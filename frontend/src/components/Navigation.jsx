@@ -16,7 +16,7 @@ const Navigation = () => {
                 <div className="flex space-x-6">
                     <Link to="/" className="hover:text-gray-300">About</Link>
                     <Link to="/mealkits" className="hover:text-gray-300">Mealkits</Link>
-                    <Link to="/subscribe" className="hover:text-gray-300">Subscribe</Link>
+                    <Link to="/subscriptions" className="hover:text-gray-300">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
                     <Link to="/help" className="hover:text-gray-300">Help Centre</Link>
                     <Link to="/forum" className="hover:text-gray-300">Forum</Link>
