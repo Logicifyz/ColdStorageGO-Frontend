@@ -8,13 +8,13 @@ const Navigation = () => {
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 {/* Logo */}
                 <div className="flex items-center space-x-2">
-                    <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-8 w-auto" />
+                    <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
 
                 </div>
 
                 {/* Links */}
                 <div className="flex space-x-6">
-                    <Link to="/" className="hover:text-gray-300">About</Link>
+                    <Link to="/" className="hover:text-gray-300">Home</Link>
                     <Link to="/mealkits" className="hover:text-gray-300">Mealkits</Link>
                     <Link to="/subscribe" className="hover:text-gray-300">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
