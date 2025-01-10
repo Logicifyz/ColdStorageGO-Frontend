@@ -2,10 +2,12 @@
   "ExpandedNodes": [
     "",
     "\\frontend",
-    "\\frontend\\public",
-    "\\frontend\\src\\Context",
+    "\\frontend\\src",
+    "\\frontend\\src\\components",
+    "\\frontend\\src\\context",
     "\\frontend\\src\\pages",
     "\\frontend\\src\\pages\\AuthFlow"
   ],
+  "SelectedNode": "\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
   "PreviewInSolutionExplorer": false
 }

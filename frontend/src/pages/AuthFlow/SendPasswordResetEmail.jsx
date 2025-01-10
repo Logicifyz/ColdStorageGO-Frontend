@@ -1,22 +1,24 @@
 ﻿import React, { useState } from 'react';
-import axios from 'axios';
 import api from '../../api'
 import { FiKey, FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom'; // For navigation
+import { useEmail } from '../../context/EmailContext';
+
 
 const SendPasswordResetEmail = () => {
     const navigate = useNavigate(); // For navigation
-    const [email, setEmail] = useState('');
+    const [localEmail, setLocalEmail] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const { setEmail } = useEmail();
 
     const handleInputChange = (e) => {
-        setEmail(e.target.value);
+        setLocalEmail(e.target.value);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!email) {
+        if (!localEmail) {
             setError('Please enter your email.');
             return;
         }
@@ -25,12 +27,14 @@ const SendPasswordResetEmail = () => {
 
         try {
             // Call API to send password reset email
-            const response = await api.post('api/Auth/sendpasswordreset', { email });
+            const response = await api.post('api/Auth/request-password-reset', { email: localEmail });
+            console.log(response);  // Add this to check the entire response object
             if (response.data.success) {
                 setSuccessMessage('Password reset email sent successfully!');
-                setEmail('');
+                setEmail(localEmail);
+                navigate("/sentpasswordresetemailsuccess")
             } else {
-                setError(response.data.message || 'Error sending password reset email.');
+                setError('Error sending password reset email.');
             }
         } catch (error) {
             setError('There was an error with the request');
@@ -60,14 +64,14 @@ const SendPasswordResetEmail = () => {
 
                     <form onSubmit={handleSubmit} className="text-left">
                         <div className="mb-4">
-                            <label htmlFor="email" className="text-white text-lg">Email</label>
+                            <label htmlFor="localEmail" className="text-white text-lg">Email</label>
                             <div className="flex items-center border border-gray-300 rounded-[10px] bg-white">
                                 <FiMail className="text-gray-400 ml-2" />
                                 <input
                                     type="email"
                                     id="email"
                                     name="email"
-                                    value={email}
+                                    value={localEmail}
                                     onChange={handleInputChange}
                                     className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
                                     placeholder="Enter your email"

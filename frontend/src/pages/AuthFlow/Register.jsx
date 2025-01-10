@@ -41,7 +41,7 @@ const Register = () => {
         setError('');
 
         try {
-            const response = await api.post('api/Auth/register', formData);
+            const response = await api.post('api/Auth/register', formData, { withCredentials: true });
             if (response.data.success) {
                 setEmail(formData.email); // Set the email in the context
                 setSuccessMessage('Registration successful!');

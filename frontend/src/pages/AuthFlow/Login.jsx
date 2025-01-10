@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import axios from 'axios';
-import api from '../../api'
+import api from '../../api';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,10 +42,16 @@ const Login = () => {
             }
         } catch (error) {
             console.error(error);
-            setError(error.response?.data?.message || 'There was an error with the login');
-        }
 
+            // Safely check if the error message exists before using includes()
+            if (error.response?.data?.message) {
+                setError(error.response.data.message);
+            } else {
+                setError('There was an issue with the login. Please try again later.');
+            }
+        }
     };
+
 
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">

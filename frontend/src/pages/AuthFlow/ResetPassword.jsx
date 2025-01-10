@@ -1,7 +1,8 @@
 ﻿import React, { useState } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'; // For accessing dynamic route parameters and navigation
 import { FiLock, FiEye, FiEyeOff, FiArrowLeft } from 'react-icons/fi';
+import api from '../../api'
+
 
 const ResetPassword = () => {
     const { token } = useParams(); // Get the token from the URL
@@ -12,7 +13,7 @@ const ResetPassword = () => {
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -24,7 +25,10 @@ const ResetPassword = () => {
         setError('');
 
         try {
-            const response = await axios.post('https://localhost:7290/api/Auth/resetpassword', { token, password });
+            const response = await api.post('/api/Auth/reset-password', {
+                token,
+                NewPassword: password, // Add NewPassword here
+            });
             if (response.data.success) {
                 setSuccessMessage('Password reset successful!');
                 setPassword('');

@@ -2,24 +2,23 @@ import React from 'react';
 import { FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useEmail } from '../../context/EmailContext';
-import api from '../../api'
+import api from '../../api';
 
-
-
-const SuccessfullySentVerificationEmail = () => {
+const SuccessfullySentPasswordResetEmail = () => {
     const navigate = useNavigate();
     const { email } = useEmail();  // Retrieve the email from the context
 
     const handleResendEmail = async () => {
         try {
-            // Make the API call to resend the verification email using the email from context
-            const response = await api.post('/api/Auth/request-verification-email', { email }, { withCredentials: true });
+            // Make the API call to resend the password reset email using the email from context
+            const response = await api.post('/api/Auth/request-password-reset', { email }, { withCredentials: true });
             console.log(response.data);  // Handle success response (e.g., show success message)
         } catch (error) {
             console.error('Error resending email:', error);
             // Optionally, show an error message to the user
         }
     };
+
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">
             <div className="flex items-center bg-[#383838] p-8 rounded-lg">
@@ -34,7 +33,7 @@ const SuccessfullySentVerificationEmail = () => {
 
                     <div className="text-center mb-6">
                         <p className="text-white text-lg">
-                            We have sent you a verification link to verify your account.
+                            We have sent you a password reset link.
                         </p>
                     </div>
 
@@ -65,4 +64,4 @@ const SuccessfullySentVerificationEmail = () => {
     );
 };
 
-export default SuccessfullySentVerificationEmail;
+export default SuccessfullySentPasswordResetEmail;

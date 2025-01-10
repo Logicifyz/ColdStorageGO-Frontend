@@ -8,9 +8,12 @@ import Register from './pages/AuthFlow/Register'; // Assuming the path to Regist
 import Login from './pages/AuthFlow/Login'; // Assuming a Login component
 import SendPasswordResetEmail from './pages/AuthFlow/SendPasswordResetEmail';
 import ResetPassword from './pages/AuthFlow/ResetPassword'; // Assuming a Login component
-import SuccessfullySentVerificationEmail from './pages/AuthFlow/SuccessfullySentVerificationEmail'; // Assuming a Login component
+import SuccessfullySentVerificationEmail from './pages/AuthFlow/SuccessfullySentVerificationEmail';
+import VerifyAccount from './pages/AuthFlow/VerifyAccount';
 import { EmailProvider } from './context/EmailContext';
-
+import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAccount";
+import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
+import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 
 
 const App = () => {
@@ -26,17 +29,33 @@ const App = () => {
                              <Register />
                         </EmailProvider>} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/sendpasswordresetemail" element={<SendPasswordResetEmail />} />
+                <Route
+                    path="/sendpasswordresetemail"
+                    element={
+                        <EmailProvider>
+                        <SendPasswordResetEmail />
+                        </EmailProvider>
+} />
                 <Route path="/resetpassword/:token" element={<ResetPassword />} />
                 <Route
-                    path="/SentVerificationEmailSuccess"
+                    path="/sentverificationemailsuccess"
                     element={
                         <EmailProvider>
                             <SuccessfullySentVerificationEmail />
                         </EmailProvider>
                     }
                 />
-
+                <Route path="/verify-account/:token" element={<VerifyAccount />} />
+                <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
+                <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
+                <Route
+                    path="/sentpasswordresetemailsuccess"
+                    element={
+                        <EmailProvider>
+                            <SuccessfullySentPasswordResetEmail/>
+                        </EmailProvider>
+                    }
+                    />
             </Routes>
             <Footer />
         </Router>
