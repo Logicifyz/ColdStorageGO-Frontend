@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
-const Navigation = () => {
+const Navigation = ({ onCreateRecipe, onCreateDiscussion }) => {
+    const [forumDropdown, setForumDropdown] = useState(false);
+    const [createPostDropdown, setCreatePostDropdown] = useState(false);
+
     return (
         <nav className="bg-[#383838] text-white sticky top-0 z-50">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 {/* Logo */}
                 <div className="flex items-center space-x-2">
                     <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
-
                 </div>
 
                 {/* Links */}
@@ -19,7 +21,53 @@ const Navigation = () => {
                     <Link to="/subscribe" className="hover:text-gray-300">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
                     <Link to="/help" className="hover:text-gray-300">Help Centre</Link>
-                    <Link to="/forum" className="hover:text-gray-300">Forum</Link>
+
+                    {/* Forum Dropdown */}
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setForumDropdown(true)}
+                        onMouseLeave={() => {
+                            setForumDropdown(false);
+                            setCreatePostDropdown(false);
+                        }}
+                    >
+                        <Link to="/forum" className="hover:text-gray-300">Forum</Link>
+                        {forumDropdown && (
+                            <div className="absolute bg-[#383838] text-white rounded shadow-lg mt-2">
+                                <Link
+                                    to="/forum"
+                                    className="block px-4 py-2 hover:bg-gray-600"
+                                >
+                                    Home
+                                </Link>
+                                <div
+                                    className="relative"
+                                    onMouseEnter={() => setCreatePostDropdown(true)}
+                                    onMouseLeave={() => setCreatePostDropdown(false)}
+                                >
+                                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-600">
+                                        Create New Post
+                                    </button>
+                                    {createPostDropdown && (
+                                        <div className="absolute left-full top-0 bg-[#383838] text-white rounded shadow-lg mt-0">
+                                            <button
+                                                onClick={onCreateRecipe}
+                                                className="block px-4 py-2 hover:bg-gray-600"
+                                            >
+                                                Create Recipe
+                                            </button>
+                                            <button
+                                                onClick={onCreateDiscussion}
+                                                className="block px-4 py-2 hover:bg-gray-600"
+                                            >
+                                                Create Discussion
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Login and Cart */}

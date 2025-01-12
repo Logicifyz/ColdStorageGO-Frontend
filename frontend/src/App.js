@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Gallery from "./pages/Gallery";
 import GalleryManagement from "./pages/staff/GalleryManagement";
 import Navbar from "./components/Navigation";
 import Footer from "./components/Footer";
+import Forum from "./pages/Forum";
 import './App.css';
-import Register from './pages/AuthFlow/Register'; // Assuming the path to Register component
-import Login from './pages/AuthFlow/Login'; // Assuming a Login component
+import Register from './pages/AuthFlow/Register';
+import Login from './pages/AuthFlow/Login';
 import SendPasswordResetEmail from './pages/AuthFlow/SendPasswordResetEmail';
-import ResetPassword from './pages/AuthFlow/ResetPassword'; // Assuming a Login component
+import ResetPassword from './pages/AuthFlow/ResetPassword';
 import SuccessfullySentVerificationEmail from './pages/AuthFlow/SuccessfullySentVerificationEmail';
 import VerifyAccount from './pages/AuthFlow/VerifyAccount';
 import { EmailProvider } from './context/EmailContext';
@@ -16,11 +17,16 @@ import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAc
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 
-
 const App = () => {
+    const [popupType, setPopupType] = useState(null);
+
+    const handleCreateRecipe = () => setPopupType("createRecipe");
+    const handleCreateDiscussion = () => setPopupType("createDiscussion");
+    const handleClosePopup = () => setPopupType(null);
+
     return (
         <Router>
-            <Navbar />
+            <Navbar onCreateRecipe={handleCreateRecipe} onCreateDiscussion={handleCreateDiscussion} />
             <Routes>
                 <Route path="/gallery" element={<Gallery />} />
                 <Route
@@ -56,7 +62,11 @@ const App = () => {
                             <SuccessfullySentPasswordResetEmail/>
                         </EmailProvider>
                     }
-                    />
+                />
+                <Route
+                    path="/forum"
+                    element={<Forum popupType={popupType} onClosePopup={handleClosePopup} />}
+                />
                 <Route path="/" element={<GalleryManagement/> } />
             </Routes>
             <Footer />
