@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiUser } from 'react-icons/fi'; // Person icon from react-icons
 import { useNavigate, useParams } from 'react-router-dom'; // For navigation and URL params
-import axios from 'axios'; // For making API requests
+import api from '../../api'
 
 const VerifyAccount = () => {
     const navigate = useNavigate();
@@ -12,8 +12,8 @@ const VerifyAccount = () => {
     const handleVerifyClick = async () => {
         try {
             // Send a request to the backend to verify the account
-            const response = await axios.post(
-                `http://localhost:5135/api/Auth/verify-email/${token}`,
+            const response = await api.post(
+                `/api/Auth/verify-email/${token}`,
                 {},
                 { withCredentials: true }
             );

@@ -27,7 +27,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await api.post('/api/Auth/login', formData);
+            const response = await api.post('/api/Auth/login', formData, { withCredentials: true });
             console.log(response.data); // For debugging
             if (response.data.success) { // Use successFlag instead of success
                 setSuccessMessage('Login successful!');
