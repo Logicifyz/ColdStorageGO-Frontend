@@ -8,78 +8,161 @@ const SubscriptionForm = () => {
         subscriptionType: '',
     });
 
+    const [step, setStep] = useState(1);
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const handleSelect = (field, value) => {
+        setFormData({ ...formData, [field]: value });
     };
 
-    const handleNext = async (e) => {
+    const handleNext = (e) => {
         e.preventDefault();
-        // Navigate to the next page with form data passed
-        navigate('/subscription-choices', { state: formData });
+        if (step < 3) {
+            setStep(step + 1);
+        } else {
+            navigate('/subscription-choices', { state: formData });
+        }
+    };
+
+    const handleBack = () => {
+        if (step > 1) {
+            setStep(step - 1);
+        }
+    };
+
+    const renderQuestion = () => {
+        switch (step) {
+            case 1:
+                return "How many meals do you want in a day?";
+            case 2:
+                return "What time would you prefer delivery?";
+            case 3:
+                return "Choose your subscription type.";
+            default:
+                return "Create Your Subscription";
+        }
+    };
+
+    const renderOptions = () => {
+        const optionClass = `cursor-pointer p-6 w-48 h-48 flex flex-col justify-center items-center rounded-lg shadow-lg transition-all bg-gradient-to-br from-gray-700 to-gray-800 text-white border-2 transform 
+        hover:scale-110 hover:shadow-2xl hover:border-yellow-400 fade-in`;
+
+        if (step === 1) {
+            return ['1', '2', '3'].map((value, index) => (
+                <div
+                    key={value}
+                    onClick={() => handleSelect('frequency', value)}
+                    className={`${optionClass} ${formData.frequency === value ? 'border-yellow-500 scale-105' : 'border-gray-700'}`}
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                    <p className="text-2xl font-bold">{value} Meal(s)</p>
+                </div>
+            ));
+        }
+
+        if (step === 2) {
+            return (
+                <div className="grid grid-cols-7 gap-6 justify-center animate-slide-in">
+                    {["8-9AM", "9-10AM", "10-11AM", "11-12PM",
+                        "12-1PM", "1-2PM", "2-3PM", "3-4PM", "4-5PM",
+                        "5-6PM", "6-7PM", "7-8PM", "8-9PM", "9-10PM"
+                    ].map((time, index) => (
+                        <div
+                            key={time}
+                            onClick={() => handleSelect('deliveryTimeSlot', time)}
+                            className={`${optionClass} ${formData.deliveryTimeSlot === time ? 'border-yellow-500 scale-105' : 'border-gray-700'}`}
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                            <p className="text-lg font-bold">{time}</p>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
+        if (step === 3) {
+            return ['Monthly', 'Weekly'].map((type, index) => (
+                <div
+                    key={type}
+                    onClick={() => handleSelect('subscriptionType', type)}
+                    className={`${optionClass} ${formData.subscriptionType === type ? 'border-yellow-500 scale-105' : 'border-gray-700'}`}
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                    <p className="text-2xl font-bold">{type}</p>
+                </div>
+            ));
+        }
     };
 
     return (
-        <div className="h-screen flex bg-charcoal text-white items-center justify-center p-12">
-            <div className="flex justify-center items-center gap-40 w-full max-w-7xl">
-                {/* Left Side - Image Section */}
-                <div className="flex justify-center items-center">
-                    <img
-                        src="https://i.pinimg.com/736x/fb/94/ca/fb94cab6d7c260b8c5952385d5dfee94.jpg"
-                        alt="Healthy Food"
-                        className="rounded-lg shadow-lg max-h-[700px] object-cover"
-                    />
-                </div>
+        <div className="h-screen bg-charcoal text-white flex flex-col justify-center items-center p-12 overflow-hidden">
+            {/* Dynamic Header */}
+            <h1 className="text-6xl font-extrabold mb-12 text-center animate-fade-in">
+                {renderQuestion()}
+            </h1>
 
-                {/* Right Side - Form Section */}
-                <div className="w-[500px]">
-                    <form onSubmit={handleNext} className="space-y-6 bg-transparent">
-                        <h2 className="text-4xl font-bold text-white mb-6 text-center">
-                            Create Your Subscription
-                        </h2>
-
-                        {/* Frequency Field */}
-                        <div>
-                            <label className="text-sm mb-2 block">Frequency of Delivery</label>
-                            <select name="frequency" onChange={handleChange} required
-                                className="w-full p-3 bg-white text-charcoal border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                                <option value="">Select Frequency</option>
-                                <option value="1">1 Meal per day</option>
-                                <option value="2">2 Meals per day</option>
-                                <option value="3">3 Meals per day</option>
-                            </select>
-                        </div>
-
-                        {/* Delivery Time Slot */}
-                        <div>
-                            <label className="text-sm mb-2 block">Delivery Time Slot</label>
-                            <select name="deliveryTimeSlot" onChange={handleChange} required
-                                className="w-full p-3 bg-white text-charcoal border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                                <option value="">Select Delivery Time Slot</option>
-                                <option value="8-9AM">8:00-9:00 AM</option>
-                                <option value="9-10AM">9:00-10:00 AM</option>
-                            </select>
-                        </div>
-
-                        {/* Subscription Type */}
-                        <div>
-                            <label className="text-sm mb-2 block">Subscription Type</label>
-                            <select name="subscriptionType" onChange={handleChange} required
-                                className="w-full p-3 bg-white text-charcoal border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                                <option value="">Select Subscription Type</option>
-                                <option value="Monthly">Monthly</option>
-                                <option value="Weekly">Weekly</option>
-                            </select>
-                        </div>
-
-                        {/* Next Button */}
-                        <button type="submit" className="w-full p-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-600 transition duration-300">
-                            Next
-                        </button>
-                    </form>
-                </div>
+            {/* Options Rendering */}
+            <div className="flex flex-wrap justify-center gap-8 animate-slide-in">
+                {renderOptions()}
             </div>
+
+            {/* Back and Next Buttons Section */}
+            <div className="flex justify-center w-full max-w-md mt-12 gap-6">
+                {step > 1 && (
+                    <button
+                        onClick={handleBack}
+                        className="w-[45%] h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block 
+                        transform transition-all duration-500 hover:scale-105 hover:shadow-lg fade-up"
+                        style={{
+                            backgroundImage: 'linear-gradient(to right, #2B2E4A, #4D5C60)',
+                        }}
+                    >
+                        Back
+                    </button>
+                )}
+
+                <button
+                    onClick={handleNext}
+                    disabled={!formData.frequency && step === 1 || !formData.deliveryTimeSlot && step === 2 || !formData.subscriptionType && step === 3}
+                    className={`w-[45%] h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block 
+                    transform transition-all duration-500 hover:scale-105 hover:shadow-lg fade-up
+                    ${step === 3 && formData.subscriptionType ? '' : 'opacity-50'}`}
+                    style={{
+                        backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
+                    }}
+                >
+                    {step === 3 ? "Confirm & Next" : "Next"}
+                </button>
+            </div>
+
+            {/* CSS for Animations */}
+            <style>
+                {`
+                @keyframes fade-in {
+                    from { opacity: 0; transform: translateY(-20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .fade-in {
+                    animation: fade-in 0.6s ease-out forwards;
+                }
+
+                @keyframes slide-in {
+                    from { opacity: 0; transform: translateX(-30px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                .animate-slide-in {
+                    animation: slide-in 0.8s ease-out forwards;
+                }
+
+                @keyframes fade-up {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .fade-up {
+                    animation: fade-up 1s ease-in-out forwards;
+                }
+                `}
+            </style>
         </div>
     );
 };

@@ -9,11 +9,16 @@ const SubscriptionSuccessPage = () => {
                 <h1 className="text-5xl font-bold mb-6">🎉 Subscription Confirmed!</h1>
                 <p className="text-lg mb-8">Thank you for subscribing to our meal plans!</p>
                 <button
-                    onClick={() => navigate('/')}
-                    className="p-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-600 transition duration-300"
+                    onClick={navigate("/")}
+                    type="submit"
+                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block mt-4"
+                    style={{
+                        backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
+                    }}
                 >
-                    Return to Home
+                    Return To Home
                 </button>
+
             </div>
         </div>
     );
