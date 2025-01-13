@@ -40,8 +40,17 @@ const Register = () => {
 
         setError('');
 
+        // Include empty fields in the formData
+        const formDataWithEmptyFields = {
+            ...formData,
+            FullName: "",
+            PhoneNumber: "",
+            StreetAddress: "",
+            PostalCode: ""
+        };
+
         try {
-            const response = await api.post('api/Auth/register', formData, { withCredentials: true });
+            const response = await api.post('api/Auth/register', formDataWithEmptyFields, { withCredentials: true });
             if (response.data.success) {
                 setEmail(formData.email); // Set the email in the context
                 setSuccessMessage('Registration successful!');
@@ -63,7 +72,6 @@ const Register = () => {
             setError(error.response?.data?.message || 'There was an error with the registration');
         }
     };
-
 
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">

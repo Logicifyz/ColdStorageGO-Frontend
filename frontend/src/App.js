@@ -20,6 +20,7 @@ import { EmailProvider } from './context/EmailContext';
 import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAccount";
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
+import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 
 
 
@@ -28,7 +29,8 @@ const App = () => {
         <Router>
             <Navbar />
             <Routes>
-                <Route path="/" element={<Gallery />} />
+                <Route path="/account-dashboard" element={<AccountDashboard/> }/>
+                <Route path="/gallery" element={<Gallery />} />
                 <Route
                     path="/register"
                     element={

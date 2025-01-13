@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\components",
+    "\\frontend\\src\\context",
+    "\\frontend\\src\\pages",
+    "\\frontend\\src\\pages\\AccountFlow",
+    "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
+    "\\frontend\\src\\pages\\AuthFlow"
+  ],
+  "SelectedNode": "\\frontend\\src\\App.js",
+  "PreviewInSolutionExplorer": false
+}
