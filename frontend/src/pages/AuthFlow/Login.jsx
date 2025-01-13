@@ -1,5 +1,4 @@
 ﻿import React, { useState } from 'react';
-import axios from 'axios';
 import api from '../../api';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +26,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await api.post('/api/Auth/login', formData);
+            const response = await api.post('/api/Auth/login', formData, { withCredentials: true });
             console.log(response.data); // For debugging
             if (response.data.success) { // Use successFlag instead of success
                 setSuccessMessage('Login successful!');

@@ -21,6 +21,25 @@ const Gallery = () => {
         fetchMealKits();
     }, []);
 
+    const addToCart = async (mealKitId, quantity = 1) => {
+        try {
+            const response = await api.post(
+                "/api/Cart",
+                { mealKitId, quantity },
+                {
+                    headers: {
+                        SessionId: localStorage.getItem("sessionId"), // Assuming session ID is stored in localStorage
+                    },
+                    withCredentials: true, // To include cookies in the request
+                }
+            );
+            alert("Added to cart successfully!");
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            alert("Failed to add to cart. Please try again.");
+        }
+    };
+
     const filteredMealKits = mealKits.filter((mealKit) =>
         mealKit.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -75,6 +94,7 @@ const Gallery = () => {
                         </div>
                         <button
                             className="mt-4 w-full bg-[#FF4B4B] text-white font-bold py-2 rounded-full hover:bg-[#E04343] transition-colors"
+                            onClick={() => addToCart(mealKit.mealKitId)}
                         >
                             Add to Cart
                         </button>

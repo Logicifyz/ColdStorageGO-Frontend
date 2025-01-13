@@ -9,6 +9,7 @@ const GalleryManagement = () => {
         expiryDate: "",
         listingImage: null,
         tags: [],
+        ingredients: "",
     });
 
     const [mealKits, setMealKits] = useState([]);
@@ -95,6 +96,7 @@ const GalleryManagement = () => {
                 expiryDate: mealKit.expiryDate.split("T")[0],
                 listingImage: null,
                 tags: mealKit.tags,
+                ingredients: mealKit.ingredients || "",
             });
             setPreviewImage(`data:image/jpeg;base64,${mealKit.listingImage}`);
         } else {
@@ -105,6 +107,7 @@ const GalleryManagement = () => {
                 expiryDate: "",
                 listingImage: null,
                 tags: [],
+                ingredients: "",
             });
             setPreviewImage(null);
         }
@@ -118,6 +121,7 @@ const GalleryManagement = () => {
         data.append("name", formData.name);
         data.append("price", formData.price);
         data.append("expiryDate", formData.expiryDate);
+        data.append("ingredients", formData.ingredients);
         if (formData.listingImage) {
             data.append("listingImage", formData.listingImage);
         }
@@ -229,6 +233,7 @@ const GalleryManagement = () => {
                                 required
                             />
                         </div>
+
                         <div className="grid grid-cols-2 gap-6 mb-4">
                             <input
                                 type="number"
@@ -248,6 +253,19 @@ const GalleryManagement = () => {
                                 required
                             />
                         </div>
+                        <div className="mb-4">
+                            <label htmlFor="ingredients" className="block mb-2">Ingredients:</label>
+                            <textarea
+                                id="ingredients"
+                                name="ingredients"
+                                placeholder="Enter ingredients"
+                                value={formData.ingredients}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-[#525266] h-28 resize-none"
+                                required
+                            ></textarea>
+                        </div>
+
                         <div className="mb-4">
                             <label>Tags:</label>
                             <div className="grid grid-cols-3 gap-2 mt-2">
@@ -314,6 +332,7 @@ const GalleryManagement = () => {
                                     <p><strong>ID:</strong> {kit.dishId}</p>
                                     <p><strong>Price:</strong> ${kit.price}</p>
                                     <p><strong>Expiry:</strong> {new Date(kit.expiryDate).toLocaleDateString()}</p>
+                                    <p><strong>Ingredients:</strong> {kit.ingredients}</p>
                                     <div className="flex gap-2 mt-4">
                                         {kit.tags.map((tag, idx) => (
                                             <span
@@ -351,3 +370,5 @@ const GalleryManagement = () => {
 };
 
 export default GalleryManagement;
+
+

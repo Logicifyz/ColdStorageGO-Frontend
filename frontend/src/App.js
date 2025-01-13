@@ -17,12 +17,13 @@ import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySen
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 
 
+
 const App = () => {
     return (
         <Router>
             <Navbar />
             <Routes>
-                <Route path="/gallery" element={<Gallery />} />
+                <Route path="/" element={<Gallery />} />
                 <Route
                     path="/register"
                     element={
@@ -57,7 +58,9 @@ const App = () => {
                         </EmailProvider>
                     }
                     />
-                <Route path="/" element={<GalleryManagement/> } />
+                <Route path="/mealkits" element={<GalleryManagement />} />
+            
+
             </Routes>
             <Footer />
         </Router>
