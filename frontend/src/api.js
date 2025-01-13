@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 
 const api = axios.create({
     baseURL: "http://localhost:5135", // Backend base URL
@@ -6,6 +6,7 @@ const api = axios.create({
         "Content-Type": "application/json",
         withCredentials: true,
     },
+    withCredentials: true  // ✅ Added this line to allow cookies and credentials
 });
 
 export default api;
