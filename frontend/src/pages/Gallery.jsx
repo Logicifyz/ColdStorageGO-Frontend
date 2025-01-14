@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
 
 const Gallery = () => {
     const [mealKits, setMealKits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchMealKits = async () => {
@@ -21,24 +23,27 @@ const Gallery = () => {
         fetchMealKits();
     }, []);
 
-    const addToCart = async (mealKitId, quantity = 1) => {
+    const addToCart = async (mealKitId, price, quantity = 1) => {
         try {
             const response = await api.post(
                 "/api/Cart",
-                { mealKitId, quantity },
+                { mealKitId, price, quantity }, // Include price in request body
                 {
                     headers: {
-                        SessionId: localStorage.getItem("sessionId"), // Assuming session ID is stored in localStorage
+                        SessionId: localStorage.getItem("sessionId"),
                     },
-                    withCredentials: true, // To include cookies in the request
+                    withCredentials: true,
                 }
             );
             alert("Added to cart successfully!");
         } catch (error) {
             console.error("Error adding to cart:", error);
-            alert("Failed to add to cart. Please try again.");
+            alert(
+                error.response?.data || "Failed to add to cart. Please try again."
+            );
         }
     };
+
 
     const filteredMealKits = mealKits.filter((mealKit) =>
         mealKit.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,12 +54,12 @@ const Gallery = () => {
     }
 
     return (
-        <div className="min-h-screen bg-[#383838] px-5 py-5">
+        <div className="min-h-screen bg-[#383838] px-16 py-5">
             <div className="flex justify-between items-center mb-5">
                 <h1 className="text-3xl font-bold text-left text-gray-200">
                     Meal Kit Gallery
                 </h1>
-                <div className="flex justify-end w-full max-w-md">
+                <div className="w-full max-w-md">
                     <input
                         type="text"
                         placeholder="Search meal kits..."
@@ -65,39 +70,50 @@ const Gallery = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 px-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {filteredMealKits.map((mealKit) => (
                     <div
                         key={mealKit.mealKitId}
-                        className="bg-[#383838] p-4 w-[300px] mx-auto"
+                        className="bg-[#383838] p-4 w-full cursor-pointer"
+                        onClick={() => navigate(`/listing/${mealKit.mealKitId}`)}
                     >
                         <img
                             src={`data:image/jpeg;base64,${mealKit.listingImage}`}
                             alt={mealKit.name}
-                            className="w-full h-[275px] object-cover rounded-lg"
-                            style={{ width: "100%", height: "275px" }}
+                            className="w-full h-[250px] object-cover rounded-lg"
                         />
-                        <div className="mt-4 flex justify-between">
-                            <h2 className="text-lg font-bold text-gray-200">{mealKit.name}</h2>
-                            <p className="text-lg font-bold text-gray-200">${mealKit.price.toFixed(2)}</p>
+                        <div className="mt-4">
+                            <h2
+                                className="text-lg font-bold text-gray-200"
+                                style={{ height: "48px", lineHeight: "1.5" }}
+                            >
+                                {mealKit.name}
+                            </h2>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-2">
                             {mealKit.tags?.map((tag, index) => (
                                 <span
                                     key={index}
-                                    className="px-2 py-1 bg-[#2B2E4A] text-white text-sm font-medium rounded-full border border-gray-500 flex-shrink-0"
-                                    style={{ maxWidth: "calc(100% - 10px)", flexBasis: "auto" }}
+                                    className="px-2 py-1 bg-[#2B2E4A] text-white text-sm font-medium rounded-full border border-gray-500"
                                 >
                                     {tag.toUpperCase()}
                                 </span>
                             ))}
                         </div>
-                        <button
-                            className="mt-4 w-full bg-[#FF4B4B] text-white font-bold py-2 rounded-full hover:bg-[#E04343] transition-colors"
-                            onClick={() => addToCart(mealKit.mealKitId)}
-                        >
-                            Add to Cart
-                        </button>
+                        <div className="mt-4">
+                            <p className="text-lg font-bold text-gray-200 text-right">
+                                ${mealKit.price.toFixed(2)}
+                            </p>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    addToCart(mealKit.mealKitId, mealKit.price);
+                                }}
+                                className="mt-2 w-full bg-red-700 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>

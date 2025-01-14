@@ -15,7 +15,7 @@ const Navigation = () => {
                 {/* Links */}
                 <div className="flex space-x-6">
                     <Link to="/" className="hover:text-gray-300">Home</Link>
-                    <Link to="/mealkits" className="hover:text-gray-300">Mealkits</Link>
+                    <Link to="/gallery" className="hover:text-gray-300">Gallery</Link>
                     <Link to="/subscriptions" className="hover:text-gray-300">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
                     <Link to="/help" className="hover:text-gray-300">Help Centre</Link>
@@ -24,11 +24,16 @@ const Navigation = () => {
 
                 {/* Login and Cart */}
                 <div className="flex items-center space-x-4">
-                    <button className="border border-white px-4 py-2 rounded hover:bg-white hover:text-[#383838]">Login</button>
-                    <div className="relative">
+                    <button className="border border-white px-4 py-2 rounded hover:bg-white hover:text-[#383838]"> <Link to="/login">Login</Link></button>
+                    
+                      
+                        <div className="relative">
                         <AiOutlineShoppingCart className="w-6 h-6" />
-                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
-                    </div>
+                        <Link to="/cart" className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">!</Link>
+                           
+                        </div>
+                    
+                   
                 </div>
             </div>
         </nav>
