@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from "react";
-import ForumPopup from "../components/ForumPopup";
-import ImageUploader from "../components/ImageUploader"; // Import the ImageUploader component
 import { FaArrowUp, FaArrowDown, FaCommentAlt, FaBookmark } from "react-icons/fa";
 
-const Forum = ({ popupType, onClosePopup }) => {
-    const [recipeForm, setRecipeForm] = useState({
-        userId: "", // Do not modify this
-        dishId: "",
-        name: "",
-        description: "",
-        timeTaken: "",
-        ingredients: [{ quantity: "", unit: "", name: "" }], // Dynamic ingredients structure
-        instructions: [{ step: "", mediaFile: null }], // Dynamic instructions structure
-        tags: "",
-        mediaFiles: [], // Allows multiple image uploads
-        visibility: "public",
-    });
-
-    const [previewImages, setPreviewImages] = useState([]); // Array for image previews
+const Forum = () => {
     const [recipes, setRecipes] = useState([]);
     const [discussions, setDiscussions] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -41,113 +25,6 @@ const Forum = ({ popupType, onClosePopup }) => {
         };
         fetchData();
     }, []);
-
-    // Handle media file changes
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        const updatedFiles = [...recipeForm.mediaFiles, ...files];
-        setRecipeForm({ ...recipeForm, mediaFiles: updatedFiles });
-
-        const updatedPreviews = files.map((file) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            return new Promise((resolve) => {
-                reader.onload = () => resolve(reader.result);
-            });
-        });
-
-        Promise.all(updatedPreviews).then((previews) => {
-            setPreviewImages([...previewImages, ...previews]);
-        });
-    };
-
-    const handleRemoveImage = (index) => {
-        const updatedFiles = recipeForm.mediaFiles.filter((_, i) => i !== index);
-        const updatedPreviews = previewImages.filter((_, i) => i !== index);
-        setRecipeForm({ ...recipeForm, mediaFiles: updatedFiles });
-        setPreviewImages(updatedPreviews);
-    };
-
-    const handleIngredientChange = (index, field, value) => {
-        const updatedIngredients = [...recipeForm.ingredients];
-        updatedIngredients[index][field] = value;
-        setRecipeForm({ ...recipeForm, ingredients: updatedIngredients });
-    };
-
-    const addIngredient = () => {
-        setRecipeForm({
-            ...recipeForm,
-            ingredients: [...recipeForm.ingredients, { quantity: "", unit: "", name: "" }],
-        });
-    };
-
-    const removeIngredient = (index) => {
-        const updatedIngredients = recipeForm.ingredients.filter((_, i) => i !== index);
-        setRecipeForm({ ...recipeForm, ingredients: updatedIngredients });
-    };
-
-    const handleInstructionChange = (index, field, value) => {
-        const updatedInstructions = [...recipeForm.instructions];
-        updatedInstructions[index][field] = value;
-        setRecipeForm({ ...recipeForm, instructions: updatedInstructions });
-    };
-
-    const addInstruction = () => {
-        setRecipeForm({
-            ...recipeForm,
-            instructions: [...recipeForm.instructions, { step: "", mediaFile: null }],
-        });
-    };
-
-    const removeInstruction = (index) => {
-        const updatedInstructions = recipeForm.instructions.filter((_, i) => i !== index);
-        setRecipeForm({ ...recipeForm, instructions: updatedInstructions });
-    };
-
-    const handleInstructionMediaUpload = (index, file) => {
-        const updatedInstructions = [...recipeForm.instructions];
-        updatedInstructions[index].mediaFile = file;
-        setRecipeForm({ ...recipeForm, instructions: updatedInstructions });
-    };
-
-    // Submit recipe
-    const handleSubmitRecipe = async () => {
-        try {
-            // Validation for required fields
-            if (!recipeForm.userId || !recipeForm.dishId || !recipeForm.name || !recipeForm.description || !recipeForm.tags) {
-                alert("Please fill in all required fields.");
-                return;
-            }
-
-            const formData = new FormData();
-            for (const key in recipeForm) {
-                if (key === "mediaFiles" && recipeForm.mediaFiles.length > 0) {
-                    recipeForm.mediaFiles.forEach((file) => formData.append("mediaFiles", file));
-                } else if (key === "ingredients" || key === "instructions") {
-                    formData.append(key, JSON.stringify(recipeForm[key]));
-                } else {
-                    formData.append(key, recipeForm[key]);
-                }
-            }
-
-            const response = await fetch("http://localhost:5135/api/Recipes", {
-                method: "POST",
-                body: formData,
-            });
-
-            if (response.ok) {
-                setRecipes([...recipes, await response.json()]);
-                onClosePopup();
-            } else {
-                const error = await response.json();
-                console.error("Failed to submit recipe:", error);
-                alert("Failed to submit recipe. Please check your input.");
-            }
-        } catch (error) {
-            console.error("Error submitting recipe:", error);
-            alert("An error occurred while submitting the recipe.");
-        }
-    };
 
     return (
         <div className="p-6 bg-[#383838] text-white min-h-screen">
@@ -226,21 +103,6 @@ const Forum = ({ popupType, onClosePopup }) => {
                     </div>
                 </div>
             </div>
-
-            <ForumPopup
-                isOpen={popupType === "createRecipe"}
-                onClose={onClosePopup}
-                onSubmit={handleSubmitRecipe}
-                recipeForm={recipeForm}
-                setRecipeForm={setRecipeForm}
-                handleIngredientChange={handleIngredientChange}
-                addIngredient={addIngredient}
-                removeIngredient={removeIngredient}
-                handleInstructionChange={handleInstructionChange}
-                addInstruction={addInstruction}
-                removeInstruction={removeInstruction}
-                handleInstructionMediaUpload={handleInstructionMediaUpload}
-            />
         </div>
     );
 };

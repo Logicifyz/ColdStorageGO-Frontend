@@ -5,6 +5,8 @@ import GalleryManagement from "./pages/staff/GalleryManagement";
 import Navbar from "./components/Navigation";
 import Footer from "./components/Footer";
 import Forum from "./pages/Forum";
+import CreateRecipe from "./pages/CreateRecipe"; 
+import CreateDiscussion from "./pages/CreateDiscussion";
 import './App.css';
 import Register from './pages/AuthFlow/Register';
 import Login from './pages/AuthFlow/Login';
@@ -32,17 +34,17 @@ const App = () => {
                 <Route
                     path="/register"
                     element={
-                         <EmailProvider>
-                             <Register />
+                        <EmailProvider>
+                            <Register />
                         </EmailProvider>} />
                 <Route path="/login" element={<Login />} />
                 <Route
                     path="/sendpasswordresetemail"
                     element={
                         <EmailProvider>
-                        <SendPasswordResetEmail />
+                            <SendPasswordResetEmail />
                         </EmailProvider>
-} />
+                    } />
                 <Route path="/resetpassword/:token" element={<ResetPassword />} />
                 <Route
                     path="/sentverificationemailsuccess"
@@ -59,15 +61,14 @@ const App = () => {
                     path="/sentpasswordresetemailsuccess"
                     element={
                         <EmailProvider>
-                            <SuccessfullySentPasswordResetEmail/>
+                            <SuccessfullySentPasswordResetEmail />
                         </EmailProvider>
                     }
                 />
-                <Route
-                    path="/forum"
-                    element={<Forum popupType={popupType} onClosePopup={handleClosePopup} />}
-                />
-                <Route path="/" element={<GalleryManagement/> } />
+                <Route path="/forum" element={<Forum />} />
+                <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
+                <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
+                <Route path="/" element={<GalleryManagement />} />
             </Routes>
             <Footer />
         </Router>

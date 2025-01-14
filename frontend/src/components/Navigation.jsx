@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 
-const Navigation = ({ onCreateRecipe, onCreateDiscussion }) => {
+const Navigation = () => {
     const [forumDropdown, setForumDropdown] = useState(false);
     const [createPostDropdown, setCreatePostDropdown] = useState(false);
 
@@ -50,18 +50,18 @@ const Navigation = ({ onCreateRecipe, onCreateDiscussion }) => {
                                     </button>
                                     {createPostDropdown && (
                                         <div className="absolute left-full top-0 bg-[#383838] text-white rounded shadow-lg mt-0">
-                                            <button
-                                                onClick={onCreateRecipe}
+                                            <Link
+                                                to="/create-recipe"
                                                 className="block px-4 py-2 hover:bg-gray-600"
                                             >
                                                 Create Recipe
-                                            </button>
-                                            <button
-                                                onClick={onCreateDiscussion}
+                                            </Link>
+                                            <Link
+                                                to="/create-discussion"
                                                 className="block px-4 py-2 hover:bg-gray-600"
                                             >
                                                 Create Discussion
-                                            </button>
+                                            </Link>
                                         </div>
                                     )}
                                 </div>
