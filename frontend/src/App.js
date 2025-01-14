@@ -21,6 +21,9 @@ import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAc
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
+import Listing from "./pages/Listing";
+//import CartPage from "./pages/CartPage";
+import Cart from "./pages/Cart";
 
 
 
@@ -31,6 +34,8 @@ const App = () => {
             <Routes>
                 <Route path="/account-dashboard" element={<AccountDashboard/> }/>
                 <Route path="/gallery" element={<Gallery />} />
+                <Route path="/cart" element={<Cart />}/>
+                <Route path="/listing/:id" element={<Listing />} />
                 <Route
                     path="/register"
                     element={
