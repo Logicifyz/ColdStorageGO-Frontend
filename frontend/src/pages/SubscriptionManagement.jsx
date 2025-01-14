@@ -19,7 +19,10 @@ const SubscriptionManagement = () => {
     useEffect(() => {
         const fetchSubscription = async () => {
             try {
-                const userId = "123e4567-e89b-12d3-a456-426614174000";  // Static for now, replace with dynamic ID
+                // Dynamically retrieve session-based user info
+                const sessionResponse = await api.get('/api/account/profile', { withCredentials: true });
+                const userId = sessionResponse.data.userId;
+
                 const response = await api.get(`/api/subscriptions/user?userId=${userId}`);
                 setSubscription(response.data);
             } catch (error) {
@@ -35,7 +38,7 @@ const SubscriptionManagement = () => {
 
     const handleToggleAutoRenewal = async () => {
         try {
-            await api.put(`/api/subscriptions/toggle-autorenewal/${subscription.subscriptionId}`);
+            await api.put(`/api/subscriptions/toggle-autorenewal/${subscription.subscriptionId}`, {}, { withCredentials: true });
             setSubscription(prev => ({
                 ...prev,
                 autoRenewal: !prev.autoRenewal
@@ -49,7 +52,7 @@ const SubscriptionManagement = () => {
 
     const handleToggleFreeze = async () => {
         try {
-            await api.put(`/api/subscriptions/toggle-freeze/${subscription.subscriptionId}`);
+            await api.put(`/api/subscriptions/toggle-freeze/${subscription.subscriptionId}`, {}, { withCredentials: true });
             setSubscription(prev => ({
                 ...prev,
                 isFrozen: !prev.isFrozen
@@ -63,7 +66,7 @@ const SubscriptionManagement = () => {
 
     const handleCancelSubscription = async () => {
         try {
-            await api.delete(`/api/subscriptions/cancel/${subscription.subscriptionId}`);
+            await api.delete(`/api/subscriptions/cancel/${subscription.subscriptionId}`, { withCredentials: true });
             alert('Subscription canceled successfully.');
         } catch (error) {
             console.error('Error canceling subscription:', error);

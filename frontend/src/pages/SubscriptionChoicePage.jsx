@@ -50,19 +50,18 @@ const SubscriptionChoicePage = () => {
         const stripe = await stripePromise;
 
         try {
-            const response = await api.post('/api/stripe/create-checkout-session', {
-                userId: "123e4567-e89b-12d3-a456-426614174000",
-                mealKitId: "543e4567-e89b-12d3-a456-426614174001",
-                frequency: formData.frequency,
-                deliveryTimeSlot: formData.deliveryTimeSlot,
-                subscriptionType: formData.subscriptionType,
-                subscriptionChoice: selectedChoice.title,
-                price: calculatePrice(selectedChoice.basePrice)
-            });
+            // ✅ Ensure the session cookie exists before the API call
+            const sessionId = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('SessionId'))
+                ?.split('=')[1];
 
-            // ✅ Adding Console Log to Verify Payload Before Sending
-            console.log('Payload Sent to Backend:', {
-                userId: "123e4567-e89b-12d3-a456-426614174000",
+
+            const sessionResponse = await api.get('/api/account/profile', { withCredentials: true });
+            const userId = sessionResponse.data.userId;
+
+            const response = await api.post('/api/stripe/create-checkout-session', {
+                userId: userId,
                 mealKitId: "543e4567-e89b-12d3-a456-426614174001",
                 frequency: formData.frequency,
                 deliveryTimeSlot: formData.deliveryTimeSlot,
@@ -78,6 +77,7 @@ const SubscriptionChoicePage = () => {
             alert('Error with payment process');
         }
     };
+
 
     const handleCancel = () => {
         setShowPopup(false);
