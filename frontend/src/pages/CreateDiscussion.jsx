@@ -19,16 +19,22 @@ const CreateDiscussions = () => {
                 return;
             }
 
-            // Prepare the payload
-            const formData = new FormData();
-            for (const key in discussionForm) {
-                formData.append(key, discussionForm[key]);
-            }
+            // Prepare the payload as JSON
+            const payload = {
+                userId: discussionForm.userId,
+                title: discussionForm.title,
+                content: discussionForm.content,
+                category: discussionForm.category,
+                visibility: discussionForm.visibility,
+            };
 
             // Send the POST request to the backend
             const response = await fetch("http://localhost:5135/api/Discussions", {
                 method: "POST",
-                body: formData,
+                headers: {
+                    "Content-Type": "application/json", // Ensure JSON payload
+                },
+                body: JSON.stringify(payload), // Convert payload to JSON string
             });
 
             if (response.ok) {
@@ -43,13 +49,18 @@ const CreateDiscussions = () => {
             } else {
                 const error = await response.json();
                 console.error("Failed to create discussion:", error);
-                alert("Failed to create discussion. Please check your input.");
+                alert(
+                    `Failed to create discussion: ${Object.entries(error.errors || {})
+                        .map(([key, val]) => `${key}: ${val}`)
+                        .join(", ")}`
+                );
             }
         } catch (error) {
             console.error("Error submitting discussion:", error);
             alert("An error occurred while creating the discussion.");
         }
     };
+
 
     return (
         <div className="p-8 bg-[#2F2F2F] min-h-screen text-white">
