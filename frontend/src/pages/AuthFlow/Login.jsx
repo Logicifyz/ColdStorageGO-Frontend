@@ -3,9 +3,10 @@ import axios from 'axios';
 import api from '../../api';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import Message from '../../components/Message'
 
 const Login = () => {
-    const navigate = useNavigate(); // For navigating to the register page
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -28,22 +29,19 @@ const Login = () => {
 
         try {
             const response = await api.post('/api/Auth/login', formData, { withCredentials: true });
-            console.log(response.data); // For debugging
-            if (response.data.success) { // Use successFlag instead of success
+            console.log(response.data);
+            if (response.data.success) {
                 setSuccessMessage('Login successful!');
-                setError(''); // Clear any previous errors
+                setError('');
                 setFormData({
                     email: '',
                     password: ''
                 });
-                // Navigate to another page or perform other actions after successful login
             } else {
                 setError(response.data.message || 'Login failed');
             }
         } catch (error) {
             console.error(error);
-
-            // Safely check if the error message exists before using includes()
             if (error.response?.data?.message) {
                 setError(error.response.data.message);
             } else {
@@ -52,21 +50,19 @@ const Login = () => {
         }
     };
 
-
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">
             <div className="flex items-center bg-[#383838] p-8 rounded-lg">
-                {/* Form on the left */}
                 <div className="w-[497px] pr-8 mt-0" style={{ marginTop: '-100px', marginRight: '150px' }}>
                     <div className="mb-6">
-                        <h2 className="text-white text-4xl font-bold">Login</h2> {/* Bold Login header */}
+                        <h2 className="text-white text-4xl font-bold">Login</h2>
                     </div>
 
                     <div className="mb-6">
                         <p className="text-white text-sm" style={{ fontSize: '20px' }}>
                             Don't have an account?{' '}
                             <span
-                                onClick={() => navigate('/register')} // Navigate to register page
+                                onClick={() => navigate('/register')}
                                 className="cursor-pointer text-[#B4C14A]"
                             >
                                 Register here
@@ -74,11 +70,11 @@ const Login = () => {
                         </p>
                     </div>
 
-                    {error && <div className="text-red-500 mb-4" style={{ fontSize: '20px' }}>{error}</div>}
-                    {successMessage && <div className="text-green-500 mb-4" style={{ fontSize: '20px' }}>{successMessage}</div>}
+                    {/* Use the Message component for error and success messages */}
+                    <Message text={error} type="error" />
+                    <Message text={successMessage} type="success" />
 
                     <form onSubmit={handleSubmit} className="text-left">
-                        {/* Email field */}
                         <div className="mb-4">
                             <label htmlFor="email" className="text-white text-lg font-medium">Email</label>
                             <div className="flex items-center border border-gray-300 rounded-[10px] bg-white">
@@ -97,7 +93,6 @@ const Login = () => {
                             </div>
                         </div>
 
-                        {/* Password field */}
                         <div className="mb-4">
                             <label htmlFor="password" className="text-white text-lg font-medium">Password</label>
                             <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
@@ -125,7 +120,7 @@ const Login = () => {
 
                         <div className="mb-4 text-right">
                             <span
-                                onClick={() => navigate('/sendpasswordresetemail')} // Navigate to forgot password page
+                                onClick={() => navigate('/sendpasswordresetemail')}
                                 className="cursor-pointer text-[#B4C14A] text-lg"
                             >
                                 Forgot Password?
@@ -144,7 +139,6 @@ const Login = () => {
                     </form>
                 </div>
 
-                {/* Image on the right */}
                 <img
                     src="https://live.staticflickr.com/65535/49642389768_aef80a434e_h.jpg"
                     alt="Side Image"

@@ -4,6 +4,7 @@ import { FiMail, FiUser, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom'; // Import for navigation
 import api from '../../api'
 import { useEmail } from '../../context/EmailContext';
+import Message from '../../components/Message'
 
 
 const Register = () => {
@@ -39,6 +40,30 @@ const Register = () => {
         }
 
         setError('');
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(formData.email)) {
+            setError('Please enter a valid email address.');
+            return;
+        }
+
+        // Password length validation
+        if (formData.password.length < 8) {
+            setError('Password must be at least 8 characters long.');
+            return;
+        }
+
+        // Confirm password validation
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match.');
+            return;
+        }
+
+        // Required fields validation
+        if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+            setError('All fields are required.');
+            return;
+        }
 
         // Include empty fields in the formData
         const formDataWithEmptyFields = {
@@ -98,8 +123,8 @@ const Register = () => {
                         </p>
                     </div>
 
-                    {error && <div className="text-red-500 mb-4" style={{ fontSize: '20px' }}>{error}</div>}
-                    {successMessage && <div className="text-green-500 mb-4" style={{ fontSize: '20px' }}>{successMessage}</div>}
+                    <Message text={error} type="error" />
+                    <Message text={successMessage} type="success" />
 
                     <form onSubmit={handleSubmit} className="text-left">
                         <div className="mb-4">

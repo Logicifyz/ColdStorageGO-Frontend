@@ -2,7 +2,7 @@
 import { useParams, useNavigate } from 'react-router-dom'; // For accessing dynamic route parameters and navigation
 import { FiLock, FiEye, FiEyeOff, FiArrowLeft } from 'react-icons/fi';
 import api from '../../api'
-
+import Message from '../../components/Message'
 
 const ResetPassword = () => {
     const { token } = useParams(); // Get the token from the URL
@@ -13,9 +13,14 @@ const ResetPassword = () => {
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!password || !confirmPassword) {
+            setError('Please fill out both password fields.');
+            return;
+        }
 
         if (password !== confirmPassword) {
             setError('Passwords do not match');
@@ -33,12 +38,12 @@ const ResetPassword = () => {
                 setSuccessMessage('Password reset successful!');
                 setPassword('');
                 setConfirmPassword('');
-                setTimeout(() => navigate('/login'), 2000); // Redirect to login page after 2 seconds
+                setTimeout(() => navigate('/successfullyresetpassword')); // Redirect to login page after 2 seconds
             } else {
-                setError(response.data.message || 'Error resetting password');
+                setError(error.response?.data?.message || 'There was an error with the password reset');
             }
         } catch (error) {
-            setError('There was an error with the password reset');
+            setError(error.response?.data?.message || 'There was an error with the password reset');
         }
     };
 
@@ -59,9 +64,8 @@ const ResetPassword = () => {
                     </p>
                 </div>
 
-                {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
-                {successMessage && <div className="text-green-500 mb-4 text-center">{successMessage}</div>}
-
+                <Message text={error} type="error" />
+                <Message text={successMessage} type="success" />
                 <form onSubmit={handleSubmit} className="text-left">
                     <div className="mb-4">
                         <label htmlFor="password" className="text-white text-lg">New Password</label>

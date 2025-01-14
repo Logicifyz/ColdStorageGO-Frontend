@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Profiler } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Gallery from "./pages/Gallery";
 import Navbar from "./components/Navigation"
@@ -15,6 +15,7 @@ import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAc
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
+import Profile from "./pages/Profile"
 
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
                         </EmailProvider>
                     }
                 />
+                <Route path="/profile/:username" element={<Profile />} />
                 <Route path="/verify-account/:token" element={<VerifyAccount />} />
                 <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
                 <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
