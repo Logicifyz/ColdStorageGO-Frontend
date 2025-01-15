@@ -21,6 +21,7 @@ const Navigation = () => {
                     <Link to="/subscribe" className="hover:text-gray-300">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
                     <Link to="/help" className="hover:text-gray-300">Help Centre</Link>
+                    <Link to="/cheffie-ai" className="hover:text-gray-300">Cheffie AI</Link>
 
                     {/* Forum Dropdown */}
                     <div

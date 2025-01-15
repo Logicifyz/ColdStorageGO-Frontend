@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import Forum from "./pages/Forum";
 import CreateRecipe from "./pages/CreateRecipe"; 
 import CreateDiscussion from "./pages/CreateDiscussion";
+import CheffieAI from "./pages/CheffieAI";
 import './App.css';
 import Register from './pages/AuthFlow/Register';
 import Login from './pages/AuthFlow/Login';
@@ -68,6 +69,7 @@ const App = () => {
                 <Route path="/forum" element={<Forum />} />
                 <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
                 <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
+                <Route path="/cheffie-ai" element={<CheffieAI />} />
                 <Route path="/" element={<GalleryManagement />} />
             </Routes>
             <Footer />
