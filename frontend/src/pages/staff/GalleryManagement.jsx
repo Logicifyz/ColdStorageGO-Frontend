@@ -12,6 +12,7 @@ const GalleryManagement = () => {
         ingredients: "",
     });
 
+    const [dishes, setDishes] = useState([]); // To store dishes fetched from the API
     const [mealKits, setMealKits] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);
@@ -20,6 +21,8 @@ const GalleryManagement = () => {
     const [editMealKitId, setEditMealKitId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [notification, setNotification] = useState({ message: "", type: "" });
+    const [dishFormOpen, setDishFormOpen] = useState(false);
+    const [newDish, setNewDish] = useState({ name: "", instructions: "" });
 
     const dietaryOptions = [
         "Vegan",
@@ -44,6 +47,45 @@ const GalleryManagement = () => {
         fetchMealKits();
     }, []);
 
+    useEffect(() => {
+        const fetchDishes = async () => {
+            try {
+                const response = await api.get("/api/Dish");
+                setDishes(response.data);
+            } catch (error) {
+                showNotification("Error fetching dishes", "error");
+            }
+        };
+
+        fetchDishes();
+    }, []);
+
+    const handleDishInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewDish((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleDishSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await api.post("/api/Dish", newDish, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            setDishes([...dishes, response.data]);
+            showNotification("Dish added successfully!", "success");
+            setDishFormOpen(false);
+            setNewDish({ name: "", instructions: "" });
+        } catch (error) {
+            showNotification("Failed to add dish", "error");
+        }
+    };
+
     const showNotification = (message, type) => {
         setNotification({ message, type });
         setTimeout(() => setNotification({ message: "", type: "" }), 3000);
@@ -54,6 +96,14 @@ const GalleryManagement = () => {
         setFormData((prev) => ({
             ...prev,
             [name]: value,
+        }));
+    };
+
+    const handleDishChange = (e) => {
+        const selectedDishId = e.target.value;
+        setFormData((prev) => ({
+            ...prev,
+            dishId: selectedDishId,
         }));
     };
 
@@ -196,13 +246,66 @@ const GalleryManagement = () => {
                         className="py-2 px-4 rounded bg-[#292929] text-white border border-gray-600 focus:ring-2 focus:ring-[#525266]"
                     />
                     <button
+                        className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                        onClick={() => setDishFormOpen(true)}
+                    >
+                        Add to the Sea of Dishes
+                    </button>
+                    <button
                         className="bg-[#292929] text-white py-2 px-4 rounded hover:bg-gray-700 focus:outline-none"
                         onClick={() => openForm()}
                     >
                         +
                     </button>
+
                 </div>
             </header>
+            {dishFormOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <form
+                        onSubmit={handleDishSubmit}
+                        className="bg-[#292929] text-white p-8 rounded shadow-md w-3/4 max-w-lg"
+                    >
+                        <h2 className="text-2xl font-bold mb-6">Add a New Dish</h2>
+                        <div className="mb-4">
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Dish Name"
+                                value={newDish.name}
+                                onChange={handleDishInputChange}
+                                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-500"
+                                required
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <textarea
+                                name="instructions"
+                                placeholder="Cooking Instructions"
+                                value={newDish.instructions}
+                                onChange={handleDishInputChange}
+                                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-blue-500 h-28 resize-none"
+                                required
+                            ></textarea>
+                        </div>
+                        <div className="flex justify-end gap-4">
+                            <button
+                                type="button"
+                                className="py-2 px-4 bg-red-600 text-white rounded"
+                                onClick={() => setDishFormOpen(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                className="py-2 px-4 bg-green-600 text-white rounded"
+                            >
+                                Add Dish
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
             {isFormOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -223,15 +326,21 @@ const GalleryManagement = () => {
                                 className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-[#525266]"
                                 required
                             />
-                            <input
-                                type="text"
+                            <select
+                                id="dish"
                                 name="dishId"
-                                placeholder="Dish ID"
                                 value={formData.dishId}
-                                onChange={handleInputChange}
-                                className="w-full px-3 py-2 rounded bg-gray-700 border border-gray-600 focus:ring-2 focus:ring-[#525266]"
+                                onChange={handleDishChange}
+                                className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500"
                                 required
-                            />
+                            >
+                                <option value="" disabled>Select a dish</option>
+                                {dishes.map((dish) => (
+                                    <option key={dish.dishId} value={dish.dishId}>
+                                        {dish.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="grid grid-cols-2 gap-6 mb-4">

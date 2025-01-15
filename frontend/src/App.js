@@ -6,7 +6,6 @@ import SubscriptionForm from "./pages/Subscriptions";
 import SubscriptionChoicePage from "./pages/SubscriptionChoicePage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import SubscriptionManagement from "./pages/SubscriptionManagement"
-
 import Navbar from "./components/Navigation"
 import Footer from "./components/Footer"
 import './App.css';
@@ -24,7 +23,8 @@ import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 import Listing from "./pages/Listing";
 //import CartPage from "./pages/CartPage";
 import Cart from "./pages/Cart";
-
+import RewardManagement from "./pages/staff/RewardManagement";
+import Rewards from "./pages/Reward";
 
 
 const App = () => {
@@ -34,6 +34,7 @@ const App = () => {
             <Routes>
                 <Route path="/account-dashboard" element={<AccountDashboard/> }/>
                 <Route path="/gallery" element={<Gallery />} />
+                <Route path="/rewards" element={<Rewards/> }/>
                 <Route path="/cart" element={<Cart />}/>
                 <Route path="/listing/:id" element={<Listing />} />
                 <Route
@@ -70,7 +71,9 @@ const App = () => {
                         </EmailProvider>
                     }
                     />
-                <Route path="/" element={<GalleryManagement/> } />
+                <Route path="/gallerymanagement" element={<GalleryManagement />} />
+                <Route path="/" element={<RewardManagement/> } />
+
                 <Route path="/subscriptions" element={<SubscriptionForm />} />
                 <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
                 <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
