@@ -3,8 +3,11 @@ import axios from 'axios';
 import api from '../../api';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import Message from '../../components/Message'
+import Message from '../../components/Message';
+import { GoogleLogin } from '@react-oauth/google'; // Import GoogleLogin
+import { jwtDecode } from 'jwt-decode';
 
+const clientid = "869557804479-pv18rpo94fbpd6hatmns6m4nes5adih8.apps.googleusercontent.com";
 const Login = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -37,6 +40,9 @@ const Login = () => {
                     email: '',
                     password: ''
                 });
+                setTimeout(() => {
+                    navigate('/account-dashboard');
+                }, 2000);
             } else {
                 setError(response.data.message || 'Login failed');
             }
@@ -49,6 +55,42 @@ const Login = () => {
             }
         }
     };
+
+    const handleGoogleLogin = async (response) => {
+        try {
+            const { credential } = response;
+
+            // Decode the ID token and inspect its contents
+            const decodedToken = jwtDecode(credential); // Decode the ID token
+            console.log(decodedToken.email)
+            if (!decodedToken.email) {
+                setError('Google login failed: Missing email.');
+                return;
+            }
+
+            // Send the Google ID token to your backend for authentication
+            const googleResponse = await api.post('/api/Auth/google-login', {
+                IdToken: credential, // Send the IdToken as expected by the backend
+            });
+
+            console.log(googleResponse.data);
+
+            if (googleResponse.data.success) {
+                setSuccessMessage('Login successful!');
+                setError('');
+                setTimeout(() => {
+                    navigate('/account-dashboard');
+                }, 2000);
+            } else {
+                setError(googleResponse.data.message || 'Google login failed');
+            }
+        } catch (error) {
+            console.error(error);
+            setError('There was an issue with Google login. Please try again later.');
+        }
+    };
+
+
 
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">
@@ -137,6 +179,16 @@ const Login = () => {
                             Login
                         </button>
                     </form>
+
+                    {/* Google login button */}
+                    <div className="mt-4">
+                        <GoogleLogin
+                            clientid={clientid}
+                            onSuccess={handleGoogleLogin}
+                            onError={(error) => setError('Google login failed. Please try again.')}
+                            useOneTap
+                        />
+                    </div>
                 </div>
 
                 <img

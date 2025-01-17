@@ -17,6 +17,7 @@ const ChangePassword = () => {
 
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [isSending, setIsSending] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -38,6 +39,24 @@ const ChangePassword = () => {
         setSuccessMessage(''); // Clear previous success message
         setErrorMessage(''); // Clear previous error message
 
+        // Password length validation for NewPassword
+        if (formData.NewPassword.length < 8) {
+            setErrorMessage('Password must be at least 8 characters long.');
+            return;
+        }
+
+        // Confirm password validation
+        if (formData.NewPassword !== formData.ConfirmPassword) {
+            setErrorMessage('Passwords do not match.');
+            return;
+        }
+
+        // Required fields validation
+        if (!formData.CurrentPassword || !formData.NewPassword || !formData.ConfirmPassword) {
+            setErrorMessage('All fields are required.');
+            return;
+        }
+
         try {
             const response = await api.post(
                 '/api/Account/change-password', // Replace with your actual API endpoint
@@ -58,14 +77,42 @@ const ChangePassword = () => {
             }
         } catch (error) {
             console.error('Error changing password:', error.response?.data || error.message);
-            // Display error message
-            setErrorMessage(error.response?.data || 'An error occurred while changing the password.');
+            const errorMsg = error.response?.data?.message || error.message || 'An error occurred while changing the password.';
+            setErrorMessage(errorMsg);
+        }
+    };
+
+    const handleResendPasswordEmail = async () => {
+        setIsSending(true);
+        setSuccessMessage(''); // Clear any previous success message
+        setErrorMessage(''); // Clear any previous error message
+
+        try {
+            const response = await api.post('/api/Auth/request-password-set'); // Replace with your actual API endpoint for resending the email
+            setSuccessMessage('Set Password email sent successfully!');
+        } catch (error) {
+            console.error('Error resending email:', error.response?.data || error.message);
+            setErrorMessage('Failed to resend set password email.');
+        } finally {
+            setIsSending(false);
         }
     };
 
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="w-[497px]">
+            <div className="w-[497px] relative">
+                {/* Resend Password Set Email Button */}
+                <div className="mb-6">
+                    <button
+                        type="button"
+                        onClick={handleResendPasswordEmail}
+                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-full"
+                        disabled={isSending}
+                    >
+                        {isSending ? 'Sending...' : 'Resend Set Password Email'}
+                    </button>
+                </div>
+
                 <h2 className="text-white text-4xl font-bold mb-6">Change Password</h2>
 
                 {successMessage && (

@@ -3,6 +3,34 @@
   "WorkspaceRootPath": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\api.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\api.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\Source\\Repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SetPassword.jsx||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\SetPassword.jsx||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
@@ -11,36 +39,8 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\Register.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Message.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\components\\Message.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\Source\\Repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Profile.jsx||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\Profile.jsx||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Listing.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -51,20 +51,44 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\Profile.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Redemptions.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\Redemptions.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Navigation.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\components\\Navigation.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Footer.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\components\\Footer.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\context\\EmailContext.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\context\\EmailContext.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Message.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\components\\Message.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Home..jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\Home..jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\Source\\Repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\api.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\api.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
@@ -77,10 +101,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\context\\EmailContext.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:frontend\\src\\context\\EmailContext.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
@@ -102,30 +122,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Register.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Register.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\Register.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Register.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\Register.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAAAAAA",
+              "DocumentIndex": 5,
+              "Title": "SetPassword.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\Source\\Repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SetPassword.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SetPassword.jsx",
+              "ToolTip": "C:\\Users\\Joe\\Source\\Repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SetPassword.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SetPassword.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAJYAAAAOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-08T15:47:47.25Z",
+              "WhenOpened": "2025-01-17T11:03:13.586Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "ResetPassword.jsx",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx",
               "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx",
               "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx",
               "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\ResetPassword.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACsAAAANAAAA",
+              "ViewState": "AQIAAH4AAAAAAAAAAAAqwJwAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2025-01-08T15:38:28.573Z",
               "EditorCaption": ""
@@ -133,117 +153,104 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "SendPasswordResetEmail.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
-              "ViewState": "AQIAAEAAAAAAAAAAAAAwwEoAAAAUAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-10T06:20:09.127Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "App.js",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\App.js",
-              "RelativeDocumentMoniker": "frontend\\src\\App.js",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\App.js",
-              "RelativeToolTip": "frontend\\src\\App.js",
-              "ViewState": "AQIAAB4AAAAAAAAAAAAAADUAAAA3AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-01-08T10:44:50.558Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "VerifyAccount.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
-              "ViewState": "AQIAAAcAAAAAAAAAAAAwwBcAAAA/AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-08T17:28:42.992Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "Login.jsx",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Login.jsx",
               "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\Login.jsx",
               "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Login.jsx",
               "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\Login.jsx",
-              "ViewState": "AQIAADAAAAAAAAAAAAAAAEkAAAAUAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2025-01-08T16:08:55.273Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SuccecssfullyResetPassword.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAADwAAAAAAAAA",
+              "DocumentIndex": 3,
+              "Title": "App.js",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\App.js",
+              "RelativeDocumentMoniker": "frontend\\src\\App.js",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\App.js",
+              "RelativeToolTip": "frontend\\src\\App.js",
+              "ViewState": "AQIAACcAAAAAAAAAAAAAABMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-01-08T10:44:50.558Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "api.js",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\api.js",
+              "RelativeDocumentMoniker": "frontend\\src\\api.js",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\api.js",
+              "RelativeToolTip": "frontend\\src\\api.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-01-08T11:04:38.997Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ChangePassword.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
+              "ViewState": "AQIAAEoAAAAAAAAAAAAqwF8AAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-10T08:56:33.414Z",
+              "WhenOpened": "2025-01-12T10:38:57.317Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DeleteAccount.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAAA8AAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-12T13:20:54.723Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "Message.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Message.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\components\\Message.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Message.jsx",
-              "RelativeToolTip": "frontend\\src\\components\\Message.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAAAAAA",
+              "Title": "VerifyAccount.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABUAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-14T15:25:09.53Z",
+              "WhenOpened": "2025-01-08T17:28:42.992Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 8,
+              "Title": "Register.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Register.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\Register.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\Register.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\Register.jsx",
+              "ViewState": "AQIAAEMAAAAAAAAAAAAAAFkAAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-08T15:47:47.25Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "Profile.jsx",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Profile.jsx",
               "RelativeDocumentMoniker": "frontend\\src\\pages\\Profile.jsx",
               "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Profile.jsx",
               "RelativeToolTip": "frontend\\src\\pages\\Profile.jsx",
-              "ViewState": "AQIAABEAAAAAAAAAAAAQwC4AAAACAAAA",
+              "ViewState": "AQIAADsAAAAAAAAAAAAwwDkAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-14T13:51:34.984Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "AccountDashboard.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
-              "ViewState": "AQIAABgAAAAAAAAAAAAAADAAAAAoAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-12T10:12:03.078Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "FollowList.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-14T09:08:09.189Z"
+              "WhenOpened": "2025-01-14T13:51:34.984Z"
             },
             {
               "$type": "Document",
@@ -259,91 +266,55 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "ChangePassword.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\ChangePassword.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-12T10:38:57.317Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 11,
               "Title": "Profile.jsx",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\Profile.jsx",
               "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\Profile.jsx",
               "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\Profile.jsx",
               "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\Profile.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAC8BAAAAAAAA",
+              "ViewState": "AQIAAIIAAAAAAAAAAAAAAAABAAAWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
               "WhenOpened": "2025-01-13T04:03:53.568Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Redemptions.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Redemptions.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\Redemptions.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Redemptions.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\Redemptions.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-15T03:11:52.165Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Navigation.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Navigation.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\components\\Navigation.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Navigation.jsx",
+              "RelativeToolTip": "frontend\\src\\components\\Navigation.jsx",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAACQAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-14T17:21:48.584Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 14,
-              "Title": "api.js",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\api.js",
-              "RelativeDocumentMoniker": "frontend\\src\\api.js",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\api.js",
-              "RelativeToolTip": "frontend\\src\\api.js",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAGAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-01-08T11:04:38.997Z"
+              "Title": "Footer.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Footer.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\components\\Footer.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Footer.jsx",
+              "RelativeToolTip": "frontend\\src\\components\\Footer.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-15T02:32:30.874Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 15,
-              "Title": "DeleteAccount.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\DeleteAccount.jsx",
-              "ViewState": "AQIAAD8AAAAAAAAAAAAAAGIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-12T13:20:54.723Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "SuccessfullySentVerificationEmail.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAMAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-08T15:47:34.776Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "SuccessfullySentPasswordResetEmail.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAACMAAABCAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-10T06:32:34.302Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "SuccessfullyVerifiedAccount.jsx",
-              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
-              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
-              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
-              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADkAAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
-              "WhenOpened": "2025-01-10T05:50:40.226Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
               "Title": "EmailContext.js",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\context\\EmailContext.js",
               "RelativeDocumentMoniker": "frontend\\src\\context\\EmailContext.js",
@@ -355,7 +326,115 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Home..jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Home..jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\Home..jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\Home..jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\Home..jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-14T17:21:23.316Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Message.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Message.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\components\\Message.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\components\\Message.jsx",
+              "RelativeToolTip": "frontend\\src\\components\\Message.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-14T15:25:09.53Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "SendPasswordResetEmail.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SendPasswordResetEmail.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADYAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-10T06:20:09.127Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "SuccecssfullyResetPassword.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccecssfullyResetPassword.jsx",
+              "ViewState": "AQIAAAkAAAAAAAAAAAAAADwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-10T08:56:33.414Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 20,
+              "Title": "AccountDashboard.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountDashboard.jsx",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAADAAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-12T10:12:03.078Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "FollowList.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\FollowList.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-14T09:08:09.189Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "SuccessfullySentVerificationEmail.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentVerificationEmail.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABYAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-08T15:47:34.776Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "SuccessfullySentPasswordResetEmail.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccessfullySentPasswordResetEmail.jsx",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAACMAAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-10T06:32:34.302Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "SuccessfullyVerifiedAccount.jsx",
+              "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
+              "RelativeDocumentMoniker": "frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
+              "ToolTip": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
+              "RelativeToolTip": "frontend\\src\\pages\\AuthFlow\\SuccessfullyVerifiedAccount.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADkAAAACAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2025-01-10T05:50:40.226Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
               "Title": ".gitignore",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\.gitignore",
               "RelativeDocumentMoniker": ".gitignore",
@@ -367,7 +446,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 26,
               "Title": "package.json",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\package.json",
               "RelativeDocumentMoniker": "frontend\\package.json",
@@ -379,7 +458,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 27,
               "Title": "index.js",
               "DocumentMoniker": "C:\\Users\\Joe\\source\\repos\\ColdStorageGO-Frontend\\frontend\\src\\index.js",
               "RelativeDocumentMoniker": "frontend\\src\\index.js",

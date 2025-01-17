@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { FiLock, FiEye, FiEyeOff, FiTrash2 } from 'react-icons/fi';
 import api from '../../../api';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const DeleteAccount = () => {
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         setPassword(e.target.value);
@@ -23,19 +27,25 @@ const DeleteAccount = () => {
 
         try {
             const response = await api.delete(
-                '/api/Account/delete-account', // Replace with your actual API endpoint
-                { password },
+                '/api/Account/delete-account',
+                { data: { password } }, // Ensure password is passed in the correct format
                 { withCredentials: true }
             );
 
             if (response.status === 200) {
                 setSuccessMessage('Your account has been deleted successfully.');
                 setPassword('');
+                setTimeout(() => {
+                    navigate('/account-dashboard');
+                }, 2000);
             }
         } catch (error) {
-            setErrorMessage(error.response?.data || 'An error occurred while deleting the account.');
+            // Ensure error message is a string
+            const errorMsg = error.response?.data?.message || error.message || 'An error occurred while deleting the account.';
+            setErrorMessage(errorMsg); // Set the error message properly
         }
     };
+
 
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">

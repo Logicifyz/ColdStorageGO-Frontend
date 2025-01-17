@@ -17,35 +17,45 @@ const ResetPassword = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Check if both password fields are filled
         if (!password || !confirmPassword) {
             setError('Please fill out both password fields.');
             return;
         }
 
+        // Check if the passwords match
         if (password !== confirmPassword) {
-            setError('Passwords do not match');
+            setError('Passwords do not match.');
             return;
         }
 
-        setError('');
+        // Check if password is at least 8 characters long
+        if (password.length < 8) {
+            setError('Password must be at least 8 characters long.');
+            return;
+        }
+
+        setError(''); // Clear previous error messages
 
         try {
             const response = await api.post('/api/Auth/reset-password', {
                 token,
-                NewPassword: password, // Add NewPassword here
+                NewPassword: password, // Send the new password in the request
             });
+
             if (response.data.success) {
                 setSuccessMessage('Password reset successful!');
                 setPassword('');
                 setConfirmPassword('');
-                setTimeout(() => navigate('/successfullyresetpassword')); // Redirect to login page after 2 seconds
+                setTimeout(() => navigate('/successfullyresetpassword')); // Redirect to success page
             } else {
-                setError(error.response?.data?.message || 'There was an error with the password reset');
+                setError(response.data.message || 'There was an error with the password reset.');
             }
         } catch (error) {
-            setError(error.response?.data?.message || 'There was an error with the password reset');
+            setError(error.response?.data?.message || 'There was an error with the password reset.');
         }
     };
+
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-[#383838]">

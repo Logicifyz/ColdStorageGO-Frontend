@@ -41,27 +41,30 @@ const Profile = () => {
                     setFormData(userData);
                     setOriginalData(userData);
                     setIsVerified(response.data.verified);  // Set verification status from response
+
+                    // Fetch followers and following data using the username from the response
+                    fetchFollowersFollowing(response.data.username);
                 }
             } catch (error) {
                 setErrorMessage('Failed to fetch profile information.');
             }
         };
 
-        const fetchFollowersFollowing = async () => {
+        const fetchFollowersFollowing = async (username) => {
             try {
-                const followersResponse = await api.get('/api/Account/followers', { withCredentials: true });
+                const followersResponse = await api.get(`/api/Account/followers/${username}`, { withCredentials: true });
                 setFollowers(followersResponse.data || []); // Set empty array if no followers
 
-                const followingResponse = await api.get('/api/Account/following', { withCredentials: true });
+                const followingResponse = await api.get(`/api/Account/following/${username}`, { withCredentials: true });
                 setFollowing(followingResponse.data || []); // Set empty array if no following
             } catch (error) {
                 console.error('Failed to fetch followers/following:', error);
             }
         };
 
-        fetchProfile();
-        fetchFollowersFollowing();
+        fetchProfile(); // Initial profile fetch
     }, []);
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
