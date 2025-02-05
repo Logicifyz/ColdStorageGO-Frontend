@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaArrowUp, FaArrowDown, FaCommentAlt, FaBookmark } from "react-icons/fa";
 
 const Forum = () => {
     const [recipes, setRecipes] = useState([]);
     const [discussions, setDiscussions] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const navigate = useNavigate(); // For navigation
 
     // Fetch recipes and discussions
     useEffect(() => {
@@ -26,6 +28,24 @@ const Forum = () => {
         fetchData();
     }, []);
 
+    const filterResults = (items) =>
+        items.filter(
+            (item) =>
+                item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.content?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+    const getMediaUrl = (url) => {
+        const baseUrl = "http://localhost:5135/";
+        if (url && url.startsWith("MediaFiles/")) {
+            return `${baseUrl}${url.replace(/\\/g, "/")}`; // Ensure proper URL formatting
+        }
+        return url || "/placeholder-image.png";
+    };
+
+
     return (
         <div className="p-6 bg-[#383838] text-white min-h-screen">
             <h1 className="text-3xl font-bold text-center mb-8">Forum</h1>
@@ -40,37 +60,21 @@ const Forum = () => {
                 />
             </div>
 
-            <div className="flex">
-                <div className="w-1/4 pr-4">
-                    <h3 className="text-lg font-bold mb-4">Saved Recipes</h3>
-                    <ul className="mb-8">
-                        {recipes.slice(0, 5).map((recipe) => (
-                            <li key={recipe.recipeId} className="mb-2">
-                                {recipe.name}
-                            </li>
-                        ))}
-                    </ul>
-                    <h3 className="text-lg font-bold mb-4">Top Discussions</h3>
-                    <ul>
-                        {discussions.slice(0, 5).map((discussion) => (
-                            <li key={discussion.discussionId} className="mb-2">
-                                {discussion.title}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                <div className="w-3/4">
-                    <h3 className="text-lg font-bold mb-4">Recent Posts</h3>
+            <h3 className="text-lg font-bold mb-4">Recently Added</h3>
+            <div className="space-y-8">
+                {/* Recipes Section */}
+                <div>
+                    <h4 className="text-md font-bold mb-4">Recipes</h4>
                     <div className="grid grid-cols-1 gap-4">
-                        {recipes.map((recipe) => (
+                        {filterResults(recipes).map((recipe) => (
                             <div
                                 key={recipe.recipeId}
-                                className="bg-[#2f2f2f] p-4 rounded shadow-lg flex items-start space-x-4 border border-gray-700"
+                                className="bg-[#2f2f2f] p-4 rounded shadow-lg flex items-start space-x-4 border border-gray-700 cursor-pointer"
+                                onClick={() => navigate(`/forum/recipe/${recipe.recipeId}`)} // Navigate to recipe page
                             >
                                 <img
-                                    src={recipe.mediaUrls?.[0] || "/placeholder-image.png"}
-                                    alt={recipe.name}
+                                    src={getMediaUrl(recipe.mediaUrls?.[0])}
+                                    alt={recipe.name || "Recipe Image"}
                                     className="w-24 h-24 rounded-md object-cover"
                                 />
                                 <div className="flex-1">
@@ -89,6 +93,46 @@ const Forum = () => {
                                         <button className="flex items-center space-x-1 hover:text-white">
                                             <FaArrowDown />
                                             <span>{recipe.downvotes || 0}</span>
+                                        </button>
+                                        <button className="hover:text-white">
+                                            <FaCommentAlt />
+                                        </button>
+                                        <button className="hover:text-white">
+                                            <FaBookmark />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Discussions Section */}
+                <div>
+                    <h4 className="text-md font-bold mb-4">Discussions</h4>
+                    <div className="grid grid-cols-1 gap-4">
+                        {filterResults(discussions).map((discussion) => (
+                            <div
+                                key={discussion.discussionId}
+                                className="bg-[#2f2f2f] p-4 rounded shadow-lg flex items-start space-x-4 border border-gray-700 cursor-pointer"
+                                onClick={() => navigate(`/forum/discussion/${discussion.discussionId}`)} // Navigate to discussion page
+                            >
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-white font-bold">{discussion.title}</p>
+                                        <p className="text-gray-400 text-sm">
+                                            {new Date(discussion.date || Date.now()).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <p className="text-gray-300 text-sm mb-2">{discussion.content}</p>
+                                    <div className="flex items-center space-x-4 text-gray-400">
+                                        <button className="flex items-center space-x-1 hover:text-white">
+                                            <FaArrowUp />
+                                            <span>{discussion.upvotes || 0}</span>
+                                        </button>
+                                        <button className="flex items-center space-x-1 hover:text-white">
+                                            <FaArrowDown />
+                                            <span>{discussion.downvotes || 0}</span>
                                         </button>
                                         <button className="hover:text-white">
                                             <FaCommentAlt />

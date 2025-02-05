@@ -9,9 +9,8 @@ const CreateRecipe = () => {
         description: "",
         timeTaken: "",
         ingredients: [{ quantity: "", unit: "", name: "" }],
-        instructions: [{ step: "", mediaFile: null }],
+        instructions: [{ stepNumber: 1, step: "", mediaUrl: "" }],
         tags: "",
-        mediaFiles: [],
         visibility: "public",
     });
 
@@ -20,14 +19,17 @@ const CreateRecipe = () => {
 
     const handleSaveImages = (images) => {
         setUploadedImages(images);
-        setRecipeForm({ ...recipeForm, mediaFiles: images });
+        setRecipeForm({ ...recipeForm, mediaUrls: images.map((img) => URL.createObjectURL(img)) });
         setShowImageUploader(false);
     };
 
     const handleRemoveImage = (index) => {
         const updatedImages = uploadedImages.filter((_, i) => i !== index);
         setUploadedImages(updatedImages);
-        setRecipeForm({ ...recipeForm, mediaFiles: updatedImages });
+        setRecipeForm({
+            ...recipeForm,
+            mediaUrls: updatedImages.map((img) => URL.createObjectURL(img)),
+        });
     };
 
     const handleAddIngredient = () => {
@@ -52,13 +54,22 @@ const CreateRecipe = () => {
     const handleAddInstruction = () => {
         setRecipeForm({
             ...recipeForm,
-            instructions: [...recipeForm.instructions, { step: "", mediaFile: null }],
+            instructions: [
+                ...recipeForm.instructions,
+                { stepNumber: recipeForm.instructions.length + 1, step: "", mediaUrl: "" },
+            ],
         });
     };
 
     const handleRemoveInstruction = (index) => {
         const updatedInstructions = recipeForm.instructions.filter((_, i) => i !== index);
-        setRecipeForm({ ...recipeForm, instructions: updatedInstructions });
+        setRecipeForm({
+            ...recipeForm,
+            instructions: updatedInstructions.map((instr, i) => ({
+                ...instr,
+                stepNumber: i + 1,
+            })),
+        });
     };
 
     const handleInstructionChange = (index, field, value) => {
@@ -77,20 +88,23 @@ const CreateRecipe = () => {
                 return;
             }
 
-            const formData = new FormData();
-            for (const key in recipeForm) {
-                if (key === "mediaFiles" && recipeForm.mediaFiles.length > 0) {
-                    recipeForm.mediaFiles.forEach((file) => formData.append("mediaFiles", file));
-                } else if (key === "ingredients" || key === "instructions") {
-                    formData.append(key, JSON.stringify(recipeForm[key]));
-                } else {
-                    formData.append(key, recipeForm[key]);
-                }
-            }
+            // Ensure all instructions have a step
+            const sanitizedInstructions = recipeForm.instructions.map((instruction) => ({
+                ...instruction,
+                step: instruction.step || "No step description provided",
+                mediaUrl: instruction.mediaUrl || "",
+            }));
 
             const response = await fetch("http://localhost:5135/api/Recipes", {
                 method: "POST",
-                body: formData,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ...recipeForm,
+                    instructions: sanitizedInstructions,
+                    mediaUrls: recipeForm.mediaUrls || [],
+                }),
             });
 
             if (response.ok) {
@@ -102,9 +116,8 @@ const CreateRecipe = () => {
                     description: "",
                     timeTaken: "",
                     ingredients: [{ quantity: "", unit: "", name: "" }],
-                    instructions: [{ step: "", mediaFile: null }],
+                    instructions: [{ stepNumber: 1, step: "", mediaUrl: "" }],
                     tags: "",
-                    mediaFiles: [],
                     visibility: "public",
                 });
                 setUploadedImages([]);
@@ -248,10 +261,10 @@ const CreateRecipe = () => {
                             rows="2"
                         ></textarea>
                         <input
-                            type="file"
-                            onChange={(e) =>
-                                handleInstructionChange(index, "mediaFile", e.target.files[0])
-                            }
+                            type="text"
+                            placeholder="Media URL"
+                            value={instruction.mediaUrl}
+                            onChange={(e) => handleInstructionChange(index, "mediaUrl", e.target.value)}
                             className="p-3 border border-gray-500 rounded bg-[#444] text-white"
                         />
                         <button

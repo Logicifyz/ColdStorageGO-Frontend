@@ -5,7 +5,8 @@ import GalleryManagement from "./pages/staff/GalleryManagement";
 import Navbar from "./components/Navigation";
 import Footer from "./components/Footer";
 import Forum from "./pages/Forum";
-import CreateRecipe from "./pages/CreateRecipe"; 
+import CreateRecipe from "./pages/CreateRecipe";
+import DisplayForumRecipe from "./pages/DisplayForumRecipe";
 import CreateDiscussion from "./pages/CreateDiscussion";
 import CheffieAI from "./pages/CheffieAI";
 import './App.css';
@@ -67,6 +68,7 @@ const App = () => {
                     }
                 />
                 <Route path="/forum" element={<Forum />} />
+                <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
                 <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
                 <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
                 <Route path="/cheffie-ai" element={<CheffieAI />} />
