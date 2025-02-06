@@ -3,6 +3,7 @@ import api from '../../api';
 import ChangePassword from './AccountFlowComponents/ChangePassword'; // Adjust the path as necessary
 import DeleteAccount from './AccountFlowComponents/DeleteAccount'; // Import the DeleteAccount component
 import Profile from './AccountFlowComponents/Profile'; // Import the Profile component
+import MyTickets from './AccountFlowComponents/MyTickets';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting
 
 const AccountDashboard = () => {
@@ -148,6 +149,8 @@ const AccountDashboard = () => {
                         <ChangePassword />
                     ) : activeTab === 'Delete Account' ? (
                         <DeleteAccount />
+                    ) : activeTab === 'My Tickets' ? (
+                        <MyTickets /> // Render MyTickets component for the "My Tickets" tab
                     ) : (
                         <p>Currently viewing the {activeTab} section.</p>
                     )}

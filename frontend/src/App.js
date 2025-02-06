@@ -18,6 +18,8 @@ import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 import Profile from "./pages/Profile";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import SetPassword from "./pages/AuthFlow/SetPassword";
+import HelpCentre from "./pages/HelpCentreFlow/HelpCentre";
+import ContactUs from "./pages/HelpCentreFlow/ContactUs";
 
 const App = () => {
     return (
@@ -28,6 +30,9 @@ const App = () => {
             <Router>
                 <Navbar />
                 <Routes>
+                    <Route path="/help-centre" element={<HelpCentre />} />
+                    <Route path="/contact-us" element={<ContactUs />} />
+
                     <Route path="/account-dashboard" element={<AccountDashboard />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route
