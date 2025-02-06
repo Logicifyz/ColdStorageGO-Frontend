@@ -2,14 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\frontend",
+    "\\frontend\\public",
     "\\frontend\\src",
     "\\frontend\\src\\components",
     "\\frontend\\src\\context",
     "\\frontend\\src\\pages",
     "\\frontend\\src\\pages\\AccountFlow",
     "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
-    "\\frontend\\src\\pages\\AuthFlow"
+    "\\frontend\\src\\pages\\HelpCentreFlow"
   ],
-  "SelectedNode": "\\frontend\\src\\pages\\AuthFlow\\VerifyAccount.jsx",
+  "SelectedNode": "\\frontend\\src\\pages\\HelpCentreFlow\\ContactUs.jsx",
   "PreviewInSolutionExplorer": false
 }
