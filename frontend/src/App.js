@@ -20,7 +20,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import SetPassword from "./pages/AuthFlow/SetPassword";
 import HelpCentre from "./pages/HelpCentreFlow/HelpCentre";
 import ContactUs from "./pages/HelpCentreFlow/ContactUs";
-
+import StaffLogin from "./pages/StaffFlow/StaffLogin";
 const App = () => {
     return (
         <GoogleOAuthProvider
@@ -75,6 +75,8 @@ const App = () => {
                             </EmailProvider>
                         }
                     />
+                    <Route path="/stafflogin" element={<StaffLogin />} />
+
                 </Routes>
                 <Footer />
             </Router>
