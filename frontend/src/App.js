@@ -1,85 +1,71 @@
+// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PublicLayout from "./components/PublicLayout";
+import StaffLayout from "./components/StaffLayout";
+import { EmailProvider } from "./context/EmailContext";
+import "./App.css";
+
+// Public Pages
 import Gallery from "./pages/Gallery";
-import GalleryManagement from "./pages/staff/GalleryManagement";
 import SubscriptionForm from "./pages/Subscriptions";
 import SubscriptionChoicePage from "./pages/SubscriptionChoicePage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
-import SubscriptionManagement from "./pages/SubscriptionManagement"
-import Navbar from "./components/Navigation"
-import Footer from "./components/Footer"
-import './App.css';
-import Register from './pages/AuthFlow/Register'; // Assuming the path to Register component
-import Login from './pages/AuthFlow/Login'; // Assuming a Login component
-import SendPasswordResetEmail from './pages/AuthFlow/SendPasswordResetEmail';
-import ResetPassword from './pages/AuthFlow/ResetPassword'; // Assuming a Login component
-import SuccessfullySentVerificationEmail from './pages/AuthFlow/SuccessfullySentVerificationEmail';
-import VerifyAccount from './pages/AuthFlow/VerifyAccount';
-import { EmailProvider } from './context/EmailContext';
-import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAccount";
-import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
-import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
+import SubscriptionManagement from "./pages/SubscriptionManagement";
 import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 import Listing from "./pages/Listing";
-//import CartPage from "./pages/CartPage";
 import Cart from "./pages/Cart";
-import RewardManagement from "./pages/staff/RewardManagement";
 import Rewards from "./pages/Reward";
+import Redemption from "./pages/Redemptions";
 
+// Authentication Pages
+import Register from "./pages/AuthFlow/Register";
+import Login from "./pages/AuthFlow/Login";
+import SendPasswordResetEmail from "./pages/AuthFlow/SendPasswordResetEmail";
+import ResetPassword from "./pages/AuthFlow/ResetPassword";
+import SuccessfullySentVerificationEmail from "./pages/AuthFlow/SuccessfullySentVerificationEmail";
+import VerifyAccount from "./pages/AuthFlow/VerifyAccount";
+import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAccount";
+import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
+
+// Staff Pages
+import RewardManagementStaff from "./pages/staff/RewardManagement";
+import GalleryManagement from "./pages/staff/GalleryManagement";
 
 const App = () => {
     return (
         <Router>
-            <Navbar />
             <Routes>
-                <Route path="/account-dashboard" element={<AccountDashboard/> }/>
-                <Route path="/gallery" element={<Gallery />} />
-                <Route path="/rewards" element={<Rewards/> }/>
-                <Route path="/cart" element={<Cart />}/>
-                <Route path="/listing/:id" element={<Listing />} />
-                <Route
-                    path="/register"
-                    element={
-                         <EmailProvider>
-                             <Register />
-                        </EmailProvider>} />
-                <Route path="/login" element={<Login />} />
-                <Route
-                    path="/sendpasswordresetemail"
-                    element={
-                        <EmailProvider>
-                        <SendPasswordResetEmail />
-                        </EmailProvider>
-} />
-                <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                <Route
-                    path="/sentverificationemailsuccess"
-                    element={
-                        <EmailProvider>
-                            <SuccessfullySentVerificationEmail />
-                        </EmailProvider>
-                    }
-                />
-                <Route path="/verify-account/:token" element={<VerifyAccount />} />
-                <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
-                <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
-                <Route
-                    path="/sentpasswordresetemailsuccess"
-                    element={
-                        <EmailProvider>
-                            <SuccessfullySentPasswordResetEmail/>
-                        </EmailProvider>
-                    }
-                    />
-                <Route path="/gallerymanagement" element={<GalleryManagement />} />
-                <Route path="/" element={<RewardManagement/> } />
+                {/* Public Routes using PublicLayout */}
+                <Route element={<PublicLayout />}>
+                    <Route path="/account-dashboard" element={<AccountDashboard />} />
+                    <Route path="/gallery" element={<Gallery />} />
+                    <Route path="/rewards" element={<Rewards />} />
+                    <Route path="/redemptions" element={<Redemption />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/listing/:id" element={<Listing />} />
+                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
+                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
+                    <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
+                    <Route path="/verify-account/:token" element={<VerifyAccount />} />
+                    <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
+                    <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
+                    <Route path="/subscriptions" element={<SubscriptionForm />} />
+                    <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
+                    <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
+                    <Route path="/subscription-management" element={<SubscriptionManagement />} />
+                </Route>
 
-                <Route path="/subscriptions" element={<SubscriptionForm />} />
-                <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
-                <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
-                <Route path="/subscription-management" element={<SubscriptionManagement />} />
+                {/* Staff Routes using StaffLayout */}
+                <Route path="/staff" element={<StaffLayout />}>
+                    <Route index element={<RewardManagementStaff />} />
+                    <Route path="rewards" element={<RewardManagementStaff />} />
+                    <Route path="gallery" element={<GalleryManagement />} />
+                    {/* Add additional staff routes as needed */}
+                </Route>
             </Routes>
-            <Footer />
         </Router>
     );
 };
