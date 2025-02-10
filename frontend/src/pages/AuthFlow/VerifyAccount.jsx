@@ -1,32 +1,44 @@
 import React, { useState } from 'react';
 import { FiUser } from 'react-icons/fi'; // Person icon from react-icons
 import { useNavigate, useParams } from 'react-router-dom'; // For navigation and URL params
-import api from '../../api'
+import api from '../../api';
+import Message from '../../components/Message';
 
 const VerifyAccount = () => {
     const navigate = useNavigate();
     const { token } = useParams(); // Get the token from the URL parameters
-    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     // Handle the verification button click
     const handleVerifyClick = async () => {
-        try {
-            // Send a request to the backend to verify the account
-            const response = await api.post(
-                `/api/Auth/verify-email/${token}`,
-                {},
-                { withCredentials: true }
-            );
+    try {
+        // Send a request to the backend to verify the account
+        const response = await api.post(
+            `/api/Auth/verify-email/${token}`,
+            {},
+            { withCredentials: true }
+        );
 
-            // Handle success
-            setMessage(response.data.message);
-            navigate("/successfullyverifiedaccount")
-        } catch (error) {
-            // Handle error
-            console.error('Verification failed:', error);
-            setMessage('Verification failed. Please try again.');
+        // Handle success
+        setSuccessMessage(response.data.message); // Set success message
+        setError(''); // Clear any error message
+        navigate("/successfullyverifiedaccount");
+    } catch (error) {
+        // Handle error
+        console.error('Verification failed:', error);
+
+        // Check if error has a response and use the error message from the response
+        if (error.response && error.response.data && error.response.data.message) {
+            setError(error.response.data.message); // Set the error message from the response
+        } else {
+            setError('Verification failed. Please try again.'); // Fallback error message
         }
-    };
+
+        setSuccessMessage(''); // Clear any success message
+    }
+};
+
 
     return (
         <div className="flex justify-center items-center h-screen bg-[#383838]">
@@ -50,11 +62,8 @@ const VerifyAccount = () => {
                     </div>
 
                     {/* Verification Message */}
-                    {message && (
-                        <div className="text-center mb-6">
-                            <p className="text-white text-lg">{message}</p>
-                        </div>
-                    )}
+                    {error && <Message text={error} type="error" />}
+                    {successMessage && <Message text={successMessage} type="success" />}
 
                     {/* Verify Button */}
                     <div className="text-center mb-6">

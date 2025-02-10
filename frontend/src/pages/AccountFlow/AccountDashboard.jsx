@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import api from '../../api';
 import ChangePassword from './AccountFlowComponents/ChangePassword'; // Adjust the path as necessary
 import DeleteAccount from './AccountFlowComponents/DeleteAccount'; // Import the DeleteAccount component
 import Profile from './AccountFlowComponents/Profile'; // Import the Profile component
+import MyTickets from './AccountFlowComponents/MyTickets';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting
 
 const AccountDashboard = () => {
     const [activeTab, setActiveTab] = useState('Profile');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false); // Track if settings dropdown is open
     const [hovered, setHovered] = useState(false); // Track if settings tab is hovered
+    const navigate = useNavigate(); // Hook to navigate after logout
 
     const tabs = [
         { name: 'Profile' },
@@ -41,6 +45,18 @@ const AccountDashboard = () => {
             setActiveTab('Change Password');
         } else if (tabName === 'Delete Account') {
             setActiveTab('Delete Account'); // Set active tab to Delete Account when clicked
+        } else if (tabName === 'Logout') {
+            // Call the logout endpoint
+            api.post('/api/Auth/logout')
+                .then(() => {
+                    // Redirect to login page after successful logout
+                    navigate('/login'); // Adjust the route as needed
+                    // Optionally, clear the user's session or token here
+                })
+                .catch((error) => {
+                    console.error('Logout failed:', error);
+                    // Handle error (show message to user, etc.)
+                });
         } else {
             setActiveTab(tabName); // Update active tab for other options
         }
@@ -85,6 +101,13 @@ const AccountDashboard = () => {
                                     >
                                         Delete Account
                                     </li>
+                                    {/* Added Logout button */}
+                                    <li
+                                        className={`p-3 cursor-pointer hover:bg-[#4D5C60]`}
+                                        onClick={() => handleTabClick('Logout')}
+                                    >
+                                        Logout
+                                    </li>
                                 </ul>
                             )}
 
@@ -103,6 +126,13 @@ const AccountDashboard = () => {
                                     >
                                         Delete Account
                                     </li>
+                                    {/* Added Logout button */}
+                                    <li
+                                        className={`p-3 cursor-pointer hover:bg-[#4D5C60]`}
+                                        onClick={() => handleTabClick('Logout')}
+                                    >
+                                        Logout
+                                    </li>
                                 </ul>
                             )}
                         </li>
@@ -112,7 +142,6 @@ const AccountDashboard = () => {
 
             {/* Main Content Area */}
             <div className="w-3/4 p-8">
-                <h2 className="text-white text-3xl font-bold mb-4">{activeTab}</h2>
                 <div className="text-white">
                     {activeTab === 'Profile' ? (
                         <Profile />
@@ -120,6 +149,8 @@ const AccountDashboard = () => {
                         <ChangePassword />
                     ) : activeTab === 'Delete Account' ? (
                         <DeleteAccount />
+                    ) : activeTab === 'My Tickets' ? (
+                        <MyTickets /> // Render MyTickets component for the "My Tickets" tab
                     ) : (
                         <p>Currently viewing the {activeTab} section.</p>
                     )}

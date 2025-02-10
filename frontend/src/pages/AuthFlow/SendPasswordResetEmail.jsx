@@ -1,9 +1,9 @@
 ﻿import React, { useState } from 'react';
-import api from '../../api'
+import api from '../../api';
 import { FiKey, FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import { useEmail } from '../../context/EmailContext';
-
+import Message from '../../components/Message'
 
 const SendPasswordResetEmail = () => {
     const navigate = useNavigate(); // For navigation
@@ -23,21 +23,34 @@ const SendPasswordResetEmail = () => {
             return;
         }
 
-        setError('');
+        // Basic email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(localEmail)) {
+            setError('Please enter a valid email address.');
+            return;
+        }
+
+        setError(''); // Reset error message
 
         try {
-            // Call API to send password reset email
             const response = await api.post('api/Auth/request-password-reset', { email: localEmail });
-            console.log(response);  // Add this to check the entire response object
+
+            // Check for success from backend response
             if (response.data.success) {
                 setSuccessMessage('Password reset email sent successfully!');
                 setEmail(localEmail);
-                navigate("/sentpasswordresetemailsuccess")
+                navigate("/sentpasswordresetemailsuccess");
             } else {
-                setError('Error sending password reset email.');
+                // If backend returns a specific error message
+                setError(response.data.message || 'Error sending password reset email.');
             }
         } catch (error) {
-            setError('There was an error with the request');
+            // Check if the error contains a response with message
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);  // Set backend error message
+            } else {
+                setError('There was an error with the request.');
+            }
         }
     };
 
@@ -50,7 +63,7 @@ const SendPasswordResetEmail = () => {
                     </div>
 
                     <div className="text-center mb-6">
-                        <h2 className="text-white text-4xl font-bold">Forgot Password?</h2> {/* Same size as register header */}
+                        <h2 className="text-white text-4xl font-bold">Forgot Password?</h2>
                     </div>
 
                     <div className="text-center mb-6">
@@ -59,8 +72,8 @@ const SendPasswordResetEmail = () => {
                         </p>
                     </div>
 
-                    {error && <div className="text-red-500 mb-4 text-center">{error}</div>}
-                    {successMessage && <div className="text-green-500 mb-4 text-center">{successMessage}</div>}
+                    <Message text={error} type="error" />
+                    <Message text={successMessage} type="success" />
 
                     <form onSubmit={handleSubmit} className="text-left">
                         <div className="mb-4">
@@ -76,7 +89,7 @@ const SendPasswordResetEmail = () => {
                                     className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
                                     placeholder="Enter your email"
                                     required
-                                    style={{ fontSize: '20px' }} // Placeholder text size 20px
+                                    style={{ fontSize: '20px' }}
                                 />
                             </div>
                         </div>
