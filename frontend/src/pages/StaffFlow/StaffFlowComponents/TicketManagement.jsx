@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../api';
 import { useParams, useNavigate } from 'react-router-dom';
+import Chat from '../../../components/Chat'; // Import the Chat component
 
 const TicketManagement = () => {
     const { ticketId } = useParams();  // Retrieve ticketId from route parameters
@@ -81,6 +82,7 @@ const TicketManagement = () => {
         <div className="p-5 bg-white text-gray-900">
             <h1 className="text-3xl font-bold mb-5">Ticket Management - Edit Ticket</h1>
             <form onSubmit={handleSubmit}>
+                {/* Ticket details fields */}
                 <div className="mb-4">
                     <label className="block mb-2">Ticket ID: {ticket.ticketId}</label>
                     <p>{ticket.ticketId}</p>
@@ -175,6 +177,12 @@ const TicketManagement = () => {
                     </button>
                 </div>
             </form>
+
+            {/* Chat Section */}
+            <div className="mt-8">
+                <h2 className="text-xl font-bold">Chat with the user</h2>
+                <Chat userId={ticket.userId} staffId={ticket.staffId} ticketId={ticketId} isStaff={true} />
+            </div>
         </div>
     );
 };
