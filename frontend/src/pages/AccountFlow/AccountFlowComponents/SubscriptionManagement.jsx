@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import api from '../../../api';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
+import SubscriptionRecommendation from './SubscriptionRecommendation'; // Import the component
 
 const formatDate = (dateString) => {
     if (!dateString) return "Date not available";
@@ -18,12 +19,14 @@ const SubscriptionManagement = () => {
     const [modal, setModal] = useState({ isOpen: false, action: null });
     const [freezeDates, setFreezeDates] = useState({ startDate: "", endDate: "" });
     const [scheduledFreezes, setScheduledFreezes] = useState([]);
+    const [userId, setUserId] = useState(null); // Add userId state
 
     useEffect(() => {
         const fetchSubscription = async () => {
             try {
                 const sessionResponse = await api.get('/api/account/profile', { withCredentials: true });
                 const userId = sessionResponse.data.userId;
+                setUserId(userId); // Set userId
                 const response = await api.get(`/api/subscriptions/user?userId=${userId}`);
                 if (!response.data || response.data.isCanceled) {
                     setSubscription(null);
@@ -247,6 +250,9 @@ const SubscriptionManagement = () => {
                                 Cancel Subscription
                             </button>
                         </div>
+
+                        {/* Subscription Recommendation */}
+                        {userId && <SubscriptionRecommendation userId={userId} />}
                     </div>
                 ) : (
                     <p className="text-lg text-gray-400">You do not have an active subscription.</p>
