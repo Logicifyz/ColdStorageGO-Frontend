@@ -12,7 +12,7 @@ import Gallery from "./pages/Gallery";
 import SubscriptionForm from "./pages/Subscriptions";
 import SubscriptionChoicePage from "./pages/SubscriptionChoicePage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
-import SubscriptionManagement from "./pages/SubscriptionManagement";
+import SubscriptionManagement from "./pages/AccountFlow/AccountFlowComponents/SubscriptionManagement";
 import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 import Listing from "./pages/Listing";
 import Cart from "./pages/Cart";
