@@ -1,256 +1,162 @@
-﻿import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+﻿// Reward.js
+import React, { useState, useEffect } from "react";
 import api from "../api";
 
-const Rewards = () => {
-    const [wallet, setWallet] = useState(null);
-    const [rewards, setRewards] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [redemptions, setRedemptions] = useState([]);
-    const navigate = useNavigate();
+const Reward = () => {
+  const [wallet, setWallet] = useState(null);
+  const [rewards, setRewards] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedReward, setSelectedReward] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-    useEffect(() => {
-        const fetchWallet = async () => {
-            try {
-                const response = await api.get("/api/Wallet");
-                setWallet(response.data);
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    navigate("/login");
-                } else {
-                    setErrorMessage("Failed to load wallet. Please try again later.");
-                }
-            }
-        };
-
-        const fetchRewards = async () => {
-            try {
-                const response = await api.get("/api/Rewards");
-                setRewards(response.data);
-            } catch (error) {
-                setErrorMessage("Failed to load rewards. Please try again later.");
-            }
-        };
-
-        const fetchRedemptions = async () => {
-            try {
-                const response = await api.get("/api/Wallet/redemptions");
-                setRedemptions(response.data);
-                console.log(response.data)
-            } catch (error) {
-                setErrorMessage("Failed to load redemptions. Please try again later.");
-            }
-        };
-
-        fetchRedemptions();
-        fetchWallet();
-        fetchRewards();
-
-    }, [navigate]);
-
-    const handleRedeem = async (rewardId) => {
-        try {
-            // Pass rewardId as a query parameter in the POST request
-            const response = await api.post(`/api/Wallet/redeem?rewardId=${rewardId}`);
-
-            setErrorMessage(""); // Clear any previous error messages
-            alert("Reward redeemed successfully!");
-      
-            // Optionally refresh wallet data or rewards
-            // fetchWallet(); 
-            // fetchRewards();
-        } catch (error) {
-            console.error("Redeem error:", error);
-
-            // Set appropriate error message based on server response
-            setErrorMessage(
-                error.response?.data || "Failed to redeem reward. Please try again later."
-            );
-        }
+  useEffect(() => {
+    const fetchWallet = async () => {
+      try {
+        const response = await api.get("/api/Wallet");
+        setWallet(response.data);
+      } catch (error) {
+        setErrorMessage("Failed to load wallet. Please try again later.");
+      }
     };
 
+    const fetchRewards = async () => {
+      try {
+        const response = await api.get("/api/Rewards");
+        setRewards(response.data);
+      } catch (error) {
+        setErrorMessage("Failed to load rewards. Please try again later.");
+      }
+    };
 
-    return (
-        <div className="rewards-page">
-            <div className="main-circle">
-                <h1 className="balance">{wallet ? `Balance: ${wallet.currentBalance} Coins` : "Loading wallet..."}</h1>
-            </div>
+    fetchWallet();
+    fetchRewards();
+  }, []);
 
-            {errorMessage && <div className="error-message">{errorMessage}</div>}
+  const handleRedeemClick = (reward) => {
+    setSelectedReward(reward);
+    setIsModalOpen(true);
+    setIsSuccess(false);
+  };
 
-            <div className="rewards-container">
-                {rewards.map((reward) => (
-                    <div key={reward.rewardId} className="reward-card">
-                        <div className="reward-header">
-                            <h2>{reward.name}</h2>
-                            <span className="reward-cost">{reward.coinsCost} <span className="coin-icon">⚪</span></span>
-                        </div>
-                        <p className="reward-description">{reward.description}</p>
-                        <p className="reward-expiry">Expires on: {new Date(reward.expiryDate).toLocaleDateString()}</p>
-                        <button className="redeem-button" onClick={() => handleRedeem(reward.rewardId)}>
-                            Redeem the reward
-                        </button>
-                    </div>
-                ))}
-            </div>
-            <div className="redemptions-section">
-                <h2>My Redemptions</h2>
-                <div className="redemptions-list">
-                    {redemptions.length > 0 ? (
-                        redemptions.map((redemption) => (
-                            <div key={redemption.redemptionId} className="redemption-record">
-                                <h3>Reward ID: {redemption.rewardId}</h3>
-                                <p>Redeemed At: {new Date(redemption.redeemedAt).toLocaleDateString()}</p>
-                                <p>Expiry Date: {new Date(redemption.expiryDate).toLocaleDateString()}</p>
-                                <p>Status: {redemption.rewardUsable ? "Usable" : "Expired"}</p>
-                            </div>
-                        ))
-                    ) : (
-                        <p>No redemptions found.</p>
-                    )}
-                </div>
-            </div>
+  const handleConfirmRedeem = async () => {
+    if (!selectedReward) return;
+    try {
+      await api.post(`/api/Wallet/redeem?rewardId=${selectedReward.rewardId}`);
+      setIsSuccess(true);
+      setWallet((prev) => ({ ...prev, currentBalance: prev.currentBalance - selectedReward.coinsCost }));
+    } catch (error) {
+      setErrorMessage("Failed to redeem reward. Please try again later.");
+    }
+  };
 
-            <style>{`
-                .rewards-page {
-                    background-color: #121212;
-                    color: #fff;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    padding: 2rem;
-                }
-
-                .main-circle {
-                    width: 25rem;
-                    height: 25rem;
-                    border-radius: 100%;
-                    background: linear-gradient(40deg, #FF0080, #FF8C00 70%);
-                    position: relative;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-bottom: 3rem;
-                }
-
-                .balance {
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                }
-
-                .error-message {
-                    color: red;
-                    margin-bottom: 1rem;
-                }
-
-                .rewards-container {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 2rem;
-                    justify-content: center;
-                }
-
-                .reward-card {
-                    background: radial-gradient(circle, #ff0080, #7a00cc);
-                    color: #fff;
-                    border-radius: 16px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                    width: 280px;
-                    padding: 1.5rem;
-                    text-align: center;
-                    transition: transform 0.3s, box-shadow 0.3s;
-                }
-
-                .reward-card:hover {
-                    transform: scale(1.05);
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-                }
-
-                .reward-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 1rem;
-                }
-
-                .reward-cost {
-                    background: #fff;
-                    color: #ff0080;
-                    padding: 0.3rem 0.8rem;
-                    border-radius: 20px;
-                    font-weight: bold;
-                    display: flex;
-                    align-items: center;
-                    gap: 0.3rem;
-                }
-
-                .coin-icon {
-                    font-size: 1.2rem;
-                }
-
-                .reward-description {
-                    margin: 0.5rem 0;
-                    font-size: 0.9rem;
-                    opacity: 0.8;
-                }
-
-                .reward-expiry {
-                    font-size: 0.8rem;
-                    margin-bottom: 1rem;
-                    opacity: 0.7;
-                }
-
-                .redeem-button {
-                    background: #ff5500;
-                    color: #fff;
-                    padding: 0.7rem 1.5rem;
-                    border: none;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: background 0.3s;
-                }
-
-                .redeem-button:hover {
-                    background: #ff2a00;
-                }
-
-                .redemptions-section {
-                    margin-top: 40px;
-                }
-
-                .redemptions-list {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 15px;
-                }
-
-                .redemption-record {
-                    border: 1px solid #ddd;
-                    padding: 15px;
-                    border-radius: 8px;
-                    background-color: #2c2c2c;
-                    color: #fff;
-                }
-
-                .redemption-record h3 {
-                    margin: 0;
-                    font-size: 18px;
-                    font-weight: bold;
-                }
-
-                .redemption-record p {
-                    margin: 5px 0;
-                }
-
-                .error-message {
-                    color: red;
-                    text-align: center;
-                    margin: 10px 0;
-                }
-            `}</style>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] p-8 relative overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-[#ff6b6b20] rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#ff8e5320] rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex justify-between items-center mb-12">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+            Rewards Hub
+          </h1>
+          <div className="flex items-center gap-4 bg-[#ffffff10] px-6 py-3 rounded-2xl backdrop-blur-sm border border-[#ffffff15]">
+            <span className="text-xl font-bold text-[#ff8e53]">🪙</span>
+            <span className="text-xl font-bold text-gray-200">
+              {wallet?.currentBalance || 0} CSGO Points
+            </span>
+          </div>
         </div>
-    );
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {rewards.map((reward) => (
+            <div key={reward.rewardId} className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#ff6b6b] to-[#ff8e53] rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity" />
+              <div className="h-full flex flex-col justify-between bg-[#ffffff05] backdrop-blur-sm rounded-3xl p-6 border border-[#ffffff10] hover:border-[#ffffff20] transition-all">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold text-gray-200">{reward.name}</h2>
+                    <span className="bg-[#ffffff15] px-4 py-1 rounded-full text-[#ff8e53] font-bold flex items-center gap-2">
+                      <span>{reward.coinsCost}</span>
+                      <span className="text-lg">🪙</span>
+                    </span>
+                  </div>
+                  <p className="text-gray-400 leading-relaxed">{reward.description}</p>
+                  <div className="text-sm text-gray-500">
+                    Expires: {new Date(reward.expiryDate).toLocaleDateString()}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleRedeemClick(reward)}
+                  className="mt-6 w-full py-3 bg-[#ffffff10] hover:bg-[#ffffff20] rounded-xl font-bold text-[#ff6b6b] transition-colors"
+                >
+                  Redeem Now →
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {errorMessage && (
+          <div className="mt-8 p-4 bg-red-900/20 text-red-400 rounded-xl border border-red-400/30">
+            {errorMessage}
+          </div>
+        )}
+
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-gradient-to-br from-[#1a1a1a] to-[#2d2d2d] rounded-3xl p-8 max-w-md w-full border border-[#ffffff15] relative">
+              {isSuccess ? (
+                <div className="text-center space-y-6">
+                  <div className="text-6xl">🎉</div>
+                  <h2 className="text-2xl font-bold text-green-400">Success!</h2>
+                  <p className="text-gray-300">
+                    You've redeemed {selectedReward?.name}. Enjoy your reward!
+                  </p>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="w-full py-3 bg-green-600/20 text-green-400 rounded-xl hover:bg-green-600/30 transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <h2 className="text-2xl font-bold text-center">Confirm Redemption</h2>
+                  <div className="bg-[#ffffff05] p-6 rounded-xl border border-[#ffffff10]">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-gray-300">{selectedReward?.name}</span>
+                      <span className="text-[#ff8e53] font-bold">
+                        {selectedReward?.coinsCost} 🪙
+                      </span>
+                    </div>
+                    <div className="text-sm text-gray-400">
+                      This action will deduct {selectedReward?.coinsCost} CSGO Points from your account
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={handleConfirmRedeem}
+                      className="flex-1 py-3 bg-green-600/20 text-green-400 rounded-xl hover:bg-green-600/30 transition-colors"
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      onClick={() => setIsModalOpen(false)}
+                      className="flex-1 py-3 bg-red-600/20 text-red-400 rounded-xl hover:bg-red-600/30 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
-export default Rewards;
+export default Reward;

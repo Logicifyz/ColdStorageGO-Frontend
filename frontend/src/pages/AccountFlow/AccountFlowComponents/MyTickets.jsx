@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../../api';
 
 const MyTickets = () => {
+    const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
     const [filteredTickets, setFilteredTickets] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -56,6 +58,12 @@ const MyTickets = () => {
         }
     };
 
+    // Handle ticket click to navigate to ticket details page
+    const handleTicketClick = (ticketId) => {
+        // Navigate to the ticket details page using the ticket ID
+        navigate(`/account-dashboard/${ticketId}`);
+    };
+
     return (
         <div className="container mx-auto p-6">
             <h2 className="text-2xl font-bold text-center">My Tickets</h2>
@@ -83,9 +91,11 @@ const MyTickets = () => {
             {filteredTickets.length > 0 && (
                 <div className="space-y-4 mt-4">
                     {filteredTickets.map((ticket) => (
-                        <div key={ticket.ticketId} className="bg-white p-4 rounded-lg shadow-md">
-
-
+                        <div
+                            key={ticket.ticketId}
+                            className="bg-white p-4 rounded-lg shadow-md cursor-pointer"
+                            onClick={() => handleTicketClick(ticket.ticketId)} // Add click handler here
+                        >
                             {/* Status Bar */}
                             <div className="mt-2">
                                 <span
