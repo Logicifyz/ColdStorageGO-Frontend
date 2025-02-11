@@ -6,8 +6,6 @@ import { EmailProvider } from "./context/EmailContext";
 // Layouts
 import PublicLayout from "./components/PublicLayout";
 import StaffLayout from "./components/StaffLayout";
-import Navbar from "./components/Navigation";
-import Footer from "./components/Footer";
 
 // Public Pages
 import Gallery from "./pages/Gallery";
@@ -38,55 +36,76 @@ import SetPassword from "./pages/AuthFlow/SetPassword";
 
 // Staff Pages
 import StaffLogin from "./pages/StaffFlow/StaffLogin";
-import RewardManagementStaff from "./pages/staff/RewardManagement";
-import GalleryManagement from "./pages/staff/GalleryManagement";
+import RewardManagement from "./pages/StaffFlow/StaffFlowComponents/RewardManagement";
+import GalleryManagement from "./pages/StaffFlow/StaffFlowComponents/GalleryManagement";
+import TicketManagement from "./pages/StaffFlow/StaffFlowComponents/TicketManagement";
+import SupportManagement from "./pages/StaffFlow/StaffFlowComponents/SupportManagement";
+import HelpCentreManagement from "./pages/StaffFlow/StaffFlowComponents/HelpCentreManagement";
+import AddArticle from "./pages/StaffFlow/StaffFlowComponents/AddArticle";
+import EditArticle from "./pages/StaffFlow/StaffFlowComponents/EditArticle";
+import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
 
 const App = () => {
     return (
-        <GoogleOAuthProvider clientId="869557804479-pv18rpo94fbpd6hatmns6m4nes5adih8.apps.googleusercontent.com" redirectUri="http://localhost:3000/login">
-            <Router>
-                <Navbar />
-                <Routes>
-                    {/* Public Routes using PublicLayout */}
-                    <Route element={<PublicLayout />}>
-                        <Route path="/account-dashboard" element={<AccountDashboard />} />
-                        <Route path="/gallery" element={<Gallery />} />
-                        <Route path="/rewards" element={<Rewards />} />
-                        <Route path="/redemptions" element={<Redemption />} />
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/listing/:id" element={<Listing />} />
-                        <Route path="/profile/:username" element={<Profile />} />
-                        <Route path="/subscriptions" element={<SubscriptionForm />} />
-                        <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
-                        <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
-                        <Route path="/subscription-management" element={<SubscriptionManagement />} />
-                        <Route path="/help-centre" element={<HelpCentre />} />
-                        <Route path="/contact-us" element={<ContactUs />} />
-                        <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
-                        <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                        <Route path="/setpassword/:token" element={<SetPassword />} />
-                        <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
-                        <Route path="/verify-account/:token" element={<VerifyAccount />} />
-                        <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
-                        <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
-                        <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
-                    </Route>
+        <Router>
+            <Routes>
+                {/* Public Routes using PublicLayout */}
+                <Route element={<PublicLayout />}>
+                    <Route path="/account-dashboard" element={<AccountDashboard />} />
+                    <Route path="/" element={<Gallery />} />
+                    <Route path="/rewards" element={<Rewards />} />
+                    <Route path="/redemptions" element={<Redemption />} />
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/listing/:id" element={<Listing />} />
+                    <Route path="/profile/:username" element={<Profile />} />
+                    <Route path="/subscriptions" element={<SubscriptionForm />} />
+                    <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
+                    <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
+                    <Route path="/subscription-management" element={<SubscriptionManagement />} />
+                    <Route path="/help-centre" element={<HelpCentre />} />
+                    <Route path="/Help-Centre/:category" element={<CategoryPage />} />
 
-                    {/* Staff Routes using StaffLayout */}
-                    <Route path="/staff" element={<StaffLayout />}>
-                        <Route index element={<RewardManagementStaff />} />
-                        <Route path="rewards" element={<RewardManagementStaff />} />
-                        <Route path="gallery" element={<GalleryManagement />} />
-                    </Route>
+                    <Route path="/contact-us" element={<ContactUs />} />
+                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
 
-                    {/* Standalone Staff Login */}
-                    <Route path="/stafflogin" element={<StaffLogin />} />
-                </Routes>
-                <Footer />
-            </Router>
-        </GoogleOAuthProvider>
+                    {/* Wrap only the Login page with GoogleOAuthProvider */}
+                    <Route
+                        path="/login"
+                        element={
+                            <GoogleOAuthProvider clientId="869557804479-pv18rpo94fbpd6hatmns6m4nes5adih8.apps.googleusercontent.com">
+                                <Login />
+                            </GoogleOAuthProvider>
+                        }
+                    />
+
+                    <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
+                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
+                    <Route path="/setpassword/:token" element={<SetPassword />} />
+                    <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
+                    <Route path="/verify-account/:token" element={<VerifyAccount />} />
+                    <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
+                    <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
+                    <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
+
+                </Route>
+
+                {/* Staff Routes using StaffLayout */}
+                <Route path="/staff" element={<StaffLayout />}>
+                    <Route index element={<RewardManagement />} />
+                    <Route path="rewards" element={<RewardManagement />} />
+                    <Route path="gallery" element={<GalleryManagement />} />
+                    <Route path="support" element={<SupportManagement />} />
+                    <Route path="support/:ticketId" element={<TicketManagement />} />
+                    <Route path="help-centre" element={<HelpCentreManagement />} />
+                    <Route path="help-centre/add-article" element={<AddArticle />} />
+                    <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
+
+                </Route>
+
+                {/* Standalone Staff Login */}
+                <Route path="/staff-login" element={<StaffLogin />} />
+            </Routes>
+        </Router>
     );
 };
 

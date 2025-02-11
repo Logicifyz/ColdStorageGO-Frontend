@@ -53,12 +53,6 @@ const Navigation = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-<<<<<<< HEAD
-                    <button className="border border-white px-4 py-2 rounded hover:bg-white hover:text-[#383838]"> <Link to="/login">Login</Link></button>
-                    
-                      
-                        <div className="relative">
-=======
                     {isLoggedIn ? (
                         <div className="cursor-pointer" onClick={handleProfileClick}>
                             {profilePic ? (
@@ -79,14 +73,11 @@ const Navigation = () => {
                             Login
                         </button>
                     )}
+
                     <div className="relative">
->>>>>>> Support
                         <AiOutlineShoppingCart className="w-6 h-6" />
                         <Link to="/cart" className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">!</Link>
-                           
-                        </div>
-                    
-                   
+                    </div>
                 </div>
             </div>
         </nav>

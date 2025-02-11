@@ -70,7 +70,7 @@ const Login = () => {
             // Send the Google ID token to your backend for authentication
             const googleResponse = await api.post('/api/Auth/google-login', {
                 IdToken: credential, // Send the IdToken as expected by the backend
-            });
+            }, { withCredentials: true });
 
             console.log(googleResponse.data);
 

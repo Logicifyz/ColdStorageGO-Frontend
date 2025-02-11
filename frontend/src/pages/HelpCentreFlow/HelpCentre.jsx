@@ -1,30 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'; // Import Link for navigation
+import api from '../../api';
+import { FaTruck, FaCreditCard, FaUndoAlt, FaUserCog, FaTools, FaComments, FaTrophy, FaUtensils } from 'react-icons/fa'; // Import icons
 
 const HelpCentre = () => {
-    const faqs = [
-        "How do I reset my password?",
-        "How can I contact support?",
-        "Where can I find my account settings?",
-        "How do I delete my account?",
-    ];
-
-    const resources = [
+    const [faqs, setFaqs] = useState([]);
+    const [resources] = useState([
         "User Guide",
         "Privacy Policy",
         "Terms of Service",
         "Refund Policy",
-    ];
+    ]);
 
     const categories = [
-        "Account",
-        "Billing",
-        "Technical Support",
-        "Orders & Refunds",
-        "Security",
-        "Privacy",
-        "General Inquiries",
-        "Other",
+        { name: "Order and Delivery", icon: <FaTruck /> },
+        { name: "Payments and Pricing", icon: <FaCreditCard /> },
+        { name: "Returns and Refunds", icon: <FaUndoAlt /> },
+        { name: "Account and Membership", icon: <FaUserCog /> },
+        { name: "Technical Support", icon: <FaTools /> },
+        { name: "Community and Forum", icon: <FaComments /> },
+        { name: "Rewards and Redemptions", icon: <FaTrophy /> },
+        { name: "Recipes and Cooking", icon: <FaUtensils /> },
     ];
+
+    useEffect(() => {
+        // Fetch top 5 FAQs by view count
+        const fetchFaqs = async () => {
+            try {
+                const response = await api.get('/api/HelpCentre', {
+                    params: { faq: true } // Fetch the top 5 most viewed FAQs
+                });
+                setFaqs(response.data);
+            } catch (error) {
+                console.error("Error fetching FAQs:", error);
+            }
+        };
+
+        fetchFaqs();
+    }, []);
 
     return (
         <div className="flex flex-col items-center bg-[#383838] min-h-screen p-8 text-white">
@@ -35,7 +48,7 @@ const HelpCentre = () => {
                     <h2 className="text-2xl font-bold mb-4">Top FAQs</h2>
                     <ul className="space-y-2">
                         {faqs.map((faq, index) => (
-                            <li key={index} className="text-lg">- {faq}</li>
+                            <li key={index} className="text-lg">- {faq.title}</li>
                         ))}
                     </ul>
                 </div>
@@ -55,9 +68,10 @@ const HelpCentre = () => {
             {/* Categories Section */}
             <div className="mt-8 grid grid-cols-4 gap-4 max-w-6xl">
                 {categories.map((category, index) => (
-                    <div key={index} className="bg-[#4D5C60] p-6 rounded-lg text-center font-bold">
-                        {category}
-                    </div>
+                    <Link key={index} to={`/Help-Centre/${category.name}`} className="bg-[#4D5C60] p-6 rounded-lg text-center font-bold aspect-square flex flex-col justify-center items-center">
+                        <div className="text-3xl mb-2">{category.icon}</div>
+                        <div>{category.name}</div>
+                    </Link>
                 ))}
             </div>
         </div>

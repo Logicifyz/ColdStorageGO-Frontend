@@ -31,10 +31,13 @@ const MyTickets = () => {
 
     // Function to categorize ticket status
     const getTicketStatus = (status) => {
-        if (status === 'Resolved') {
-            return 'Closed';
+        if (status === "Resolved") {
+            return "Resolved";
+        } else if (status === "In Progress") {
+            return "In Progress";
+        } else {
+            return "Open"; // Unassigned or any other status defaults to Open
         }
-        return status === 'Unassigned' || !status ? 'Active' : 'Awaiting Your Reply';
     };
 
     // Handle the status filter change
@@ -43,11 +46,11 @@ const MyTickets = () => {
         setSelectedStatus(status);
 
         // Filter tickets based on the selected status
-        if (status === 'All') {
+        if (status === "All") {
             setFilteredTickets(tickets); // Show all tickets
         } else {
             const filtered = tickets.filter(
-                (ticket) => getTicketStatus(ticket.Status) === status
+                (ticket) => getTicketStatus(ticket.status) === status
             );
             setFilteredTickets(filtered);
         }
@@ -67,9 +70,9 @@ const MyTickets = () => {
                     className="px-4 py-2 border rounded-md"
                 >
                     <option value="All">All</option>
-                    <option value="Active">Active</option>
-                    <option value="Awaiting Your Reply">Awaiting Your Reply</option>
-                    <option value="Closed">Closed</option>
+                    <option value="Open">Open</option> {/* Unassigned */}
+                    <option value="In Progress">In Progress</option> {/* In Progress */}
+                    <option value="Resolved">Resolved</option> {/* Resolved */}
                 </select>
             </div>
 
@@ -80,28 +83,33 @@ const MyTickets = () => {
             {filteredTickets.length > 0 && (
                 <div className="space-y-4 mt-4">
                     {filteredTickets.map((ticket) => (
-                        <div key={ticket.TicketId} className="bg-white p-4 rounded-lg shadow-md">
-                            <h3 className="text-xl font-semibold">{ticket.Subject}</h3>
-                            <p className="text-gray-600">{ticket.Details}</p>
+                        <div key={ticket.ticketId} className="bg-white p-4 rounded-lg shadow-md">
+
 
                             {/* Status Bar */}
                             <div className="mt-2">
                                 <span
-                                    className={`px-3 py-1 text-sm font-semibold rounded-lg ${getTicketStatus(ticket.Status) === 'Active'
+                                    className={`px-3 py-1 text-sm font-semibold rounded-lg ${getTicketStatus(ticket.status) === 'Resolved'
                                         ? 'bg-green-500 text-white'
-                                        : getTicketStatus(ticket.Status) === 'Closed'
-                                            ? 'bg-gray-500 text-white'
-                                            : 'bg-yellow-500 text-black'
+                                        : getTicketStatus(ticket.status) === 'In Progress'
+                                            ? 'bg-blue-500 text-white'
+                                            : 'bg-red-500 text-white'
                                         }`}
                                 >
-                                    {getTicketStatus(ticket.Status)}
+                                    {getTicketStatus(ticket.status)}
                                 </span>
                             </div>
 
                             <div className="mt-2 text-sm text-gray-500">
                                 <p><strong>Subject:</strong> {ticket.subject}</p>
                                 <p><strong>Details:</strong> {ticket.details}</p>
-                                <p><strong>Created At:</strong> {new Date(ticket.CreatedAt).toLocaleDateString()}</p>
+                                <p><strong>Created At:</strong>
+                                    {ticket.createdAt ? new Date(ticket.createdAt.split('.')[0]).toLocaleString() : "N/A"}
+                                </p>
+
+                                <p><strong>Resolved At:</strong>
+                                    {ticket.resolvedAt ? new Date(ticket.resolvedAt.split('.')[0]).toLocaleString() : "N/A"}
+                                </p>
                             </div>
                         </div>
                     ))}

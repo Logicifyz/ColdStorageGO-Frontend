@@ -21,7 +21,7 @@ const StaffLogin = () => {
             );
 
 
-            navigate("/staff/dashboard");
+            navigate("/staff/gallery");
         } catch (err) {
             setError(err.response?.data || "Login failed. Please try again.");
         }
