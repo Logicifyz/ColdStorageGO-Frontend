@@ -1,10 +1,11 @@
-// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { EmailProvider } from "./context/EmailContext";
+
+// Layouts
 import PublicLayout from "./components/PublicLayout";
 import StaffLayout from "./components/StaffLayout";
-import { EmailProvider } from "./context/EmailContext";
-import "./App.css";
 
 // Public Pages
 import Gallery from "./pages/Gallery";
@@ -17,6 +18,9 @@ import Listing from "./pages/Listing";
 import Cart from "./pages/Cart";
 import Rewards from "./pages/Reward";
 import Redemption from "./pages/Redemptions";
+import Profile from "./pages/Profile";
+import HelpCentre from "./pages/HelpCentreFlow/HelpCentre";
+import ContactUs from "./pages/HelpCentreFlow/ContactUs";
 import Home from "./pages/Home";
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
@@ -27,10 +31,22 @@ import SuccessfullySentVerificationEmail from "./pages/AuthFlow/SuccessfullySent
 import VerifyAccount from "./pages/AuthFlow/VerifyAccount";
 import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAccount";
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
+import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
+import SetPassword from "./pages/AuthFlow/SetPassword";
 
 // Staff Pages
-import RewardManagementStaff from "./pages/staff/RewardManagement";
+import StaffLogin from "./pages/StaffFlow/StaffLogin";
+import RewardManagement from "./pages/StaffFlow/StaffFlowComponents/RewardManagement";
+import GalleryManagement from "./pages/StaffFlow/StaffFlowComponents/GalleryManagement";
+import TicketManagement from "./pages/StaffFlow/StaffFlowComponents/TicketManagement";
+import SupportManagement from "./pages/StaffFlow/StaffFlowComponents/SupportManagement";
+import HelpCentreManagement from "./pages/StaffFlow/StaffFlowComponents/HelpCentreManagement";
+import AddArticle from "./pages/StaffFlow/StaffFlowComponents/AddArticle";
+import EditArticle from "./pages/StaffFlow/StaffFlowComponents/EditArticle";
+import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
+mport RewardManagementStaff from "./pages/staff/RewardManagement";
 import GalleryManagement from "./pages/staff/GalleryManagement";
+
 
 const App = () => {
     return (
@@ -40,32 +56,58 @@ const App = () => {
                 <Route element={<PublicLayout />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/account-dashboard" element={<AccountDashboard />} />
-                    <Route path="/gallery" element={<Gallery />} />
+                    <Route path="/" element={<Gallery />} />
                     <Route path="/rewards" element={<Rewards />} />
                     <Route path="/redemptions" element={<Redemption />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/listing/:id" element={<Listing />} />
-                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
-                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                    <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
-                    <Route path="/verify-account/:token" element={<VerifyAccount />} />
-                    <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
-                    <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
+                    <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/subscriptions" element={<SubscriptionForm />} />
                     <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
                     <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
                     <Route path="/subscription-management" element={<SubscriptionManagement />} />
+                    <Route path="/help-centre" element={<HelpCentre />} />
+                    <Route path="/Help-Centre/:category" element={<CategoryPage />} />
+
+                    <Route path="/contact-us" element={<ContactUs />} />
+                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
+
+                    {/* Wrap only the Login page with GoogleOAuthProvider */}
+                    <Route
+                        path="/login"
+                        element={
+                            <GoogleOAuthProvider clientId="869557804479-pv18rpo94fbpd6hatmns6m4nes5adih8.apps.googleusercontent.com">
+                                <Login />
+                            </GoogleOAuthProvider>
+                        }
+                    />
+
+                    <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
+                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
+                    <Route path="/setpassword/:token" element={<SetPassword />} />
+                    <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
+                    <Route path="/verify-account/:token" element={<VerifyAccount />} />
+                    <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
+                    <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
+                    <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
+
                 </Route>
 
                 {/* Staff Routes using StaffLayout */}
                 <Route path="/staff" element={<StaffLayout />}>
-                    <Route index element={<RewardManagementStaff />} />
-                    <Route path="rewards" element={<RewardManagementStaff />} />
+                    <Route index element={<RewardManagement />} />
+                    <Route path="rewards" element={<RewardManagement />} />
                     <Route path="gallery" element={<GalleryManagement />} />
-                    {/* Add additional staff routes as needed */}
+                    <Route path="support" element={<SupportManagement />} />
+                    <Route path="support/:ticketId" element={<TicketManagement />} />
+                    <Route path="help-centre" element={<HelpCentreManagement />} />
+                    <Route path="help-centre/add-article" element={<AddArticle />} />
+                    <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
+
                 </Route>
+
+                {/* Standalone Staff Login */}
+                <Route path="/staff-login" element={<StaffLogin />} />
             </Routes>
         </Router>
     );

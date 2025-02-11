@@ -1,7 +1,16 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\components",
+    "\\frontend\\src\\context",
+    "\\frontend\\src\\pages",
+    "\\frontend\\src\\pages\\AccountFlow",
+    "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
+    "\\frontend\\src\\pages\\StaffFlow",
+    "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents"
   ],
-  "SelectedNode": "\\C:\\Users\\zhiya\\Source\\Repos\\ColdStorageGO-Frontend",
+  "SelectedNode": "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents\\TicketManagement.jsx",
   "PreviewInSolutionExplorer": false
 }
