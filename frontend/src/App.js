@@ -44,6 +44,7 @@ import HelpCentreManagement from "./pages/StaffFlow/StaffFlowComponents/HelpCent
 import AddArticle from "./pages/StaffFlow/StaffFlowComponents/AddArticle";
 import EditArticle from "./pages/StaffFlow/StaffFlowComponents/EditArticle";
 import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
+import TicketDetails from "./pages/AccountFlow/AccountFlowComponents/TicketDetails";
 
 const App = () => {
     return (
@@ -64,9 +65,9 @@ const App = () => {
                     <Route path="/subscription-management" element={<SubscriptionManagement />} />
                     <Route path="/help-centre" element={<HelpCentre />} />
                     <Route path="/Help-Centre/:category" element={<CategoryPage />} />
-
                     <Route path="/contact-us" element={<ContactUs />} />
                     <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
+                    <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
 
                     {/* Wrap only the Login page with GoogleOAuthProvider */}
                     <Route
