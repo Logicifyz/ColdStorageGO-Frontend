@@ -2,3 +2,29 @@ body {
 	background-color: #383838;
 	color: white; /* Adjust text color for visibility */
 }
+
+@keyframes pulse {
+	0%, 100% {
+		opacity: 0.2;
+	}
+
+	50% {
+		opacity: 0.3;
+	}
+}
+
+.animate-pulse {
+	animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-1000 {
+	animation-delay: 1s;
+}
+
+* {
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+button {
+	transition: transform 0.2s ease;
+}
