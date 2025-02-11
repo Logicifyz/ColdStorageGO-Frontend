@@ -5,5 +5,12 @@
 /.vs/ColdStorageGO-Frontend/FileContentIndex
 /.vs/ColdStorageGO-Frontend/FileContentIndex
 /.vs/slnx.sqlite
+<<<<<<< HEAD
 /.gitignore
 /.gitignore
+=======
+*.wsuo
+*.json
+/.vs/slnx.sqlite
+/.gitignore
+>>>>>>> 9cb358bc1071b5b507cdc3604f01d4bc67ea9f31
