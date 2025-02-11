@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 const CheffieAI = () => {
     const [advancedControlsVisible, setAdvancedControlsVisible] = useState(false);
     const [formData, setFormData] = useState({
@@ -10,9 +11,13 @@ const CheffieAI = () => {
         dietaryPreferences: [],
         cuisine: "",
         cookingTime: "",
+        servings: "",
     });
     const [recipeResponse, setRecipeResponse] = useState(null); // State for recipe response
     const [loading, setLoading] = useState(false); // State for loading
+    const [followUpPrompt, setFollowUpPrompt] = useState(null);
+    const [redirectMessage, setRedirectMessage] = useState(null); // State for Redirect response
+
 
     const handleToggleAdvancedControls = () => {
         setAdvancedControlsVisible(!advancedControlsVisible);
@@ -32,42 +37,102 @@ const CheffieAI = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Start loading
-        setRecipeResponse(null); // Clear previous response
+        setLoading(true);
+        setRecipeResponse(null);
+        setFollowUpPrompt(null);
+        setRecipeResponse(null);
+        setFollowUpPrompt(null);
+        setRedirectMessage(null);
+
         try {
-            const response = await fetch("http://localhost:5135/api/AIRecommendations/Recommend", {
+            const requestBody = {
+                freeText: formData.freeText,
+                ingredientsInclude: formData.ingredientsInclude.split(",").map((i) => i.trim()),
+                ingredientsExclude: formData.ingredientsExclude.split(",").map((i) => i.trim()),
+                maxIngredients: formData.maxIngredients === "Any" ? null : parseInt(formData.maxIngredients),
+                dietaryPreferences: formData.dietaryPreferences,
+                cuisine: formData.cuisine,
+                cookingTime: formData.cookingTime,
+                servings: formData.servings ? parseInt(formData.servings) : null,
+            };
+
+            // ? Include userId if available
+            const userId = "d5d0bdcb-13e3-4399-91ef-bf1a0d92c90a"; // Replace with actual user retrieval logic
+            if (userId) {
+                requestBody.userId = userId;
+            }
+
+            // ? Submit request to backend
+            const aiResponse = await fetch("http://localhost:5135/api/AIRecommendations/Recommend", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    freeText: formData.freeText,
-                    ingredientsInclude: formData.ingredientsInclude.split(",").map((i) => i.trim()),
-                    ingredientsExclude: formData.ingredientsExclude.split(",").map((i) => i.trim()),
-                    maxIngredients: formData.maxIngredients === "Any" ? null : parseInt(formData.maxIngredients),
-                    dietaryPreferences: formData.dietaryPreferences,
-                    cuisine: formData.cuisine,
-                    cookingTime: formData.cookingTime,
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(requestBody),
             });
 
-            const result = await response.json();
-            console.log("Response from API:", result);
-
-            if (
-                result.recommendation.toLowerCase().includes("let me know") ||
-                result.recommendation.toLowerCase().includes("more details")
-            ) {
-                alert(result.recommendation); // Show clarifying question as an alert
-            } else {
-                setRecipeResponse(result); // Set the full recipe to display at the bottom
+            if (!aiResponse.ok) {
+                throw new Error("Failed to fetch AI response.");
             }
+
+            const aiResult = await aiResponse.json();
+            console.log("AI Response:", aiResult);
+
+            // ? Ensure responseType is present before processing
+            if (!aiResult.responseType) {
+                console.error("Error: Missing responseType in AI response", aiResult);
+                setRedirectMessage("Unexpected response. Please try again.");
+                return;
+            }
+
+            if (aiResult.responseType === "Recipe") {
+                console.log("Fetching latest stored recipe...");
+
+                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe");
+
+                if (!recipeResponse.ok) {
+                    throw new Error("Failed to fetch latest recipe.");
+                }
+
+                const finalDish = await recipeResponse.json();
+                console.log("Fetched FinalDish from API:", finalDish);
+
+                setRecipeResponse(finalDish.recipe);  // ? Ensure correct access of 'recipe' field
+            }
+
+
+            if (aiResult.responseType === "Recipe") {
+                console.log("Fetching latest stored recipe...");
+
+                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe");
+
+                if (!recipeResponse.ok) {
+                    throw new Error("Failed to fetch latest recipe.");
+                }
+
+                const finalDish = await recipeResponse.json();
+                console.log("Fetched FinalDish from API:", finalDish);
+
+                setRecipeResponse(finalDish);
+            }
+            else if (aiResult.responseType === "FollowUp") {
+                setFollowUpPrompt(aiResult.message || "Can you refine your request?");
+            }
+            else if (aiResult.responseType === "Redirect") {
+                setRedirectMessage(aiResult.message || "I'm sorry, I can only help with food-related requests.");
+            }
+            else {
+                setRedirectMessage("Unexpected response. Please try again.");
+            }
+
         } catch (error) {
             console.error("Error fetching AI recommendation:", error);
+            setRedirectMessage("An error occurred while processing your request.");
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false);
         }
     };
+
+
+
 
     return (
         <div className="min-h-screen p-8 bg-gray-900 text-gray-200">
@@ -173,6 +238,20 @@ const CheffieAI = () => {
                                 className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
                             />
                         </div>
+                        
+
+                        {/* Servings Field */}
+                        <div>
+                            <label className="block mb-2 text-gray-400">Servings</label>
+                            <input
+                                type="number"
+                                placeholder="Number of servings"
+                                value={formData.servings}
+                                onChange={(e) => handleInputChange("servings", e.target.value)}
+                                className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                            />
+                        </div>
+
                     </div>
                 )}
 
@@ -187,12 +266,110 @@ const CheffieAI = () => {
 
             {loading && <p className="text-center mt-4 text-gray-400">Fetching your recipe... Please wait.</p>}
 
-            {recipeResponse && (
-                <div className="mt-8 p-6 bg-gray-800 rounded-lg shadow-lg">
-                    <h2 className="text-xl font-bold text-center text-purple-400">{recipeResponse.recommendation}</h2>
-                    <p className="text-center text-gray-300">Generated by Cheffie AI</p>
+            
+            {/* FOLLOWUP RESPONSE UI */}
+            {followUpPrompt && (
+                <div className="flex justify-center items-center w-full mt-12">
+                    <div className="w-full max-w-4xl bg-yellow-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
+                        <h2 className="text-2xl font-bold text-yellow-400">Follow-Up Needed</h2>
+                        <p className="text-gray-300 mt-2">{followUpPrompt}</p>
+
+                        <input
+                            type="text"
+                            placeholder="Refine your request..."
+                            value={formData.freeText}
+                            onChange={(e) => handleInputChange("freeText", e.target.value)}
+                            className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500 mt-4"
+                        />
+                        <button
+                            type="submit"
+                            className="w-full bg-purple-600 text-white p-3 rounded-lg mt-4 hover:bg-purple-700 focus:outline-none focus:ring focus:ring-purple-500"
+                            onClick={handleSubmit}
+                        >
+                            Resubmit
+                        </button>
+                    </div>
                 </div>
             )}
+
+
+            {/* REDIRECT RESPONSE UI */}
+            {redirectMessage && (
+                <div className="flex justify-center items-center w-full mt-12">
+                    <div className="w-full max-w-4xl bg-red-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
+                        <h2 className="text-2xl font-bold text-red-400">Invalid Request</h2>
+                        <p className="text-gray-300 mt-2">{redirectMessage}</p>
+                    </div>
+                </div>
+            )}
+
+
+
+            {/* ? Display structured recipe */}
+            {recipeResponse && (
+                <div className="flex justify-center items-center w-full mt-12">
+                    <div className="w-full max-w-4xl bg-gray-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
+                        <h2 className="text-3xl font-bold text-white">{recipeResponse.title || "Recipe Title Not Found"}</h2>
+                        <p className="text-gray-400 mt-2">{recipeResponse.description || "No description available"}</p>
+
+                        {/* ? Use Your PNG Icons */}
+                        <div className="flex justify-center gap-12 mt-6">
+                            <div className="flex flex-col items-center">
+                                <img src="/Icons/servings-icon.png" alt="Serving Size" className="w-8 h-8" />
+                                <span className="text-lg font-semibold mt-2">Serves</span>
+                                <p className="text-white text-xl">{recipeResponse.servings ?? "N/A"}</p>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <img src="/Icons/cookingtime-icon.png" alt="Cooking Time" className="w-8 h-8" />
+                                <span className="text-lg font-semibold mt-2">Cooking Time</span>
+                                <p className="text-white text-xl">{recipeResponse.cookingTime ?? "N/A"}</p>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <img src="/Icons/spatula-icon.png" alt="Difficulty" className="w-8 h-8" />
+                                <span className="text-lg font-semibold mt-2">Difficulty</span>
+                                <p className="text-white text-xl">{recipeResponse.difficulty ?? "N/A"}</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 text-left">
+                            <div>
+                                <h3 className="text-xl font-semibold text-white">Ingredients:</h3>
+                                <ul className="list-disc ml-6 text-gray-300">
+                                    {recipeResponse.ingredients && Array.isArray(recipeResponse.ingredients) ? (
+                                        recipeResponse.ingredients.map((item, index) => <li key={index}>{item}</li>)
+                                    ) : (
+                                        <li>No ingredients provided</li>
+                                    )}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="text-xl font-semibold text-white">Steps:</h3>
+                                <ol className="list-decimal ml-6 text-gray-300">
+                                    {recipeResponse.steps && Array.isArray(recipeResponse.steps) ? (
+                                        recipeResponse.steps.map((step, index) => <li key={index}>{step}</li>)
+                                    ) : (
+                                        <li>No steps provided</li>
+                                    )}
+                                </ol>
+                            </div>
+                        </div>
+
+                        <h3 className="text-xl font-semibold text-white mt-8">Nutrition Facts:</h3>
+                        <div className="flex justify-between text-gray-300 text-lg">
+                            <p>Calories: <span className="text-white">{recipeResponse.nutrition?.calories ?? "N/A"} kcal</span></p>
+                            <p>Protein: <span className="text-white">{recipeResponse.nutrition?.protein ?? "N/A"} g</span></p>
+                            <p>Carbs: <span className="text-white">{recipeResponse.nutrition?.carbs ?? "N/A"} g</span></p>
+                            <p>Fats: <span className="text-white">{recipeResponse.nutrition?.fats ?? "N/A"} g</span></p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
         </div>
     );
 };
