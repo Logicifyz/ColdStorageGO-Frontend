@@ -15,21 +15,21 @@ const CreateRecipe = () => {
     });
 
     const [showImageUploader, setShowImageUploader] = useState(false);
-    const [uploadedImages, setUploadedImages] = useState([]);
+    const [coverImages, setCoverImages] = useState([]);
+    const [instructionImages, setInstructionImages] = useState({});
 
     const handleSaveImages = (images) => {
-        setUploadedImages(images);
-        setRecipeForm({ ...recipeForm, mediaUrls: images.map((img) => URL.createObjectURL(img)) });
+        setCoverImages(images);
         setShowImageUploader(false);
     };
 
-    const handleRemoveImage = (index) => {
-        const updatedImages = uploadedImages.filter((_, i) => i !== index);
-        setUploadedImages(updatedImages);
-        setRecipeForm({
-            ...recipeForm,
-            mediaUrls: updatedImages.map((img) => URL.createObjectURL(img)),
-        });
+    const handleInstructionImageUpload = (index, file) => {
+        setInstructionImages({ ...instructionImages, [index]: file });
+    };
+
+    const handleRemoveCoverImage = (index) => {
+        const updatedImages = coverImages.filter((_, i) => i !== index);
+        setCoverImages(updatedImages);
     };
 
     const handleAddIngredient = () => {
@@ -56,7 +56,7 @@ const CreateRecipe = () => {
             ...recipeForm,
             instructions: [
                 ...recipeForm.instructions,
-                { stepNumber: recipeForm.instructions.length + 1, step: "", mediaUrl: "" },
+                { stepNumber: recipeForm.instructions.length + 1, step: "" },
             ],
         });
     };
@@ -70,7 +70,13 @@ const CreateRecipe = () => {
                 stepNumber: i + 1,
             })),
         });
+
+        // Remove associated instruction image if exists
+        const updatedInstructionImages = { ...instructionImages };
+        delete updatedInstructionImages[index];
+        setInstructionImages(updatedInstructionImages);
     };
+
 
     const handleInstructionChange = (index, field, value) => {
         const updatedInstructions = recipeForm.instructions.map((instruction, i) =>
@@ -82,55 +88,64 @@ const CreateRecipe = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        try {
-            if (!recipeForm.userId || !recipeForm.name || !recipeForm.description || !recipeForm.tags) {
-                alert("Please fill in all required fields.");
-                return;
+        const formattedIngredients = recipeForm.ingredients.map(ing => ({
+            quantity: ing.quantity.trim(),
+            unit: ing.unit.trim(),
+            name: ing.name.trim()
+        }));
+
+        const formattedInstructions = recipeForm.instructions.map((instr, index) => ({
+            stepNumber: index + 1, // Ensure step number consistency
+            step: instr.step.trim()
+        }));
+
+        const formData = new FormData();
+
+        // ? Log before sending to ensure correctness
+        console.log("?? Submitting Recipe Data:", {
+            ...recipeForm,
+            ingredients: formattedIngredients,
+            instructions: formattedInstructions
+        });
+
+        formData.append("ingredients", JSON.stringify(formattedIngredients));
+        formData.append("instructions", JSON.stringify(formattedInstructions));
+
+        // ? Append Cover Images
+        coverImages.forEach((file) => formData.append("coverImages", file));
+
+        // ? Append Instruction Images (Fixing Issue #1)
+        Object.keys(instructionImages).forEach((index) => {
+            formData.append("instructionImages", instructionImages[index]);
+        });
+
+        // ? Append other text fields
+        Object.keys(recipeForm).forEach((key) => {
+            if (!["ingredients", "instructions"].includes(key)) {
+                formData.append(key, recipeForm[key]);
             }
+        });
 
-            // Ensure all instructions have a step
-            const sanitizedInstructions = recipeForm.instructions.map((instruction) => ({
-                ...instruction,
-                step: instruction.step || "No step description provided",
-                mediaUrl: instruction.mediaUrl || "",
-            }));
-
+        try {
             const response = await fetch("http://localhost:5135/api/Recipes", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    ...recipeForm,
-                    instructions: sanitizedInstructions,
-                    mediaUrls: recipeForm.mediaUrls || [],
-                }),
+                body: formData,
             });
 
-            if (response.ok) {
-                alert("Recipe created successfully!");
-                setRecipeForm({
-                    userId: "",
-                    dishId: "",
-                    name: "",
-                    description: "",
-                    timeTaken: "",
-                    ingredients: [{ quantity: "", unit: "", name: "" }],
-                    instructions: [{ stepNumber: 1, step: "", mediaUrl: "" }],
-                    tags: "",
-                    visibility: "public",
-                });
-                setUploadedImages([]);
-            } else {
-                const error = await response.json();
-                console.error("Failed to create recipe:", error);
-                alert("Failed to create recipe. Please try again.");
+            if (!response.ok) {
+                throw new Error("? Failed to create recipe");
             }
+
+            const data = await response.json();
+            console.log("? Recipe Created Successfully:", data);
         } catch (error) {
-            console.error("Error submitting recipe:", error);
-            alert("An error occurred while creating the recipe.");
+            console.error("? Error creating recipe:", error);
         }
     };
+
+
+
+
 
     return (
         <div className="p-8 bg-[#2F2F2F] min-h-screen text-white">
@@ -143,20 +158,20 @@ const CreateRecipe = () => {
                         onClick={() => setShowImageUploader(true)}
                         className="w-full p-4 border-2 border-dashed text-gray-300 rounded-md hover:bg-[#444]"
                     >
-                        {uploadedImages.length > 0 ? "Edit Uploaded Images" : "Upload Cover Photo"}
+                        {coverImages.length > 0 ? "Edit Uploaded Images" : "Upload Cover Photo"}
                     </button>
                     <div className="grid grid-cols-4 gap-4 mt-4">
-                        {uploadedImages.map((img, index) => (
+                        {coverImages.map((file, index) => (
                             <div key={index} className="relative">
                                 <img
-                                    src={URL.createObjectURL(img)}
+                                    src={URL.createObjectURL(file)}
                                     alt={`Preview ${index}`}
                                     className="w-full h-24 object-cover rounded-md"
                                 />
                                 <button
                                     type="button"
                                     className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
-                                    onClick={() => handleRemoveImage(index)}
+                                    onClick={() => handleRemoveCoverImage(index)}
                                 >
                                     X
                                 </button>
@@ -261,10 +276,9 @@ const CreateRecipe = () => {
                             rows="2"
                         ></textarea>
                         <input
-                            type="text"
-                            placeholder="Media URL"
-                            value={instruction.mediaUrl}
-                            onChange={(e) => handleInstructionChange(index, "mediaUrl", e.target.value)}
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleInstructionImageUpload(index, e.target.files[0])}
                             className="p-3 border border-gray-500 rounded bg-[#444] text-white"
                         />
                         <button
@@ -314,13 +328,8 @@ const CreateRecipe = () => {
                 </div>
             </form>
 
-            {/* ImageUploader Modal */}
             {showImageUploader && (
-                <ImageUploader
-                    maxImages={10}
-                    onSave={handleSaveImages}
-                    onClose={() => setShowImageUploader(false)}
-                />
+                <ImageUploader maxImages={10} onSave={handleSaveImages} onClose={() => setShowImageUploader(false)} />
             )}
         </div>
     );

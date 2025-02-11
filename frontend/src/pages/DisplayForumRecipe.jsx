@@ -1,88 +1,97 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const DisplayForumRecipe = () => {
     const { recipeId } = useParams();
-    const navigate = useNavigate();
+    console.log("?? Extracted recipeId from URL:", recipeId);
+
     const [recipe, setRecipe] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!recipeId || recipeId === "undefined") {
+            console.error("?? Recipe ID is missing.");
+            setError("Invalid Recipe ID.");
+            setLoading(false);
+            return;
+        }
+
         const fetchRecipe = async () => {
             try {
                 const response = await fetch(`http://localhost:5135/api/Recipes/${recipeId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("Fetched Recipe Data:", data); // Log response for debugging
-                    setRecipe(data);
-                } else {
-                    console.error("Failed to fetch recipe details.");
-                    alert("Recipe not found!");
-                    navigate("/");
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch recipe: ${response.status}`);
                 }
-            } catch (error) {
-                console.error("Error fetching recipe:", error);
+
+                const data = await response.json();
+                console.log("? Fetched Recipe Data:", data);
+                setRecipe(data);
+            } catch (err) {
+                console.error("? Failed to fetch recipe details:", err);
+                setError("Failed to load recipe.");
             } finally {
-                setIsLoading(false);
+                setLoading(false);
             }
         };
+
         fetchRecipe();
-    }, [recipeId, navigate]);
+    }, [recipeId]);
 
-    if (isLoading) {
-        return <p className="text-center text-white">Loading...</p>;
-    }
-
-    if (!recipe) {
-        return <p className="text-center text-white">Recipe not found.</p>;
-    }
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p className="text-red-500">{error}</p>;
+    if (!recipe) return <p>No recipe found.</p>;
 
     return (
-        <div className="p-8 bg-[#2F2F2F] min-h-screen text-white">
-            <h1 className="text-3xl font-bold mb-6">{recipe.name}</h1>
+        <div className="p-6 bg-[#383838] text-white min-h-screen">
+            <h1 className="text-3xl font-bold text-center mb-4">{recipe?.name}</h1>
+            <p className="text-gray-300 text-center">{recipe?.description}</p>
 
-            <div className="grid grid-cols-3 gap-6 mb-8">
-                {recipe.mediaUrls.map((url, index) => (
+            {/* ? Display Cover Image */}
+            {recipe?.coverImages?.length > 0 && (
+                <div className="flex justify-center my-6">
                     <img
-                        key={index}
-                        src={`http://localhost:5135/${url}`}
-                        alt={`Recipe Image ${index + 1}`}
-                        className="w-full h-auto rounded-md object-cover"
+                        src={`data:image/jpeg;base64,${recipe.coverImages[0]}`}
+                        alt="Recipe Cover"
+                        className="w-80 h-80 object-cover rounded-lg shadow-lg"
                     />
-                ))}
-            </div>
-
-            <div className="mb-8">
-                <p className="text-gray-300 mb-2">{recipe.description}</p>
-                <p><strong>Time Taken:</strong> {recipe.timeTaken} minutes</p>
-                <p><strong>Tags:</strong> {recipe.tags || "None"}</p>
-            </div>
-
-            <h3 className="text-2xl font-bold mb-4">Ingredients</h3>
-            {recipe.ingredients && recipe.ingredients.length > 0 ? (
-                <ul className="list-disc ml-6 space-y-2">
-                    {recipe.ingredients.map((ingredient, index) => (
-                        <li key={index} className="text-lg">
-                            {ingredient.quantity} {ingredient.unit} {ingredient.name}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p className="text-gray-400">No ingredients available.</p>
+                </div>
             )}
 
-            <h3 className="text-2xl font-bold mt-8 mb-4">Instructions</h3>
-            {recipe.instructions && recipe.instructions.length > 0 ? (
-                <ol className="list-decimal ml-6 space-y-4">
-                    {recipe.instructions.map((instruction, index) => (
-                        <li key={index} className="text-lg">
-                            {instruction.step || instruction}
+            {/* ? Recipe Metadata */}
+            <div className="text-center text-gray-400">
+                <p><strong>Time Taken:</strong> {recipe?.timeTaken} mins</p>
+                <p><strong>Visibility:</strong> {recipe?.visibility}</p>
+                <p><strong>Tags:</strong> {recipe?.tags || "No tags provided"}</p>
+                <p><strong>Votes:</strong> ?? {recipe?.upvotes || 0} | ?? {recipe?.downvotes || 0}</p>
+            </div>
+
+            {/* ? Ingredients Section */}
+            <h2 className="text-xl font-semibold mt-6">Ingredients</h2>
+            <ul className="list-disc pl-6 text-gray-300">
+                {recipe?.ingredients?.length > 0 ? (
+                    recipe.ingredients.map((ingredient, index) => (
+                        <li key={index}>
+                            {`${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}`}
                         </li>
-                    ))}
-                </ol>
-            ) : (
-                <p className="text-gray-400">No instructions available.</p>
-            )}
+                    ))
+                ) : (
+                    <p>No ingredients listed.</p>
+                )}
+            </ul>
+
+            {/* ? Instructions Section */}
+            <h2 className="text-xl font-semibold mt-6">Instructions</h2>
+            <ol className="list-decimal pl-6 text-gray-300">
+                {recipe?.instructions?.length > 0 ? (
+                    recipe.instructions.map((step, index) => (
+                        <li key={index}>{step.step}</li>
+                    ))
+                ) : (
+                    <p>No instructions provided.</p>
+                )}
+            </ol>
         </div>
     );
 };
