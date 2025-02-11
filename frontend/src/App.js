@@ -17,7 +17,7 @@ import Listing from "./pages/Listing";
 import Cart from "./pages/Cart";
 import Rewards from "./pages/Reward";
 import Redemption from "./pages/Redemptions";
-
+import Home from "./pages/Home";
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
 import Login from "./pages/AuthFlow/Login";
@@ -38,6 +38,7 @@ const App = () => {
             <Routes>
                 {/* Public Routes using PublicLayout */}
                 <Route element={<PublicLayout />}>
+                    <Route path="/" element={<Home />} />
                     <Route path="/account-dashboard" element={<AccountDashboard />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/rewards" element={<Rewards />} />
