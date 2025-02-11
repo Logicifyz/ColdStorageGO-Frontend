@@ -4,3 +4,8 @@
 
 /.vs/ColdStorageGO-Frontend/FileContentIndex
 /.vs/ColdStorageGO-Frontend/FileContentIndex
+/.vs/slnx.sqlite
+*.wsuo
+*.json
+/.vs/slnx.sqlite
+/.gitignore
