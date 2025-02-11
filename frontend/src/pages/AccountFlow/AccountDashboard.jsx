@@ -4,6 +4,8 @@ import ChangePassword from "./AccountFlowComponents/ChangePassword";
 import DeleteAccount from "./AccountFlowComponents/DeleteAccount";
 import Profile from "./AccountFlowComponents/Profile";
 import MyTickets from "./AccountFlowComponents/MyTickets";
+import MyRedemptions from "./AccountFlowComponents/MyRedemptions";
+
 import MyOrders from "./AccountFlowComponents/MyOrders";
 import { useNavigate } from "react-router-dom";
 
@@ -149,6 +151,8 @@ const AccountDashboard = () => {
             <MyTickets />
           ) : activeTab === "My Orders" ? (
             <MyOrders />
+          ) : activeTab === "My Redemptions" ? (
+            <MyRedemptions />
           ) : (
             <p>Currently viewing the {activeTab} section.</p>
           )}
