@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../api';
-import FollowList from './FollowList'; // Import the List component
-import Modal from 'react-modal';  // Import react-modal
+import FollowList from './FollowList';
+import Modal from 'react-modal';
+import { motion } from 'framer-motion';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -11,23 +12,23 @@ const Profile = () => {
         Username: '',
         PhoneNumber: '',
         FullName: '',
-        ProfilePicture: '', // Add field for profile picture URL
+        ProfilePicture: '',
     });
     const [originalData, setOriginalData] = useState({
         Email: '',
         Username: '',
         PhoneNumber: '',
         FullName: '',
-        ProfilePicture: '', // Add field for original profile picture URL
+        ProfilePicture: '',
     });
     const [isEditing, setIsEditing] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [isVerified, setIsVerified] = useState(false); // Default is false until verified status is fetched
+    const [isVerified, setIsVerified] = useState(false);
     const [followers, setFollowers] = useState([]);
     const [following, setFollowing] = useState([]);
-    const [isFollowersListOpen, setIsFollowersListOpen] = useState(false); // State to control followers list visibility
-    const [isFollowingListOpen, setIsFollowingListOpen] = useState(false); // State to control following list visibility
+    const [isFollowersListOpen, setIsFollowersListOpen] = useState(false);
+    const [isFollowingListOpen, setIsFollowingListOpen] = useState(false);
     const [profilePicturePreview, setProfilePicturePreview] = useState('');
 
     useEffect(() => {
@@ -40,14 +41,12 @@ const Profile = () => {
                         Username: response.data.username,
                         PhoneNumber: response.data.phoneNumber || '',
                         FullName: response.data.fullName || '',
-                        ProfilePicture: response.data.profilePicture || '', // Add profile picture URL
+                        ProfilePicture: response.data.profilePicture || '',
                     };
                     setFormData(userData);
                     setOriginalData(userData);
-                    setIsVerified(response.data.verified);  // Set verification status from response
-                    setProfilePicturePreview(userData.ProfilePicture ? `data:image/png;base64,${userData.ProfilePicture}` : 'default-profile.jpg'); // Set initial preview
-
-                    // Fetch followers and following data using the username from the response
+                    setIsVerified(response.data.verified);
+                    setProfilePicturePreview(userData.ProfilePicture ? `data:image/png;base64,${userData.ProfilePicture}` : 'default-profile.jpg');
                     fetchFollowersFollowing(response.data.username);
                 }
             } catch (error) {
@@ -58,16 +57,15 @@ const Profile = () => {
         const fetchFollowersFollowing = async (username) => {
             try {
                 const followersResponse = await api.get(`/api/Account/followers/${username}`, { withCredentials: true });
-                setFollowers(followersResponse.data || []); // Set empty array if no followers
-
+                setFollowers(followersResponse.data || []);
                 const followingResponse = await api.get(`/api/Account/following/${username}`, { withCredentials: true });
-                setFollowing(followingResponse.data || []); // Set empty array if no following
+                setFollowing(followingResponse.data || []);
             } catch (error) {
                 console.error('Failed to fetch followers/following:', error);
             }
         };
 
-        fetchProfile(); // Initial profile fetch
+        fetchProfile();
     }, []);
 
     const handleInputChange = (e) => {
@@ -75,7 +73,7 @@ const Profile = () => {
         if (name === 'ProfilePicture' && files && files[0]) {
             const file = files[0];
             const allowedTypes = ['image/jpeg', 'image/png'];
-            const maxSize = 2 * 1024 * 1024; // 2MB
+            const maxSize = 2 * 1024 * 1024;
 
             if (!allowedTypes.includes(file.type)) {
                 setErrorMessage('Invalid file type. Only JPG and PNG images are allowed.');
@@ -91,9 +89,8 @@ const Profile = () => {
                 ...formData,
                 ProfilePicture: file,
             });
-            setProfilePicturePreview(URL.createObjectURL(file)); // Set preview for the new image
-            console.log('Profile Picture Selected:', file); // Log the selected file
-            setErrorMessage(''); // Clear any previous error messages
+            setProfilePicturePreview(URL.createObjectURL(file));
+            setErrorMessage('');
         } else {
             setFormData({
                 ...formData,
@@ -122,7 +119,6 @@ const Profile = () => {
             if (formData.ProfilePicture instanceof File) {
                 formDataToSend.append('ProfilePicture', formData.ProfilePicture);
             }
-            console.log("Sending form data:", formDataToSend)
 
             const response = await api.put('/api/Account/update-profile', formDataToSend, {
                 withCredentials: true,
@@ -135,25 +131,21 @@ const Profile = () => {
                 setSuccessMessage('Profile updated successfully.');
                 setIsEditing(false);
 
-                // Convert ProfilePicture to Base64 before updating originalData
                 if (formData.ProfilePicture instanceof File) {
                     const reader = new FileReader();
                     reader.onloadend = () => {
-                        const base64ProfilePicture = reader.result.split(',')[1]; // Get the Base64 string
+                        const base64ProfilePicture = reader.result.split(',')[1];
                         setOriginalData({
                             ...formData,
-                            ProfilePicture: base64ProfilePicture, // Set the Base64 encoded profile picture
+                            ProfilePicture: base64ProfilePicture,
                         });
-                        console.log("After updating profile:", base64ProfilePicture);
                     };
-                    reader.readAsDataURL(formData.ProfilePicture); // Convert the file to Base64
+                    reader.readAsDataURL(formData.ProfilePicture);
                 } else {
-                    // If no new ProfilePicture, just update with the formData
                     setOriginalData({
                         ...formData,
-                        ProfilePicture: formData.ProfilePicture, // Directly set the existing ProfilePicture
+                        ProfilePicture: formData.ProfilePicture,
                     });
-                    console.log("After updating profile:", formData.ProfilePicture);
                 }
             }
 
@@ -168,11 +160,9 @@ const Profile = () => {
 
     const handleCancel = () => {
         setFormData(originalData);
-        setProfilePicturePreview(originalData.ProfilePicture ? `data:image/png;base64,${originalData.ProfilePicture}` : 'default-profile.jpg'); // Revert to the original profile picture
+        setProfilePicturePreview(originalData.ProfilePicture ? `data:image/png;base64,${originalData.ProfilePicture}` : 'default-profile.jpg');
         setIsEditing(false);
-        console.log('Profile Picture After Cancel:', originalData.ProfilePicture); // Log the profile picture after cancel
-
-        setErrorMessage(''); // Clear any error messages
+        setErrorMessage('');
     };
 
     const requestVerificationEmail = async () => {
@@ -190,129 +180,171 @@ const Profile = () => {
         }
     };
 
-    // Handle opening modal for followers
     const openFollowersModal = () => setIsFollowersListOpen(true);
     const closeFollowersModal = () => setIsFollowersListOpen(false);
 
-    // Handle opening modal for following
     const openFollowingModal = () => setIsFollowingListOpen(true);
     const closeFollowingModal = () => setIsFollowingListOpen(false);
 
     return (
-        <div className="relative flex flex-row justify-start items-start h-screen bg-[#383838] p-6">
-            {/* Profile Details on the Left */}
-            <div className="flex-1 w-[497px] p-6 rounded-lg bg-[#383838] text-left">
-                <div className="w-full p-6 bg-[#383838] text-white">
-                    <h1 className="text-4xl font-bold">{formData.Username || 'Loading...'}</h1>
-                    <p className="text-lg text-gray-400">{formData.Email}</p>
-                </div>
-
-                {successMessage && (
-                    <div className="mb-4 p-4 bg-green-500 text-white rounded-[10px]">
-                        {successMessage}
-                    </div>
-                )}
-
-                {errorMessage && (
-                    <div className="mb-4 p-4 bg-red-500 text-white rounded-[10px]">
-                        {errorMessage}
-                    </div>
-                )}
-
-
-                {!isEditing ? (
-                    <div>
-                        <p className="mb-4 text-lg text-white">Username: {formData.Username}</p>
-                        <p className="mb-4 text-lg text-white">Email: {formData.Email}</p>
-                        <p className="mb-4 text-lg text-white">Phone Number: {formData.PhoneNumber}</p>
-                        <p className="mb-4 text-lg text-white">Full Name: {formData.FullName}</p>
-                        <button
-                            onClick={() => setIsEditing(true)}
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
-                        >
-                            Edit Profile
-                        </button>
-                    </div>
-                ) : (
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label htmlFor="Username" className="text-white text-lg">Username</label>
-                            <input
-                                type="text"
-                                id="Username"
-                                name="Username"
-                                value={formData.Username}
-                                onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="Email" className="text-white text-lg">Email</label>
-                            <input
-                                type="Email"
-                                id="Email"
-                                name="Email"
-                                value={formData.Email}
-                                onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
-                                required
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="PhoneNumber" className="text-white text-lg">Phone Number</label>
-                            <input
-                                type="text"
-                                id="PhoneNumber"
-                                name="PhoneNumber"
-                                value={formData.PhoneNumber}
-                                onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="FullName" className="text-white text-lg">Full Name</label>
-                            <input
-                                type="text"
-                                id="FullName"
-                                name="FullName"
-                                value={formData.FullName}
-                                onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
-                        >
-                            Save Changes
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleCancel}
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
-                        >
-                            Cancel
-                        </button>
-                    </form>
-                )}
+        <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden p-8">
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-purple-700/10 to-blue-500/10 rounded-full blur-3xl" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-pink-700/10 to-cyan-500/10 rounded-full blur-3xl" />
             </div>
-            <div className="flex items-center space-x-6 mt-4">
-                <div className="text-white cursor-pointer" onClick={openFollowersModal}>
-                    <strong>{followers.length}</strong> Followers
+
+            <div className="relative z-10 max-w-4xl mx-auto">
+                <div className="flex items-center gap-4 mb-12">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                        Profile
+                    </h1>
                 </div>
-                <div className="text-white cursor-pointer" onClick={openFollowingModal}>
-                    <strong>{following.length}</strong> Following
+
+                <div className="grid gap-4">
+                    {successMessage && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-4 p-4 bg-green-500/30 text-green-300 rounded-[10px]"
+                        >
+                            {successMessage}
+                        </motion.div>
+                    )}
+
+                    {errorMessage && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="mb-4 p-4 bg-red-500/30 text-red-300 rounded-[10px]"
+                        >
+                            {errorMessage}
+                        </motion.div>
+                    )}
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-2xl border border-[#ffffff10] shadow-2xl overflow-hidden p-6"
+                    >
+                        <div className="flex items-center space-x-6">
+                            <img
+                                src={profilePicturePreview}
+                                alt="Profile"
+                                className="w-32 h-32 rounded-full border-4 border-white"
+                            />
+                            <div>
+                                <h2 className="text-2xl font-bold text-white">{formData.Username}</h2>
+                                <p className="text-gray-400">{formData.Email}</p>
+                                <div className="flex items-center space-x-6 mt-4">
+                                    <div className="text-white cursor-pointer" onClick={openFollowersModal}>
+                                        <strong>{followers.length}</strong> Followers
+                                    </div>
+                                    <div className="text-white cursor-pointer" onClick={openFollowingModal}>
+                                        <strong>{following.length}</strong> Following
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {!isEditing ? (
+                            <div className="mt-6">
+                                <p className="mb-4 text-lg text-white">Phone Number: {formData.PhoneNumber}</p>
+                                <p className="mb-4 text-lg text-white">Full Name: {formData.FullName}</p>
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
+                                >
+                                    Edit Profile
+                                </button>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="mt-6">
+                                <div className="mb-4">
+                                    <label htmlFor="Username" className="text-white text-lg">Username</label>
+                                    <input
+                                        type="text"
+                                        id="Username"
+                                        name="Username"
+                                        value={formData.Username}
+                                        onChange={handleInputChange}
+                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="Email" className="text-white text-lg">Email</label>
+                                    <input
+                                        type="Email"
+                                        id="Email"
+                                        name="Email"
+                                        value={formData.Email}
+                                        onChange={handleInputChange}
+                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="PhoneNumber" className="text-white text-lg">Phone Number</label>
+                                    <input
+                                        type="text"
+                                        id="PhoneNumber"
+                                        name="PhoneNumber"
+                                        value={formData.PhoneNumber}
+                                        onChange={handleInputChange}
+                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="FullName" className="text-white text-lg">Full Name</label>
+                                    <input
+                                        type="text"
+                                        id="FullName"
+                                        name="FullName"
+                                        value={formData.FullName}
+                                        onChange={handleInputChange}
+                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label htmlFor="ProfilePicture" className="text-white text-lg">Profile Picture</label>
+                                    <input
+                                        type="file"
+                                        id="ProfilePicture"
+                                        name="ProfilePicture"
+                                        onChange={handleInputChange}
+                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
+                                >
+                                    Save Changes
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleCancel}
+                                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
+                                >
+                                    Cancel
+                                </button>
+                            </form>
+                        )}
+                    </motion.div>
                 </div>
             </div>
+
             <Modal
                 isOpen={isFollowersListOpen}
-                onRequestClose={() => setIsFollowersListOpen(false)}
+                onRequestClose={closeFollowersModal}
                 contentLabel="Followers List"
                 style={{
-                    overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)' },
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                        zIndex: 1001 // Ensure it's above other content
+                    },
                     content: {
-                        position: 'absolute',
+                        position: 'fixed', // Key change: fixed positioning
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -320,8 +352,10 @@ const Profile = () => {
                         maxWidth: '400px',
                         backgroundColor: 'white',
                         borderRadius: '10px',
-                        zIndex: '9999',
+                        zIndex: 1002, // Higher z-index for content
                         width: '80%',
+                        maxHeight: '80vh', // Prevent modal from overflowing viewport
+                        overflowY: 'auto'  // Add scroll if content is too long
                     },
                 }}
             >
@@ -329,15 +363,17 @@ const Profile = () => {
                 <FollowList title="Followers" listData={followers} />
             </Modal>
 
-            {/* Following List Modal */}
             <Modal
                 isOpen={isFollowingListOpen}
-                onRequestClose={() => setIsFollowingListOpen(false)}
+                onRequestClose={closeFollowingModal}
                 contentLabel="Following List"
                 style={{
-                    overlay: { backgroundColor: 'rgba(0, 0, 0, 0.75)' },
+                    overlay: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                        zIndex: 1001
+                    },
                     content: {
-                        position: 'absolute',
+                        position: 'fixed', // Key change: fixed positioning
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -345,40 +381,16 @@ const Profile = () => {
                         maxWidth: '400px',
                         backgroundColor: 'white',
                         borderRadius: '10px',
-                        zIndex: '9999',
+                        zIndex: 1002,
                         width: '80%',
+                        maxHeight: '80vh',
+                        overflowY: 'auto'
                     },
                 }}
             >
                 <h2 className="text-xl font-bold">Following</h2>
                 <FollowList title="Following" listData={following} />
             </Modal>
-            {/* Profile Picture on the Right */}
-            <div className="flex flex-col justify-start items-center ml-6">
-                <img
-                    src={profilePicturePreview}
-                    alt="Profile"
-                    className="w-32 h-32 rounded-full border-4 border-white mt-4"
-                />
-
-                {isEditing && (
-                    <div className="mt-2">
-                        <input
-                            type="file"
-                            id="ProfilePicture"
-                            name="ProfilePicture"
-                            onChange={handleInputChange}
-                            className="hidden"
-                        />
-                        <label
-                            htmlFor="ProfilePicture"
-                            className="text-white bg-blue-500 px-4 py-1 rounded-lg cursor-pointer hover:bg-blue-600"
-                        >
-                            Edit Profile Picture
-                        </label>
-                    </div>
-                )}
-            </div>
         </div>
     );
 };

@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
-import api from '../../api';
-import { FaTruck, FaCreditCard, FaUndoAlt, FaUserCog, FaTools, FaComments, FaTrophy, FaUtensils } from 'react-icons/fa'; // Import icons
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../../api";
+import {
+    FaTruck,
+    FaCreditCard,
+    FaUndoAlt,
+    FaUserCog,
+    FaTools,
+    FaComments,
+    FaTrophy,
+    FaUtensils,
+} from "react-icons/fa";
 
 const HelpCentre = () => {
     const [faqs, setFaqs] = useState([]);
@@ -24,12 +33,9 @@ const HelpCentre = () => {
     ];
 
     useEffect(() => {
-        // Fetch top 5 FAQs by view count
         const fetchFaqs = async () => {
             try {
-                const response = await api.get('/api/HelpCentre', {
-                    params: { faq: true } // Fetch the top 5 most viewed FAQs
-                });
+                const response = await api.get("/api/HelpCentre", { params: { faq: true } });
                 setFaqs(response.data);
             } catch (error) {
                 console.error("Error fetching FAQs:", error);
@@ -40,39 +46,71 @@ const HelpCentre = () => {
     }, []);
 
     return (
-        <div className="flex flex-col items-center bg-[#383838] min-h-screen p-8 text-white">
-            {/* Help Centre Sections */}
-            <div className="flex w-full max-w-6xl space-x-8">
-                {/* Left - FAQs */}
-                <div className="w-1/2 bg-[#4D5C60] p-6 rounded-lg">
-                    <h2 className="text-2xl font-bold mb-4">Top FAQs</h2>
-                    <ul className="space-y-2">
-                        {faqs.map((faq, index) => (
-                            <li key={index} className="text-lg">- {faq.title}</li>
-                        ))}
-                    </ul>
-                </div>
+        <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-[#2c2c2c] text-white p-8">
+            <div className="max-w-6xl mx-auto">
+                {/* Header */}
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent text-center mb-8">
+                    Help Centre
+                </h1>
 
-                {/* Right - Help Centre Resources */}
-                <div className="w-1/2 bg-[#2B2E4A] p-6 rounded-lg">
-                    <h2 className="text-2xl font-bold mb-4">Help Centre Resources</h2>
-                    <ul className="space-y-2">
-                        {resources.map((resource, index) => (
-                            <li key={index} className="text-lg">- {resource}</li>
-                        ))}
-                    </ul>
-                    <button className="mt-6 w-full bg-[#B4C14A] text-black p-3 rounded-lg font-bold">Contact Us</button>
-                </div>
-            </div>
-
-            {/* Categories Section */}
-            <div className="mt-8 grid grid-cols-4 gap-4 max-w-6xl">
-                {categories.map((category, index) => (
-                    <Link key={index} to={`/Help-Centre/${category.name}`} className="bg-[#4D5C60] p-6 rounded-lg text-center font-bold aspect-square flex flex-col justify-center items-center">
-                        <div className="text-3xl mb-2">{category.icon}</div>
-                        <div>{category.name}</div>
+                {/* Contact Us Button */}
+                <div className="flex justify-center mb-8">
+                    <Link
+                        to="/contact-us"
+                        className="bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:opacity-90 transition"
+                    >
+                        Contact Us
                     </Link>
-                ))}
+                </div>
+                {/* Top Section: FAQs (Left) & Resources (Right) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    {/* FAQs Section */}
+                    <div className="bg-[#ffffff08] backdrop-blur-lg p-6 rounded-xl border border-[#ffffff15] hover:border-[#ffffff30] transition-all">
+                        <h2 className="text-2xl font-semibold mb-4">Top FAQs</h2>
+                        <ul className="space-y-4">
+                            {faqs.map((faq, index) => (
+                                <li
+                                    key={index}
+                                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                                >
+                                    ? {faq.question}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Help Resources (Right) */}
+                    <div className="bg-[#ffffff08] backdrop-blur-lg p-6 rounded-xl border border-[#ffffff15] hover:border-[#ffffff30] transition-all">
+                        <h2 className="text-2xl font-semibold mb-4">Resources</h2>
+                        <ul className="space-y-2">
+                            {resources.map((resource, index) => (
+                                <li
+                                    key={index}
+                                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                                >
+                                    ?? {resource}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Help Categories (8 squares) */}
+                <div className="bg-[#ffffff08] backdrop-blur-lg p-6 rounded-xl border border-[#ffffff15] hover:border-[#ffffff30] transition-all">
+                    <h2 className="text-2xl font-semibold mb-4">Help Categories</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {categories.map((category, index) => (
+                            <Link
+                                key={index}
+                                to={`/help-centre/${category.name}`}
+                                className="bg-[#ffffff10] p-6 rounded-lg text-center font-bold aspect-square flex flex-col justify-center items-center border border-[#ffffff15] hover:bg-[#ffffff20] hover:border-[#ffffff30] transition-all"
+                            >
+                                <div className="text-[#ff8e53] text-3xl mb-2">{category.icon}</div>
+                                <div className="text-gray-300 text-sm">{category.name}</div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -1,14 +1,26 @@
 import React, { useState } from 'react';
 import { FiFileText, FiTag, FiImage, FiX } from 'react-icons/fi';
+import { FaTruck, FaCreditCard, FaUndoAlt, FaUserCog, FaTools, FaComments, FaTrophy, FaUtensils } from 'react-icons/fa';
 import api from '../../api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const categories = [
+    { name: "Order and Delivery", icon: <FaTruck /> },
+    { name: "Payments and Pricing", icon: <FaCreditCard /> },
+    { name: "Returns and Refunds", icon: <FaUndoAlt /> },
+    { name: "Account and Membership", icon: <FaUserCog /> },
+    { name: "Technical Support", icon: <FaTools /> },
+    { name: "Community and Forum", icon: <FaComments /> },
+    { name: "Rewards and Redemptions", icon: <FaTrophy /> },
+    { name: "Recipes and Cooking", icon: <FaUtensils /> },
+];
 
 const ContactUs = () => {
     const [subject, setSubject] = useState('');
     const [category, setCategory] = useState('');
     const [details, setDetails] = useState('');
     const [images, setImages] = useState([]);
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
 
     const maxFiles = 5;
@@ -39,8 +51,6 @@ const ContactUs = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
-        setMessage('');
 
         const formData = new FormData();
         formData.append('Subject', subject);
@@ -61,14 +71,14 @@ const ContactUs = () => {
             });
 
             if (response.status === 200) {
-                setMessage('Ticket opened successfully!');
+                toast.success('Ticket opened successfully!');
                 setSubject('');
                 setCategory('');
                 setDetails('');
                 setImages([]);
             }
         } catch (error) {
-            setError('Error opening ticket. Please try again later.');
+            toast.error('Error opening ticket. Please try again later.');
             console.error(error);
         } finally {
             setLoading(false);
@@ -76,146 +86,161 @@ const ContactUs = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-[#383838] p-4">
-            <div className="flex items-center bg-[#383838] p-8 rounded-lg w-full max-w-4xl">
-                <div className="w-full">
+        <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] p-8">
+            {/* Background Elements */}
+            <div className="absolute top-0 left-0 w-[40%] h-[60%] bg-[#ff6b6b10] rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-[#ff8e5310] rounded-full blur-3xl" />
+
+            <div className="max-w-4xl mx-auto relative z-10">
+                {/* Header Section */}
+                <div className="mb-8">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+                        Contact Us
+                    </h1>
+                    <p className="text-gray-400 text-lg mt-2">
+                        Need help? Let us know your issue!
+                    </p>
+                </div>
+
+                {/* Form Section */}
+                <form onSubmit={handleSubmit} className="bg-[#ffffff08] backdrop-blur-sm rounded-2xl p-8 border border-[#ffffff15]">
+                    {/* Subject Field */}
                     <div className="mb-6">
-                        <h2 className="text-white text-4xl font-bold">Contact Us</h2>
+                        <label htmlFor="subject" className="text-gray-300 text-lg font-semibold mb-2 block">Subject</label>
+                        <div className="flex items-center bg-[#ffffff05] rounded-xl border border-[#ffffff15]">
+                            <FiFileText className="text-gray-400 ml-4" />
+                            <input
+                                type="text"
+                                id="subject"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                className="w-full h-14 px-4 bg-transparent text-gray-200 placeholder-gray-400 focus:outline-none"
+                                placeholder="Enter subject"
+                                required
+                            />
+                        </div>
                     </div>
 
+                    {/* Category Field */}
                     <div className="mb-6">
-                        <p className="text-white text-sm" style={{ fontSize: '20px' }}>
-                            Need help? Let us know your issue!
-                        </p>
+                        <label htmlFor="category" className="text-gray-300 text-lg font-semibold mb-2 block">Category</label>
+                        <div className="relative flex items-center bg-[#ffffff05] rounded-xl border border-[#ffffff15]">
+                            <FiTag className="text-gray-400 ml-4" />
+                            <select
+                                id="category"
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                className="w-full h-14 px-4 bg-transparent text-gray-200 placeholder-gray-400 focus:outline-none appearance-none"
+                                required
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map((cat, index) => (
+                                    <option key={index} value={cat.name} className="flex items-center gap-2 bg-[#1a1a1a]">
+                                        {cat.icon} {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                <svg
+                                    className="w-5 h-5 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M19 9l-7 7-7-7"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
 
-                    {error && <div className="text-red-500 mb-4">{error}</div>}
-                    {message && <div className="text-green-500 mb-4">{message}</div>}
-
-                    <form onSubmit={handleSubmit} className="text-left">
-                        {/* Subject Field */}
-                        <div className="mb-4">
-                            <label htmlFor="subject" className="text-white text-lg">Subject</label>
-                            <div className="flex items-center border border-gray-300 rounded-[10px] bg-white">
-                                <FiFileText className="text-gray-400 ml-2" />
-                                <input
-                                    type="text"
-                                    id="subject"
-                                    value={subject}
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
-                                    placeholder="Enter subject"
-                                    required
-                                    style={{ fontSize: '20px' }}
-                                />
-                            </div>
+                    {/* Details Field */}
+                    <div className="mb-6">
+                        <label htmlFor="details" className="text-gray-300 text-lg font-semibold mb-2 block">Details</label>
+                        <div className="flex items-center bg-[#ffffff05] rounded-xl border border-[#ffffff15]">
+                            <FiFileText className="text-gray-400 ml-4 self-start mt-4" />
+                            <textarea
+                                id="details"
+                                value={details}
+                                onChange={(e) => setDetails(e.target.value)}
+                                rows="4"
+                                className="w-full px-4 py-3 bg-transparent text-gray-200 placeholder-gray-400 focus:outline-none"
+                                placeholder="Enter your message"
+                                required
+                            />
                         </div>
+                    </div>
 
-                        {/* Category Field */}
-                        <div className="mb-4">
-                            <label htmlFor="category" className="text-white text-lg">Category</label>
-                            <div className="flex items-center border border-gray-300 rounded-[10px] bg-white">
-                                <FiTag className="text-gray-400 ml-2" />
-                                <input
-                                    type="text"
-                                    id="category"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
-                                    placeholder="Enter category"
-                                    required
-                                    style={{ fontSize: '20px' }}
-                                />
-                            </div>
-                        </div>
+                    {/* Attach Images Section */}
+                    <div className="mb-6">
+                        <label htmlFor="images" className="text-gray-300 text-lg font-semibold mb-2 block">Attach Images (optional)</label>
+                        <div className="flex flex-col gap-4">
+                            {images.map((image, index) => (
+                                <div key={index} className="flex items-center gap-4">
+                                    <label
+                                        htmlFor={`file-${index}`}
+                                        className="w-full h-14 px-4 bg-[#ffffff05] rounded-xl border border-[#ffffff15] text-gray-200 flex items-center justify-between cursor-pointer hover:bg-[#ffffff10] transition-colors"
+                                    >
+                                        <span className="truncate">
+                                            {image ? image.name : "Choose file"}
+                                        </span>
+                                        <FiImage className="text-gray-400" />
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id={`file-${index}`}
+                                        onChange={(e) => handleImageChange(e, index)}
+                                        className="hidden"
+                                        disabled={images.length >= maxFiles && !image}
+                                    />
+                                    {image && (
+                                        <div className="flex items-center gap-2">
+                                            <img
+                                                src={URL.createObjectURL(image)}
+                                                alt={`preview-${index}`}
+                                                className="h-24 w-24 object-cover rounded"
+                                            />
 
-                        {/* Details Field */}
-                        <div className="mb-4">
-                            <label htmlFor="details" className="text-white text-lg">Details</label>
-                            <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
-                                <FiFileText className="text-gray-400 ml-2" />
-                                <textarea
-                                    id="details"
-                                    value={details}
-                                    onChange={(e) => setDetails(e.target.value)}
-                                    rows="4"
-                                    className="w-full p-2 pl-8 text-black rounded-[10px]"
-                                    placeholder="Enter your message"
-                                    required
-                                    style={{ fontSize: '20px' }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Attach Images Section */}
-                        <div className="mb-4">
-                            <label htmlFor="images" className="text-white text-lg">Attach Images (optional)</label>
-                            <div className="flex flex-col">
-                                {images.map((image, index) => (
-                                    <div key={index} className="flex items-center mb-2">
-                                        <input
-                                            type="file"
-                                            onChange={(e) => handleImageChange(e, index)}
-                                            className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
-                                            disabled={images.length >= maxFiles && !image} // Disable input if max files are reached
-                                        />
-                                        {image && (
-                                            <div className="ml-4 flex items-center">
-                                                <img
-                                                    src={URL.createObjectURL(image)}
-                                                    alt={`preview-${index}`}
-                                                    className="h-32 w-auto object-cover rounded"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeFile(index)}
-                                                    className="ml-2 text-red-500 hover:text-red-700"
-                                                >
-                                                    <FiX className="w-6 h-6" />
-                                                </button>
-                                            </div>
-                                        )}
-                                        {/* Add X button even when image slot is empty */}
-                                        {image === null && (
                                             <button
                                                 type="button"
                                                 onClick={() => removeFile(index)}
-                                                className="ml-2 text-red-500 hover:text-red-700"
+                                                className="text-red-500 hover:text-red-700"
                                             >
                                                 <FiX className="w-6 h-6" />
                                             </button>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-
-
-                            {/* File count and add new file button */}
-                            <div className="text-white mt-2">
-                                {images.filter(img => img !== null).length}/{maxFiles} files attached
-                            </div>
-                            {images.filter(img => img === null).length === 0 && images.length < maxFiles && (
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                            {images.length < maxFiles && (
                                 <button
                                     type="button"
                                     onClick={addNewFileInput}
-                                    className="text-blue-500 mt-2"
+                                    className="text-[#ff8e53] hover:text-[#ff6b6b] transition-colors"
                                 >
-                                    Add another file
+                                    + Add another file
                                 </button>
                             )}
                         </div>
+                    </div>
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            className="w-full h-[66px] bg-[#B4C14A] text-white rounded-[10px] hover:bg-[#9fbb3a] focus:outline-none mt-4"
-                            disabled={loading}
-                        >
-                            {loading ? 'Submitting...' : 'Submit Ticket'}
-                        </button>
-                    </form>
-                </div>
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full h-14 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] text-white font-semibold rounded-xl hover:from-[#ff8e53] hover:to-[#ff6b6b] transition-all"
+                        disabled={loading}
+                    >
+                        {loading ? 'Submitting...' : 'Submit Ticket'}
+                    </button>
+                </form>
             </div>
+
+            {/* Toast Container */}
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar closeButton />
         </div>
     );
 };

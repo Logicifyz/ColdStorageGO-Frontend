@@ -74,7 +74,7 @@ const App = () => {
                     <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
                     <Route path="/subscription-management" element={<SubscriptionManagement />} />
                     <Route path="/help-centre" element={<HelpCentre />} />
-                    <Route path="/Help-Centre/:category" element={<CategoryPage />} />
+                    <Route path="/help-centre/:category" element={<CategoryPage />} />
                     <Route path="/contact-us" element={<ContactUs />} />
                     <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
                     <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
