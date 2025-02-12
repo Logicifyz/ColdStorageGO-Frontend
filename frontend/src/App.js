@@ -39,6 +39,7 @@ import SetPassword from "./pages/AuthFlow/SetPassword";
 // Staff Pages
 import StaffLogin from "./pages/StaffFlow/StaffLogin";
 import RewardManagement from "./pages/StaffFlow/StaffFlowComponents/RewardManagement";
+import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
 import GalleryManagement from "./pages/StaffFlow/StaffFlowComponents/GalleryManagement";
 import OrdersManagement from "./pages/StaffFlow/StaffFlowComponents/OrdersManagement";
 import TicketManagement from "./pages/StaffFlow/StaffFlowComponents/TicketManagement";
@@ -118,6 +119,7 @@ const App = () => {
                     <Route path="help-centre" element={<HelpCentreManagement />} />
                     <Route path="help-centre/add-article" element={<AddArticle />} />
                     <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
+                    <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
 
                 </Route>
 
