@@ -39,6 +39,7 @@ import SetPassword from "./pages/AuthFlow/SetPassword";
 // Staff Pages
 import StaffLogin from "./pages/StaffFlow/StaffLogin";
 import RewardManagement from "./pages/StaffFlow/StaffFlowComponents/RewardManagement";
+import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
 import GalleryManagement from "./pages/StaffFlow/StaffFlowComponents/GalleryManagement";
 import OrdersManagement from "./pages/StaffFlow/StaffFlowComponents/OrdersManagement";
 import TicketManagement from "./pages/StaffFlow/StaffFlowComponents/TicketManagement";
@@ -48,6 +49,12 @@ import AddArticle from "./pages/StaffFlow/StaffFlowComponents/AddArticle";
 import EditArticle from "./pages/StaffFlow/StaffFlowComponents/EditArticle";
 import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
 import TicketDetails from "./pages/AccountFlow/AccountFlowComponents/TicketDetails";
+import AnalyticsDashboard from "./pages/StaffFlow/StaffFlowComponents/AnalyticsDashboard";
+import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
+
+
+
+
 
 
 
@@ -102,15 +109,17 @@ const App = () => {
 
                 {/* Staff Routes using StaffLayout */}
                 <Route path="/staff" element={<StaffLayout />}>
-                    <Route index element={<RewardManagement />} />
+                    <Route index element={<AnalyticsDashboard />} />
                     <Route path="rewards" element={<RewardManagement />} />
                     <Route path="orders" element={<OrdersManagement />} />
                     <Route path="gallery" element={<GalleryManagement />} />
+                    <Route path="subscription" element={<StaffSubscriptionManagement />} />
                     <Route path="support" element={<SupportManagement />} />
                     <Route path="support/:ticketId" element={<TicketManagement />} />
                     <Route path="help-centre" element={<HelpCentreManagement />} />
                     <Route path="help-centre/add-article" element={<AddArticle />} />
                     <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
+                    <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
 
                 </Route>
 

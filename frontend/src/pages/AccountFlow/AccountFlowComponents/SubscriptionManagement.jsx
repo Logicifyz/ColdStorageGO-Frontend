@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import api from '../../../api';
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/solid';
+import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
 import SubscriptionRecommendation from './SubscriptionRecommendation'; // Import the component
 
 const formatDate = (dateString) => {

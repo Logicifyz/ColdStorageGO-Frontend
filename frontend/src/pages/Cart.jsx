@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
+import { motion } from "framer-motion";
 import "tailwindcss/tailwind.css";
 
 const Cart = () => {
@@ -30,15 +31,11 @@ const Cart = () => {
       const items = await Promise.all(
         response.data.map(async (item) => {
           try {
-            const mealKitResponse = await api.get(
-              `/api/MealKit/${item.mealKitId}`
-            );
+            const mealKitResponse = await api.get(`/api/MealKit/${item.mealKitId}`);
             const MealKit = mealKitResponse.data;
-
             const base64Image = MealKit.listingImage
               ? `data:image/jpeg;base64,${MealKit.listingImage}`
               : "/default-image.png";
-
             return {
               ...item,
               MealKit: {
@@ -53,6 +50,7 @@ const Cart = () => {
                 name: "Unknown Meal Kit",
                 ListingImage: "/default-image.png",
                 price: 0,
+                expiryDate: new Date().toISOString(),
               },
             };
           }
@@ -75,7 +73,6 @@ const Cart = () => {
 
   const updateQuantity = async (mealKitId, newQuantity) => {
     if (newQuantity < 1) return;
-
     try {
       await api.post("/api/Cart", { mealKitId, quantity: newQuantity });
       const updatedCart = cartItems.map((item) =>
@@ -89,29 +86,46 @@ const Cart = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-8 font-inter text-gray-100">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
-        
-        <div className="bg-gray-800 rounded-xl p-6 shadow-lg mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative overflow-hidden p-8 font-inter text-gray-100">
+      {/* Abstract Liquid Gradient Background Blobs */}
+      <motion.div
+        className="absolute top-0 left-0 w-[40%] h-[60%] bg-[#ff6b6b10] rounded-full blur-3xl"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-[#ff8e5310] rounded-full blur-3xl"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      />
+
+      <div className="relative z-10 max-w-6xl mx-auto">
+        <h1 className="text-5xl font-bold mb-8 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+          Shopping Cart
+        </h1>
+
+        {/* Cart Items List */}
+        <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl mb-8">
           <div className="divide-y divide-gray-700">
             {cartItems.map((item, index) => (
-              <div key={index} className="flex items-center py-6">
+              <motion.div
+                key={index}
+                className="flex items-center py-6"
+                whileHover={{ scale: 1.02 }}
+              >
                 <img
                   src={item.MealKit.ListingImage}
                   alt={item.MealKit.name}
                   className="w-24 h-24 rounded-lg object-cover mr-6"
                 />
-                
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold mb-2">
+                  <h2 className="text-2xl font-semibold mb-2">
                     {item.MealKit.name}
                   </h2>
                   <p className="text-gray-400 text-sm">
                     Expires: {new Date(item.MealKit.expiryDate).toLocaleDateString()}
                   </p>
                 </div>
-
                 <div className="flex items-center gap-6">
                   <div className="flex items-center gap-3 bg-gray-700 rounded-lg p-2">
                     <button
@@ -128,42 +142,40 @@ const Cart = () => {
                       +
                     </button>
                   </div>
-
                   <div className="text-right w-32">
                     <p className="text-lg font-semibold">
                       ${(item.MealKit.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
+        {/* Order Totals Summary */}
+        <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl">
           <div className="space-y-4 mb-6">
-            <div className="flex justify-between text-lg">
+            <div className="flex justify-between text-xl">
               <span className="text-gray-400">Subtotal:</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-lg">
+            <div className="flex justify-between text-xl">
               <span className="text-gray-400">Delivery (5%):</span>
               <span>${shippingCost.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-lg">
+            <div className="flex justify-between text-xl">
               <span className="text-gray-400">Tax (9%):</span>
               <span>${taxes.toFixed(2)}</span>
             </div>
           </div>
-
-          <div className="flex justify-between text-2xl font-bold pt-4 border-t border-gray-700">
+          <div className="flex justify-between text-3xl font-bold pt-4 border-t border-gray-700">
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
-
           <Link
             to="/checkout"
-            className="mt-6 w-full py-4 bg-blue-600 hover:bg-blue-700 transition rounded-lg font-semibold text-lg flex justify-center items-center"
+            className="mt-6 w-full py-4 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] hover:from-[#ff8e53] hover:to-[#ff6b6b] transition rounded-2xl font-bold text-xl flex justify-center items-center shadow-lg"
           >
             Proceed to Checkout
           </Link>
