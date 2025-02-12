@@ -1,16 +1,26 @@
 ﻿import React, { useState, useEffect } from 'react';
 import api from '../../../api';
 import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import SubscriptionRecommendation from './SubscriptionRecommendation'; // Import the component
+import { motion, AnimatePresence } from 'framer-motion';
+import SubscriptionRecommendation from './SubscriptionRecommendation';
+
+const BackgroundBlobs = () => (
+    <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-[#302b63] to-[#24243e] opacity-20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-[#4b379c] to-[#1a1a2e] opacity-20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
+);
 
 const formatDate = (dateString) => {
     if (!dateString) return "Date not available";
     const date = new Date(dateString);
-    return isNaN(date.getTime()) ? "Invalid Date" : date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-    });
+    return isNaN(date.getTime())
+        ? "Invalid Date"
+        : date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+        });
 };
 
 const SubscriptionManagement = () => {
@@ -19,14 +29,14 @@ const SubscriptionManagement = () => {
     const [modal, setModal] = useState({ isOpen: false, action: null });
     const [freezeDates, setFreezeDates] = useState({ startDate: "", endDate: "" });
     const [scheduledFreezes, setScheduledFreezes] = useState([]);
-    const [userId, setUserId] = useState(null); // Add userId state
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
         const fetchSubscription = async () => {
             try {
                 const sessionResponse = await api.get('/api/account/profile', { withCredentials: true });
                 const userId = sessionResponse.data.userId;
-                setUserId(userId); // Set userId
+                setUserId(userId);
                 const response = await api.get(`/api/subscriptions/user?userId=${userId}`);
                 if (!response.data || response.data.isCanceled) {
                     setSubscription(null);
@@ -73,17 +83,18 @@ const SubscriptionManagement = () => {
                 await api.put(`/api/subscriptions/toggle-autorenewal/${subscription.subscriptionId}`, {}, { withCredentials: true });
                 setSubscription(prev => ({
                     ...prev,
-                    autoRenewal: !prev.autoRenewal
+                    autoRenewal: !prev.autoRenewal,
                 }));
             } else if (modal.action === 'freeze') {
                 await api.put(`/api/subscriptions/toggle-freeze/${subscription.subscriptionId}`, {}, { withCredentials: true });
                 setSubscription(prev => ({
                     ...prev,
                     isFrozen: !prev.isFrozen,
-                    freezeStarted: prev.isFrozen ? null : new Date().toISOString()
+                    freezeStarted: prev.isFrozen ? null : new Date().toISOString(),
                 }));
             } else if (modal.action === 'scheduleFreeze') {
-                const response = await api.post(`/api/subscriptions/schedule-freeze/${subscription.subscriptionId}`,
+                const response = await api.post(
+                    `/api/subscriptions/schedule-freeze/${subscription.subscriptionId}`,
                     { startDate: freezeDates.startDate, endDate: freezeDates.endDate },
                     { withCredentials: true }
                 );
@@ -101,13 +112,18 @@ const SubscriptionManagement = () => {
     };
 
     return (
-        <div className="flex min-h-[calc(100vh-4rem)] bg-gradient-to-b from-gray-900 to-black text-white p-8">
-            <div className="w-full flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-[#0b0b1a] text-gray-100 relative overflow-hidden p-8">
+            <BackgroundBlobs />
+            <div className="relative z-10 max-w-7xl mx-auto">
                 {isLoading ? (
                     <p className="text-lg animate-pulse">Loading...</p>
                 ) : subscription ? (
-                    <div className="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-700">
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent mb-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-[#1a1a2e]/50 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-[#ffffff10]"
+                    >
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6">
                             My Subscription
                         </h1>
 
@@ -122,7 +138,10 @@ const SubscriptionManagement = () => {
                             <div className="flex justify-between items-center">
                                 <p className="text-lg flex items-center">
                                     <strong>Status:</strong>
-                                    <span className={`ml-2 px-3 py-1 rounded-full text-white text-sm ${subscription.isFrozen ? 'bg-blue-500' : 'bg-green-500'}`}>
+                                    <span
+                                        className={`ml-2 px-3 py-1 rounded-full text-white text-sm ${subscription.isFrozen ? 'bg-blue-500' : 'bg-green-500'
+                                            }`}
+                                    >
                                         {subscription.isFrozen ? 'Frozen' : 'Active'}
                                     </span>
                                 </p>
@@ -134,9 +153,13 @@ const SubscriptionManagement = () => {
                             </div>
 
                             {/* Dates */}
-                            <p className="text-lg"><strong>Ending Date:</strong> {formatDate(subscription.endDate)}</p>
+                            <p className="text-lg">
+                                <strong>Ending Date:</strong> {formatDate(subscription.endDate)}
+                            </p>
                             {subscription.isFrozen && (
-                                <p className="text-lg"><strong>Freeze Started:</strong> {formatDate(subscription.freezeStarted)}</p>
+                                <p className="text-lg">
+                                    <strong>Freeze Started:</strong> {formatDate(subscription.freezeStarted)}
+                                </p>
                             )}
 
                             {/* Auto-Renewal Switch */}
@@ -199,14 +222,14 @@ const SubscriptionManagement = () => {
                                 <div className="space-y-2">
                                     <input
                                         type="date"
-                                        className="w-full p-2 rounded-lg bg-gray-900 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                        className="w-full p-2 rounded-lg bg-[#1a1a2e] text-white border border-[#ffffff10] focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         value={freezeDates.startDate}
                                         onChange={(e) => setFreezeDates(prev => ({ ...prev, startDate: e.target.value }))}
                                         min={new Date().toISOString().split('T')[0]}
                                     />
                                     <input
                                         type="date"
-                                        className="w-full p-2 rounded-lg bg-gray-900 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                        className="w-full p-2 rounded-lg bg-[#1a1a2e] text-white border border-[#ffffff10] focus:outline-none focus:ring-2 focus:ring-purple-500"
                                         value={freezeDates.endDate}
                                         onChange={(e) => setFreezeDates(prev => ({ ...prev, endDate: e.target.value }))}
                                         min={freezeDates.startDate || new Date().toISOString().split('T')[0]}
@@ -214,7 +237,7 @@ const SubscriptionManagement = () => {
                                 </div>
                                 <button
                                     onClick={() => openModal('scheduleFreeze')}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                                    className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
                                 >
                                     Schedule Freeze
                                 </button>
@@ -226,7 +249,10 @@ const SubscriptionManagement = () => {
                                     <h3 className="text-xl font-semibold">Scheduled Freezes</h3>
                                     <div className="max-h-40 overflow-y-auto pr-2">
                                         {scheduledFreezes.map((freeze) => (
-                                            <div key={freeze.id} className="flex justify-between items-center text-gray-300 border-b border-gray-600 pb-2">
+                                            <div
+                                                key={freeze.id}
+                                                className="flex justify-between items-center text-gray-300 border-b border-[#ffffff10] pb-2"
+                                            >
                                                 <p>
                                                     <strong>{formatDate(freeze.startDate)}</strong> to <strong>{formatDate(freeze.endDate)}</strong>
                                                 </p>
@@ -253,35 +279,44 @@ const SubscriptionManagement = () => {
 
                         {/* Subscription Recommendation */}
                         {userId && <SubscriptionRecommendation userId={userId} />}
-                    </div>
+                    </motion.div>
                 ) : (
                     <p className="text-lg text-gray-400">You do not have an active subscription.</p>
                 )}
             </div>
 
             {/* Confirmation Modal */}
-            {modal.isOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
-                    <div className="bg-gray-800 p-6 rounded-xl shadow-2xl text-center w-80">
-                        <h2 className="text-2xl font-bold mb-4">Confirm Action</h2>
-                        <p className="mb-6 text-gray-300">Are you sure you want to {modal.action.replace(/([A-Z])/g, ' $1').toLowerCase()}?</p>
-                        <div className="flex justify-center space-x-4">
-                            <button
-                                onClick={closeModal}
-                                className="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
-                            >
-                                No
-                            </button>
-                            <button
-                                onClick={executeAction}
-                                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
-                            >
-                                Yes
-                            </button>
+            <AnimatePresence>
+                {modal.isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                    >
+                        <div className="bg-[#1a1a2e]/50 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-[#ffffff10] text-center w-80">
+                            <h2 className="text-2xl font-bold mb-4">Confirm Action</h2>
+                            <p className="mb-6 text-gray-300">
+                                Are you sure you want to {modal.action.replace(/([A-Z])/g, ' $1').toLowerCase()}?
+                            </p>
+                            <div className="flex justify-center space-x-4">
+                                <button
+                                    onClick={closeModal}
+                                    className="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
+                                >
+                                    No
+                                </button>
+                                <button
+                                    onClick={executeAction}
+                                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
+                                >
+                                    Yes
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

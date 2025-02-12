@@ -73,7 +73,7 @@ const HelpCentre = () => {
                                     key={index}
                                     className="text-gray-300 hover:text-white transition-colors cursor-pointer"
                                 >
-                                    ? {faq.question}
+                                    {faq.title}
                                 </li>
                             ))}
                         </ul>
@@ -88,7 +88,7 @@ const HelpCentre = () => {
                                     key={index}
                                     className="text-gray-300 hover:text-white transition-colors cursor-pointer"
                                 >
-                                    ?? {resource}
+                                    {resource}
                                 </li>
                             ))}
                         </ul>

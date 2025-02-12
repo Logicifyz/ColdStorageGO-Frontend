@@ -30,6 +30,7 @@ const Profile = () => {
     const [isFollowersListOpen, setIsFollowersListOpen] = useState(false);
     const [isFollowingListOpen, setIsFollowingListOpen] = useState(false);
     const [profilePicturePreview, setProfilePicturePreview] = useState('');
+        const [isPasswordNotSet, setIsPasswordNotSet] = useState(false); // State for password setup
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -44,6 +45,10 @@ const Profile = () => {
                         ProfilePicture: response.data.profilePicture || '',
                     };
                     setFormData(userData);
+                    if (!response.data.passwordHash || response.data.passwordHash === "google-login") {
+                        setIsPasswordNotSet(true);
+                        console.log("ispasswordnotset:",isPasswordNotSet)
+                    }
                     setOriginalData(userData);
                     setIsVerified(response.data.verified);
                     setProfilePicturePreview(userData.ProfilePicture ? `data:image/png;base64,${userData.ProfilePicture}` : 'default-profile.jpg');
@@ -164,7 +169,22 @@ const Profile = () => {
         setIsEditing(false);
         setErrorMessage('');
     };
-
+    const handleSetPassword = async () => {
+        console.log("Requesting password setup...");
+        try {
+            const response = await api.post('/api/Auth/request-password-set');
+            if (response.data.success) {
+                console.log("Password set token received:", response.data.Token);
+                alert("Check your email to set your password.");
+                navigate(`/sentpasswordresetemailsuccess`);
+            } else {
+                alert(response.data.Message);
+            }
+        } catch (error) {
+            console.error("Error requesting password setup:", error);
+            alert("Error requesting password setup.");
+        }
+    };
     const requestVerificationEmail = async () => {
         try {
             const response = await api.post('/api/Auth/request-verification-email', { Email: formData.Email });
@@ -199,6 +219,14 @@ const Profile = () => {
                         Profile
                     </h1>
                 </div>
+                {isPasswordNotSet && (
+                    <button
+                        onClick={handleSetPassword}
+                        className="bg-green-500 text-white p-3 rounded-lg mt-6 block w-full text-center font-bold hover:bg-green-600 transition duration-200"
+                    >
+                        Set Password
+                    </button>
+                )}
 
                 <div className="grid gap-4">
                     {successMessage && (
@@ -333,7 +361,7 @@ const Profile = () => {
                     </motion.div>
                 </div>
             </div>
-
+            
             <Modal
                 isOpen={isFollowersListOpen}
                 onRequestClose={closeFollowersModal}

@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const BackgroundBlobs = () => (
     <div className="absolute inset-0 overflow-hidden">
@@ -180,26 +180,36 @@ const SubscriptionForm = () => {
             <BackgroundBlobs />
             <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center justify-center h-full">
                 {/* Progress Bar */}
-                <div className="w-full max-w-2xl mb-8 relative">
-                    <div className="h-2 bg-[#555555] rounded-full overflow-hidden">
+                <div className="w-full max-w-2xl mb-8">
+                    <div className="relative h-2 bg-[#555555] rounded-full overflow-hidden">
+                        {/* Progress Bar Fill */}
                         <div
                             className="h-full bg-purple-500 transition-all duration-700"
                             style={{ width: `${progressPercentage}%` }}
                         />
                     </div>
+                    {/* Checkpoints */}
                     <div className="absolute top-0 left-0 w-full flex justify-between">
                         {[1, 2, 3].map((checkpoint) => (
                             <div
                                 key={checkpoint}
-                                className={`w-6 h-6 rounded-full flex items-center justify-center 
-                  ${step >= checkpoint ? 'bg-purple-500' : 'bg-[#555555]'
-                                    } transition-all duration-300`}
+                                className="relative"
+                                style={{
+                                    left: `${((checkpoint - 1) / 2) * 100}%`, // Evenly spaced checkpoints
+                                    transform: 'translateX(-50%)', // Center the checkpoints
+                                }}
                             >
-                                {step > checkpoint ? (
-                                    <span className="text-white text-sm">✓</span>
-                                ) : (
-                                    <span className="text-gray-200 text-sm">{checkpoint}</span>
-                                )}
+                                <div
+                                    className={`w-6 h-6 rounded-full flex items-center justify-center 
+                    ${step >= checkpoint ? 'bg-purple-500' : 'bg-[#555555]'
+                                        } transition-all duration-300`}
+                                >
+                                    {step > checkpoint ? (
+                                        <span className="text-white text-sm">✓</span>
+                                    ) : (
+                                        <span className="text-gray-200 text-sm">{checkpoint}</span>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>

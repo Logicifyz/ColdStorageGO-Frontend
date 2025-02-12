@@ -102,6 +102,7 @@ const App = () => {
                     <Route path="/verify-account/:token" element={<VerifyAccount />} />
                     <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
                     <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
+                    <Route path="/successfullysetpassword" element={<SuccessfullyResetPassword />} />
                     <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
 
                 </Route>
