@@ -89,37 +89,29 @@ const CreateRecipe = () => {
         e.preventDefault();
 
         const formattedIngredients = recipeForm.ingredients.map(ing => ({
-            quantity: ing.quantity.trim(),
-            unit: ing.unit.trim(),
-            name: ing.name.trim()
+            quantity: ing.quantity.trim() || "N/A",  // ? Ensure No Empty Values
+            unit: ing.unit.trim() || "N/A",
+            name: ing.name.trim() || "Unnamed Ingredient"
         }));
 
         const formattedInstructions = recipeForm.instructions.map((instr, index) => ({
-            stepNumber: index + 1, // Ensure step number consistency
-            step: instr.step.trim()
+            stepNumber: index + 1,
+            step: instr.step.trim() || "Step details missing"  // ? Ensure Step is Always Assigned
         }));
 
         const formData = new FormData();
-
-        // ? Log before sending to ensure correctness
-        console.log("?? Submitting Recipe Data:", {
-            ...recipeForm,
-            ingredients: formattedIngredients,
-            instructions: formattedInstructions
-        });
-
         formData.append("ingredients", JSON.stringify(formattedIngredients));
         formData.append("instructions", JSON.stringify(formattedInstructions));
 
         // ? Append Cover Images
         coverImages.forEach((file) => formData.append("coverImages", file));
 
-        // ? Append Instruction Images (Fixing Issue #1)
+        // ? Append Instruction Images Properly
         Object.keys(instructionImages).forEach((index) => {
             formData.append("instructionImages", instructionImages[index]);
         });
 
-        // ? Append other text fields
+        // ? Append Other Fields
         Object.keys(recipeForm).forEach((key) => {
             if (!["ingredients", "instructions"].includes(key)) {
                 formData.append(key, recipeForm[key]);
@@ -142,6 +134,7 @@ const CreateRecipe = () => {
             console.error("? Error creating recipe:", error);
         }
     };
+
 
 
 

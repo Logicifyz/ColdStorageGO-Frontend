@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { FaClock, FaTags, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 
 const DisplayForumRecipe = () => {
     const { recipeId } = useParams();
-    console.log("?? Extracted recipeId from URL:", recipeId);
-
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         if (!recipeId || recipeId === "undefined") {
-            console.error("?? Recipe ID is missing.");
             setError("Invalid Recipe ID.");
             setLoading(false);
             return;
@@ -20,16 +18,12 @@ const DisplayForumRecipe = () => {
         const fetchRecipe = async () => {
             try {
                 const response = await fetch(`http://localhost:5135/api/Recipes/${recipeId}`);
-
                 if (!response.ok) {
                     throw new Error(`Failed to fetch recipe: ${response.status}`);
                 }
-
                 const data = await response.json();
-                console.log("? Fetched Recipe Data:", data);
                 setRecipe(data);
             } catch (err) {
-                console.error("? Failed to fetch recipe details:", err);
                 setError("Failed to load recipe.");
             } finally {
                 setLoading(false);
@@ -39,59 +33,91 @@ const DisplayForumRecipe = () => {
         fetchRecipe();
     }, [recipeId]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p className="text-red-500">{error}</p>;
-    if (!recipe) return <p>No recipe found.</p>;
+    if (loading) return <p className="text-center text-gray-300 text-xl">Loading...</p>;
+    if (error) return <p className="text-center text-red-500 text-xl">{error}</p>;
+    if (!recipe) return <p className="text-center text-gray-400 text-xl">Recipe not found.</p>;
 
     return (
-        <div className="p-6 bg-[#383838] text-white min-h-screen">
-            <h1 className="text-3xl font-bold text-center mb-4">{recipe?.name}</h1>
-            <p className="text-gray-300 text-center">{recipe?.description}</p>
+        <div className="p-6 bg-[#1e1e1e] text-white min-h-screen">
+            {/* Recipe Title */}
+            <h1 className="text-5xl font-bold text-center mb-4 text-[#ff6b6b]">{recipe.Name}</h1>
+            <p className="text-center text-gray-400 text-lg mb-8">{recipe.Description}</p>
 
-            {/* ? Display Cover Image */}
-            {recipe?.coverImages?.length > 0 && (
-                <div className="flex justify-center my-6">
+            {/* Recipe Cover Image */}
+            <div className="flex justify-center my-8">
+                {recipe.CoverImages && recipe.CoverImages.length > 0 ? (
                     <img
-                        src={`data:image/jpeg;base64,${recipe.coverImages[0]}`}
+                        src={`data:image/jpeg;base64,${recipe.CoverImages[0]}`}
                         alt="Recipe Cover"
-                        className="w-80 h-80 object-cover rounded-lg shadow-lg"
+                        className="w-full max-w-2xl h-[400px] object-cover rounded-lg shadow-2xl transition-transform duration-300 hover:scale-105"
                     />
-                </div>
-            )}
-
-            {/* ? Recipe Metadata */}
-            <div className="text-center text-gray-400">
-                <p><strong>Time Taken:</strong> {recipe?.timeTaken} mins</p>
-                <p><strong>Visibility:</strong> {recipe?.visibility}</p>
-                <p><strong>Tags:</strong> {recipe?.tags || "No tags provided"}</p>
-                <p><strong>Votes:</strong> ?? {recipe?.upvotes || 0} | ?? {recipe?.downvotes || 0}</p>
+                ) : (
+                    <div className="w-full max-w-2xl h-[400px] bg-gray-700 rounded-lg flex items-center justify-center">
+                        <p className="text-gray-400 text-xl">No Image Available</p>
+                    </div>
+                )}
             </div>
 
-            {/* ? Ingredients Section */}
-            <h2 className="text-xl font-semibold mt-6">Ingredients</h2>
-            <ul className="list-disc pl-6 text-gray-300">
-                {recipe?.ingredients?.length > 0 ? (
-                    recipe.ingredients.map((ingredient, index) => (
-                        <li key={index}>
-                            {`${ingredient.quantity} ${ingredient.unit} - ${ingredient.name}`}
-                        </li>
-                    ))
-                ) : (
-                    <p>No ingredients listed.</p>
-                )}
-            </ul>
+            {/* Recipe Metadata */}
+            <div className="flex justify-center space-x-12 text-gray-400 my-8 border-b border-gray-600 pb-6">
+                <div className="flex items-center space-x-2">
+                    <FaClock className="text-[#ff6b6b]" />
+                    <p><strong>Time Taken:</strong> {recipe.TimeTaken} mins</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <FaTags className="text-[#ff6b6b]" />
+                    <p><strong>Tags:</strong> {recipe.Tags}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <FaThumbsUp className="text-[#ff6b6b]" />
+                    <p><strong>Upvotes:</strong> {recipe.Upvotes}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <FaThumbsDown className="text-[#ff6b6b]" />
+                    <p><strong>Downvotes:</strong> {recipe.Downvotes}</p>
+                </div>
+            </div>
 
-            {/* ? Instructions Section */}
-            <h2 className="text-xl font-semibold mt-6">Instructions</h2>
-            <ol className="list-decimal pl-6 text-gray-300">
-                {recipe?.instructions?.length > 0 ? (
-                    recipe.instructions.map((step, index) => (
-                        <li key={index}>{step.step}</li>
-                    ))
-                ) : (
-                    <p>No instructions provided.</p>
-                )}
-            </ol>
+            {/* Ingredients Section */}
+            <div className="mt-10 max-w-2xl mx-auto">
+                <h2 className="text-3xl font-semibold mb-6 text-[#ff6b6b]">Ingredients</h2>
+                <ul className="list-disc pl-8 text-gray-300 space-y-3">
+                    {recipe.Ingredients && recipe.Ingredients.length > 0 ? (
+                        recipe.Ingredients.map((ingredient) => (
+                            <li key={ingredient.IngredientId} className="text-lg">
+                                {`${ingredient.Quantity} ${ingredient.Unit} - ${ingredient.Name}`}
+                            </li>
+                        ))
+                    ) : (
+                        <p className="text-gray-400 text-lg">No ingredients listed.</p>
+                    )}
+                </ul>
+            </div>
+
+            {/* Instructions Section */}
+            <div className="mt-10 max-w-2xl mx-auto">
+                <h2 className="text-3xl font-semibold mb-6 text-[#ff6b6b]">Instructions</h2>
+                <ol className="list-decimal pl-8 text-gray-300 space-y-6">
+                    {recipe.Instructions && recipe.Instructions.length > 0 ? (
+                        recipe.Instructions.map((step) => (
+                            <li key={step.InstructionId} className="text-lg">
+                                <p>{step.Step}</p>
+                                {step.StepImage && step.StepImage !== "" && (
+                                    <div className="mt-4">
+                                        <img
+                                            src={`data:image/jpeg;base64,${step.StepImage}`}
+                                            alt={`Step ${step.StepNumber}`}
+                                            className="w-full h-96 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+                                        />
+                                    </div>
+                                )}
+                            </li>
+                        ))
+                    ) : (
+                        <p className="text-gray-400 text-lg">No instructions provided.</p>
+                    )}
+                </ol>
+            </div>
         </div>
     );
 };
