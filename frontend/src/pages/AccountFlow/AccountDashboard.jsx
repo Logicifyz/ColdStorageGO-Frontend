@@ -4,6 +4,9 @@ import api from '../../api';
 import ChangePassword from './AccountFlowComponents/ChangePassword';
 import DeleteAccount from './AccountFlowComponents/DeleteAccount';
 import Profile from './AccountFlowComponents/Profile';
+import MyRedemptions from './AccountFlowComponents/MyRedemptions';
+import MyOrders from './AccountFlowComponents/MyOrders';
+import MyOrderDetail from './AccountFlowComponents/MyOrderDetail';
 import MyTickets from './AccountFlowComponents/MyTickets';
 import SubscriptionManagement from './AccountFlowComponents/SubscriptionManagement';
 import SubscriptionHistory from './AccountFlowComponents/SubscriptionHistory';
@@ -160,6 +163,10 @@ const AccountDashboard = () => {
                         <SubscriptionManagement />
                     ) : activeTab === 'Subscription History' ? (
                         <SubscriptionHistory />
+                    ) : activeTab === 'My Orders' ? (
+                        <MyOrders />
+                    ) : activeTab === 'My Redemptions' ? (
+                        <MyRedemptions />
                     ) : (
                         <p>Currently viewing the {activeTab} section.</p>
                     )}

@@ -39,7 +39,6 @@ import SetPassword from "./pages/AuthFlow/SetPassword";
 // Staff Pages
 import StaffLogin from "./pages/StaffFlow/StaffLogin";
 import RewardManagement from "./pages/StaffFlow/StaffFlowComponents/RewardManagement";
-import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
 import GalleryManagement from "./pages/StaffFlow/StaffFlowComponents/GalleryManagement";
 import OrdersManagement from "./pages/StaffFlow/StaffFlowComponents/OrdersManagement";
 import TicketManagement from "./pages/StaffFlow/StaffFlowComponents/TicketManagement";
@@ -113,7 +112,6 @@ const App = () => {
                     <Route path="rewards" element={<RewardManagement />} />
                     <Route path="orders" element={<OrdersManagement />} />
                     <Route path="gallery" element={<GalleryManagement />} />
-                    <Route path="subscription" element={<StaffSubscriptionManagement />} />
                     <Route path="support" element={<SupportManagement />} />
                     <Route path="support/:ticketId" element={<TicketManagement />} />
                     <Route path="help-centre" element={<HelpCentreManagement />} />
