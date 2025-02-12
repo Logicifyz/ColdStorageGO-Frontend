@@ -2,9 +2,44 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import api from '../api';
+import { motion, AnimatePresence } from 'framer-motion';
+import { SparklesIcon, GiftIcon, CurrencyDollarIcon, XMarkIcon, PhotoIcon, BookOpenIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Initialize Stripe with your publishable key
 const stripePromise = loadStripe('pk_test_51QfdWdBwKaF4UCL2U5tt4GMubmDduDxy50PaDfVW0PKkb9bWlpYl7SIxDvxpjkIxUYrKPGdvBsCAvALCYshj8rOZ00HIxcZmFn');
+
+const BackgroundBlobs = () => (
+    <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-[#302b63] to-[#24243e] opacity-20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-[#4b379c] to-[#1a1a2e] opacity-20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    </div>
+);
+
+const GlowingButton = ({ children, onClick, className = "", type = "button" }) => (
+    <motion.button
+        type={type}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={onClick}
+        className={`relative overflow-hidden px-6 py-3 rounded-2xl font-medium ${className}`}
+    >
+        <span className="relative z-10">{children}</span>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#4f46e5] to-[#8b5cf6] opacity-20 blur-md" />
+    </motion.button>
+);
+
+const FloatingCard = ({ children }) => (
+    <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-3xl p-6 border border-[#ffffff10] shadow-2xl"
+    >
+        {children}
+    </motion.div>
+);
 
 const SubscriptionChoicePage = () => {
     const { state: formData } = useLocation();
@@ -134,111 +169,106 @@ const SubscriptionChoicePage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#383838] text-gray-200 flex flex-col items-center justify-center p-12 space-y-12 relative overflow-hidden">
-            {/* Background Animation */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute w-64 h-64 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full blur-3xl opacity-20 animate-float"></div>
-                <div className="absolute w-64 h-64 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full blur-3xl opacity-20 animate-float animation-delay-2000"></div>
-                <div className="absolute w-64 h-64 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full blur-3xl opacity-20 animate-float animation-delay-4000"></div>
-            </div>
+        <div className="min-h-screen bg-[#0b0b1a] text-gray-100 relative overflow-hidden p-8">
+            <BackgroundBlobs />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
+            <div className="relative z-10 max-w-7xl mx-auto">
+                <header className="flex items-center justify-between mb-12">
+                    <motion.h1
+                        initial={{ x: -20, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent"
+                    >
+                        <BookOpenIcon className="w-12 h-12 mr-4 inline-block" />
+                        Meal Kit Subscription
+                    </motion.h1>
+                </header>
 
-            {/* Header Section */}
-            <h2 className="text-5xl font-extrabold mb-8 text-center tracking-wide text-white relative z-10">
-                Choose Your Perfect Meal Kit
-            </h2>
-
-            {/* Carousel Section */}
-            <div className="flex items-center justify-center space-x-8 relative z-10">
-                <button
-                    onClick={handlePrev}
-                    className="text-white text-4xl hover:text-purple-400 transition-all duration-300"
-                >
-                    &#10094;
-                </button>
-                <div className="flex space-x-8">
-                    {getVisibleCards().map((meal, index) => (
-                        <div
-                            key={meal.title}
-                            className={`relative p-8 rounded-2xl shadow-lg border-2 cursor-pointer flex flex-col justify-between transform transition-all duration-500 
-                                ${index === 1 ? 'scale-110 bg-gradient-to-br from-[#444444] to-[#2E2E2E] border-purple-500' : 'scale-90 bg-[#444444] border-[#555555]'}`}
-                            style={{ width: '300px', height: '500px' }} // Tall, vertical rectangle cards
-                            onClick={() => handleSelect(meal)}
-                        >
-                            <div className="text-6xl mb-6 text-purple-400">{meal.icon}</div>
-                            <h3 className="text-4xl font-bold mb-6 text-purple-400">{meal.title}</h3>
-                            <p className="text-lg opacity-90 mb-6 text-gray-300">{meal.description}</p>
-                            <p className="text-2xl font-semibold text-purple-400">${calculatePrice(meal.basePrice)} / {formData.subscriptionType}</p>
-                        </div>
-                    ))}
-                </div>
-                <button
-                    onClick={handleNext}
-                    className="text-white text-4xl hover:text-purple-400 transition-all duration-300"
-                >
-                    &#10095;
-                </button>
-            </div>
-
-            {/* Confirmation Popup */}
-            {showPopup && selectedChoice && (
-                <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
-                    <div className="bg-[#444444] text-white p-12 rounded-xl shadow-2xl text-center max-w-lg space-y-6 transform scale-105 transition-all">
-                        <h3 className="text-4xl font-bold mb-6 text-white-400">Confirm Your Choice</h3>
-                        <p className="text-lg mb-4">You selected: <span className="font-semibold text-white-400">{selectedChoice.title}</span></p>
-                        <p className="text-xl mb-4 font-semibold">Total Price: <span className="text-white-400">${calculatePrice(selectedChoice.basePrice)}</span></p>
-                        <button
-                            onClick={handleConfirm}
-                            className="px-6 py-3 bg-green-500 text-white font-bold rounded-lg hover:bg-purple-600 transition-all transform hover:scale-105"
-                        >
-                            Confirm & Pay
-                        </button>
-                        <button
-                            onClick={handleCancel}
-                            className="px-6 py-3 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition-all transform hover:scale-105"
-                        >
-                            Cancel
-                        </button>
+                <div className="flex items-center justify-center space-x-8 relative z-10">
+                    <button
+                        onClick={handlePrev}
+                        className="text-white text-4xl hover:text-purple-400 transition-all duration-300"
+                    >
+                        &#10094;
+                    </button>
+                    <div className="flex space-x-8">
+                        {getVisibleCards().map((meal, index) => (
+                            <motion.div
+                                key={meal.title}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className={`relative p-8 rounded-2xl shadow-lg border-2 cursor-pointer flex flex-col justify-between transform transition-all duration-500 
+                  ${index === 1 ? 'scale-110 bg-gradient-to-br from-[#444444] to-[#2E2E2E] border-purple-500' : 'scale-90 bg-[#444444] border-[#555555]'}`}
+                                style={{ width: '300px', height: '500px' }} // Tall, vertical rectangle cards
+                                onClick={() => handleSelect(meal)}
+                            >
+                                <div className="text-6xl mb-6 text-purple-400">{meal.icon}</div>
+                                <h3 className="text-4xl font-bold mb-6 text-purple-400">{meal.title}</h3>
+                                <p className="text-lg opacity-90 mb-6 text-gray-300">{meal.description}</p>
+                                <p className="text-2xl font-semibold text-purple-400">${calculatePrice(meal.basePrice)} / {formData.subscriptionType}</p>
+                            </motion.div>
+                        ))}
                     </div>
+                    <button
+                        onClick={handleNext}
+                        className="text-white text-4xl hover:text-purple-400 transition-all duration-300"
+                    >
+                        &#10095;
+                    </button>
                 </div>
-            )}
 
-            {/* CSS Animations */}
-            <style>
-                {`
-                .gradient-text {
-                    background: linear-gradient(45deg, #FFC107, #FF8C00, #FF0080);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                }
-
-                @keyframes float {
-                    0% { transform: translateY(0) rotate(0deg); }
-                    50% { transform: translateY(-20px) rotate(10deg); }
-                    100% { transform: translateY(0) rotate(0deg); }
-                }
-
-                .animate-float {
-                    animation: float 6s infinite ease-in-out;
-                }
-
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-
-                .hover:scale-110:hover {
-                    animation: glow 1.2s infinite alternate;
-                }
-
-                @keyframes glow {
-                    0% { box-shadow: 0 0 5px #FFC107; }
-                    100% { box-shadow: 0 0 20px #FFC107; }
-                }
-                `}
-            </style>
+                {/* Confirmation Popup */}
+                <AnimatePresence>
+                    {showPopup && selectedChoice && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                        >
+                            <FloatingCard>
+                                <div className="flex justify-between items-center mb-6">
+                                    <h2 className="text-2xl font-bold">Confirm Your Choice</h2>
+                                    <button
+                                        onClick={handleCancel}
+                                        className="p-2 hover:bg-[#ffffff10] rounded-lg"
+                                    >
+                                        <XMarkIcon className="w-6 h-6" />
+                                    </button>
+                                </div>
+                                <p className="text-lg mb-4">You selected: <span className="font-semibold text-purple-400">{selectedChoice.title}</span></p>
+                                <p className="text-xl mb-4 font-semibold">Total Price: <span className="text-purple-400">${calculatePrice(selectedChoice.basePrice)}</span></p>
+                                <div className="flex justify-end gap-4">
+                                    <GlowingButton
+                                        onClick={handleConfirm}
+                                        className="bg-green-600 hover:bg-green-500"
+                                    >
+                                        Confirm & Pay
+                                    </GlowingButton>
+                                    <GlowingButton
+                                        onClick={handleCancel}
+                                        className="bg-red-600 hover:bg-red-500"
+                                    >
+                                        Cancel
+                                    </GlowingButton>
+                                </div>
+                            </FloatingCard>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     );
 };

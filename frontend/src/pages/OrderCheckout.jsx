@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { motion } from "framer-motion";
 import "tailwindcss/tailwind.css";
 
 const OrderCheckout = () => {
@@ -33,7 +34,6 @@ const OrderCheckout = () => {
   }, []);
 
   useEffect(() => {
-    // Combine address parts into one string
     setDeliveryAddress(`${street}, ${city}, ${state} ${postalCode}`);
   }, [street, city, state, postalCode]);
 
@@ -48,7 +48,6 @@ const OrderCheckout = () => {
   const fetchCartItems = async () => {
     try {
       const response = await api.get("/api/cart/view-cart");
-      // Enrich each cart item with MealKit details including the listing image
       const items = await Promise.all(
         response.data.map(async (item) => {
           try {
@@ -107,7 +106,6 @@ const OrderCheckout = () => {
     try {
       await api.post("/api/order", orderPayload);
       setSuccess("Order placed successfully!");
-      // Clear cart and reset form fields
       setStreet("");
       setCity("");
       setState("");
@@ -115,7 +113,6 @@ const OrderCheckout = () => {
       setCardNumber("");
       setExpiry("");
       setCvc("");
-      // Redirect to order success page
       navigate("/ordersuccess");
     } catch (err) {
       console.error("Checkout error", err);
@@ -132,7 +129,7 @@ const OrderCheckout = () => {
     if (!cardNumber.match(/^\d{4} \d{4} \d{4} \d{4}$/)) errors.push("Invalid card number");
     if (!expiry.match(/^\d{2}\/\d{2}$/)) errors.push("Invalid expiry date");
     if (!cvc.match(/^\d{3}$/)) errors.push("Invalid CVC");
-    
+
     if (errors.length) {
       setError(errors.join(". ") + ".");
       return false;
@@ -142,37 +139,51 @@ const OrderCheckout = () => {
 
   const formatCardNumber = (value) => {
     return value
-      .replace(/\D/g, '')
+      .replace(/\D/g, "")
       .match(/.{1,4}/g)
-      ?.join(' ')
-      .substr(0, 19) || '';
+      ?.join(" ")
+      .substr(0, 19) || "";
   };
 
   const formatExpiry = (value) => {
     return value
-      .replace(/\D/g, '')
+      .replace(/\D/g, "")
       .match(/.{1,2}/g)
-      ?.join('/')
-      .substr(0, 5) || '';
+      ?.join("/")
+      .substr(0, 5) || "";
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-8 font-inter text-gray-100">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative overflow-hidden p-8 font-inter text-gray-100">
+      {/* Abstract Background Blobs */}
+      <motion.div
+        className="absolute top-0 right-0 w-[40%] h-[60%] bg-[#ff6b6b10] rounded-full blur-3xl"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+      />
+      <motion.div
+        className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-[#ff8e5310] rounded-full blur-3xl"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      />
+
+      <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column - Checkout Form */}
-        <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
-          <h1 className="text-3xl font-bold mb-6">Checkout Details</h1>
+        <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+            Checkout Details
+          </h1>
           <form onSubmit={handleCheckout}>
-            {/* Address Section */}
+            {/* Shipping Address */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
+              <h2 className="text-2xl font-semibold mb-4">Shipping Address</h2>
               <div className="space-y-4">
                 <input
                   type="text"
                   placeholder="Street Address"
                   value={street}
                   onChange={(e) => setStreet(e.target.value)}
-                  className="w-full p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] backdrop-blur-sm border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                   required
                 />
                 <div className="grid grid-cols-2 gap-4">
@@ -181,7 +192,7 @@ const OrderCheckout = () => {
                     placeholder="City"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                     required
                   />
                   <input
@@ -189,7 +200,7 @@ const OrderCheckout = () => {
                     placeholder="State"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
-                    className="p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                     required
                   />
                 </div>
@@ -198,22 +209,22 @@ const OrderCheckout = () => {
                   placeholder="Postal Code"
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
-                  className="w-full p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] backdrop-blur-sm border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                   required
                 />
               </div>
             </div>
 
-            {/* Payment Section */}
+            {/* Payment Information */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Payment Information</h2>
+              <h2 className="text-2xl font-semibold mb-4">Payment Information</h2>
               <div className="space-y-4">
                 <input
                   type="text"
                   placeholder="Card Number"
                   value={formatCardNumber(cardNumber)}
                   onChange={(e) => setCardNumber(e.target.value)}
-                  className="w-full p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] backdrop-blur-sm border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                   maxLength={19}
                 />
                 <div className="grid grid-cols-2 gap-4">
@@ -222,7 +233,7 @@ const OrderCheckout = () => {
                     placeholder="MM/YY"
                     value={formatExpiry(expiry)}
                     onChange={(e) => setExpiry(e.target.value)}
-                    className="p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                     maxLength={5}
                   />
                   <input
@@ -232,7 +243,7 @@ const OrderCheckout = () => {
                     onChange={(e) =>
                       setCvc(e.target.value.replace(/\D/g, "").substr(0, 3))
                     }
-                    className="p-3 border border-gray-700 rounded-lg bg-gray-700 text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
                     maxLength={3}
                   />
                 </div>
@@ -244,7 +255,7 @@ const OrderCheckout = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 transition py-4 rounded-lg font-semibold text-lg"
+              className="w-full py-4 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] hover:from-[#ff8e53] hover:to-[#ff6b6b] transition rounded-2xl font-bold text-xl flex justify-center items-center shadow-lg"
             >
               Pay ${total.toFixed(2)}
             </button>
@@ -252,45 +263,50 @@ const OrderCheckout = () => {
         </div>
 
         {/* Right Column - Order Summary */}
-        <div className="bg-gray-800 rounded-xl p-6 shadow-lg">
-          <h2 className="text-3xl font-bold mb-6">Order Summary</h2>
+        <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl">
+          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+            Order Summary
+          </h2>
           <div className="divide-y divide-gray-700">
             {cartItems.map((item, index) => (
-              <div key={index} className="flex items-center py-4">
+              <motion.div
+                key={index}
+                className="flex items-center py-4"
+                whileHover={{ scale: 1.02 }}
+              >
                 <img
                   src={item.mealKit.listingImage}
                   alt={item.mealKit?.name || "Meal Kit"}
                   className="w-20 h-20 rounded-lg object-cover mr-4"
                 />
                 <div className="flex-1">
-                  <h3 className="font-semibold text-xl">
+                  <h3 className="font-semibold text-2xl">
                     {item.mealKit?.name || "Meal Kit"}
                   </h3>
                   <p className="text-gray-400">Qty: {item.quantity}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-xl">
+                  <p className="font-semibold text-2xl">
                     ${(item.mealKit?.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-
           <div className="mt-6 space-y-4">
-            <div className="flex justify-between text-lg">
+            <div className="flex justify-between text-xl">
               <span>Subtotal:</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-lg">
+            <div className="flex justify-between text-xl">
               <span>Delivery (5%):</span>
               <span>${shippingCost.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-lg">
+            <div className="flex justify-between text-xl">
               <span>Tax (9%):</span>
               <span>${taxes.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between font-bold text-2xl pt-4">
+            <div className="flex justify-between font-bold text-3xl pt-4">
               <span>Total:</span>
               <span>${total.toFixed(2)}</span>
             </div>
