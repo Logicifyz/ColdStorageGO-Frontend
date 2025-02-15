@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import ImageUploader from "../components/ImageUploader";
+import Select from "react-select";
 
 const CreateRecipe = () => {
+    const [dishes, setDishes] = useState([]);
     const [recipeForm, setRecipeForm] = useState({
         userId: "",
         dishId: "",
@@ -13,6 +15,47 @@ const CreateRecipe = () => {
         tags: "",
         visibility: "public",
     });
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await fetch("http://localhost:5135/api/Auth/check-session", {
+                    method: "GET",
+                    credentials: "include",
+                });
+
+                const data = await response.json();
+                if (data.sessionValid) {
+                    setRecipeForm((prev) => ({ ...prev, userId: data.userId }));
+                }
+            } catch (error) {
+                console.error("Error fetching user session:", error);
+            }
+        };
+
+        const fetchDishes = async () => {
+            try {
+                const response = await fetch("http://localhost:5135/api/Dish");
+                if (!response.ok) throw new Error("Failed to fetch dishes");
+                const data = await response.json();
+                setDishes(data.map(dish => ({ value: dish.dishId, label: dish.name })));
+            } catch (error) {
+                console.error("Error fetching dishes:", error);
+            }
+        };
+
+        fetchUser();
+        fetchDishes();
+    }, []);
+
+
+    const handleMealKitChange = (selectedOption) => {
+        console.log("🔹 Selected Dish:", selectedOption); // Log selected dish
+        setRecipeForm({ ...recipeForm, dishId: selectedOption ? selectedOption.value : "" });
+    };
+
+
+
 
     const [showImageUploader, setShowImageUploader] = useState(false);
     const [coverImages, setCoverImages] = useState([]);
@@ -88,6 +131,17 @@ const CreateRecipe = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // 🔹 Ensure User ID is Available
+        if (!recipeForm.userId) {
+            alert("You must be logged in to create a recipe.");
+            return;
+        }
+
+        if (!recipeForm.dishId) {
+            alert("You must select a MealKit (Dish).");
+            return;
+        }
+
         const formattedIngredients = recipeForm.ingredients.map(ing => ({
             quantity: ing.quantity.trim() || "N/A",  // ? Ensure No Empty Values
             unit: ing.unit.trim() || "N/A",
@@ -99,28 +153,30 @@ const CreateRecipe = () => {
             step: instr.step.trim() || "Step details missing"  // ? Ensure Step is Always Assigned
         }));
 
+        // 🔹 Create FormData to Handle Images & Recipe Data
         const formData = new FormData();
+        formData.append("userId", recipeForm.userId);
+        formData.append("dishId", recipeForm.dishId);
+        formData.append("name", recipeForm.name);
+        formData.append("description", recipeForm.description);
+        formData.append("timeTaken", recipeForm.timeTaken);
+        formData.append("tags", recipeForm.tags);
+        formData.append("visibility", recipeForm.visibility);
         formData.append("ingredients", JSON.stringify(formattedIngredients));
         formData.append("instructions", JSON.stringify(formattedInstructions));
 
-        // ? Append Cover Images
+        // 🔹 Append Cover Images
         coverImages.forEach((file) => formData.append("coverImages", file));
 
-        // ? Append Instruction Images Properly
+        // 🔹 Append Instruction Images
         Object.keys(instructionImages).forEach((index) => {
             formData.append("instructionImages", instructionImages[index]);
-        });
-
-        // ? Append Other Fields
-        Object.keys(recipeForm).forEach((key) => {
-            if (!["ingredients", "instructions"].includes(key)) {
-                formData.append(key, recipeForm[key]);
-            }
         });
 
         try {
             const response = await fetch("http://localhost:5135/api/Recipes", {
                 method: "POST",
+                credentials: "include",
                 body: formData,
             });
 
@@ -175,20 +231,12 @@ const CreateRecipe = () => {
 
                 {/* Form Fields */}
                 <div className="grid grid-cols-2 gap-6 mb-8">
-                    <input
-                        type="text"
-                        placeholder="User ID"
-                        value={recipeForm.userId}
-                        onChange={(e) => setRecipeForm({ ...recipeForm, userId: e.target.value })}
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
-                        required
-                    />
-                    <input
-                        type="text"
-                        placeholder="MealKit Used"
-                        value={recipeForm.dishId}
-                        onChange={(e) => setRecipeForm({ ...recipeForm, dishId: e.target.value })}
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                    <Select
+                        options={dishes}
+                        isSearchable
+                        placeholder="Select a MealKit..."
+                        onChange={handleMealKitChange}
+                        className="text-black"
                     />
                     <input
                         type="text"
