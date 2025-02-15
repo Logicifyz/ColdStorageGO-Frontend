@@ -5,6 +5,9 @@ import ChangePassword from './AccountFlowComponents/ChangePassword';
 import DeleteAccount from './AccountFlowComponents/DeleteAccount';
 import Profile from './AccountFlowComponents/Profile';
 import MyTickets from './AccountFlowComponents/MyTickets';
+import MyOrders from './AccountFlowComponents/MyOrders';
+import MyRedemptions from './AccountFlowComponents/MyRedemptions';
+
 import SubscriptionManagement from './AccountFlowComponents/SubscriptionManagement';
 import SubscriptionHistory from './AccountFlowComponents/SubscriptionHistory';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting
@@ -160,6 +163,10 @@ const AccountDashboard = () => {
                         <SubscriptionManagement />
                     ) : activeTab === 'Subscription History' ? (
                         <SubscriptionHistory />
+                    ) : activeTab === 'My Orders' ? (
+                        <MyOrders />
+                    ) : activeTab === 'My Redemptions' ? (
+                        <MyRedemptions/>
                     ) : (
                         <p>Currently viewing the {activeTab} section.</p>
                     )}
