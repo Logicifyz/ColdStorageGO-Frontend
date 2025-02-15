@@ -70,19 +70,20 @@ const MyTickets = () => {
 
             {/* Filter bar */}
             <div className="mt-4 mb-6">
-                <label htmlFor="statusFilter" className="mr-2">Filter by Status:</label>
+                <label htmlFor="statusFilter" className="mr-2 text-white">Filter by Status:</label>
                 <select
                     id="statusFilter"
                     value={selectedStatus}
                     onChange={handleStatusChange}
-                    className="px-4 py-2 border rounded-md"
+                    className="px-4 py-2 border rounded-md text-black"
                 >
-                    <option value="All">All</option>
-                    <option value="Open">Open</option> {/* Unassigned */}
-                    <option value="In Progress">In Progress</option> {/* In Progress */}
-                    <option value="Resolved">Resolved</option> {/* Resolved */}
+                    <option value="All" className="text-black">All</option>
+                    <option value="Open" className="text-black">Open</option> {/* Unassigned */}
+                    <option value="In Progress" className="text-black">In Progress</option> {/* In Progress */}
+                    <option value="Resolved" className="text-black">Resolved</option> {/* Resolved */}
                 </select>
             </div>
+
 
             {loading && <div>Loading...</div>}
             {error && <div className="text-red-500">{error}</div>}

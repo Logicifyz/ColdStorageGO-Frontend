@@ -8,6 +8,8 @@ const Navigation = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [profilePic, setProfilePic] = useState(null); // State to store profile picture
+    const [forumDropdown, setForumDropdown] = useState(false);
+    const [createPostDropdown, setCreatePostDropdown] = useState(false);
 
     useEffect(() => {
         // Function to check session validity
@@ -49,7 +51,46 @@ const Navigation = () => {
                     <Link to="/subscriptions" className="hover:text-gray-300">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
                     <Link to="/help-centre" className="hover:text-gray-300">Help Centre</Link>
-                    <Link to="/forum" className="hover:text-gray-300">Forum</Link>
+
+                    {/* Forum Dropdown */}
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setForumDropdown(true)}
+                        onMouseLeave={() => {
+                            setForumDropdown(false);
+                            setCreatePostDropdown(false);
+                        }}
+                    >
+                        <button className="hover:text-gray-300">Forum</button>
+                        {forumDropdown && (
+                            <div className="absolute bg-[#383838] text-white rounded shadow-lg mt-2 w-40">
+                                <Link to="/forum" className="block px-4 py-2 hover:bg-gray-600">
+                                    Home
+                                </Link>
+                                <div
+                                    className="relative"
+                                    onMouseEnter={() => setCreatePostDropdown(true)}
+                                    onMouseLeave={() => setCreatePostDropdown(false)}
+                                >
+                                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-600">
+                                        Create New Post
+                                    </button>
+                                    {createPostDropdown && (
+                                        <div className="absolute left-full top-0 bg-[#383838] text-white rounded shadow-lg mt-0 w-48">
+                                            <Link to="/create-recipe" className="block px-4 py-2 hover:bg-gray-600">
+                                                Create Recipe
+                                            </Link>
+                                            <Link to="/create-discussion" className="block px-4 py-2 hover:bg-gray-600">
+                                                Create Discussion
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link to="/cheffie-ai" className="hover:text-gray-300">Cheffie AI</Link>
                 </div>
 
                 <div className="flex items-center space-x-4">

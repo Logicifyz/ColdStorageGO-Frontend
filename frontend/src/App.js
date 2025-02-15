@@ -23,6 +23,11 @@ import Profile from "./pages/Profile";
 import HelpCentre from "./pages/HelpCentreFlow/HelpCentre";
 import ContactUs from "./pages/HelpCentreFlow/ContactUs";
 import OrderCheckout from "./pages/OrderCheckout";
+import Forum from "./pages/Forum";
+import CreateRecipe from "./pages/CreateRecipe";
+import DisplayForumRecipe from "./pages/DisplayForumRecipe";
+import CreateDiscussion from "./pages/CreateDiscussion";
+import CheffieAI from "./pages/CheffieAI";
 import Home from "./pages/Home";
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
@@ -70,7 +75,12 @@ const App = () => {
                     <Route path="/redemptions" element={<Redemption />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<OrderCheckout/>} />
-                    <Route path="/ordersuccess" element={<OrderSuccess/>} />
+                    <Route path="/ordersuccess" element={<OrderSuccess />} />
+                    <Route path="/forum" element={<Forum />} />
+                    <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
+                    <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
+                    <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
+                    <Route path="/cheffie-ai" element={<CheffieAI />} />
 
 
                     <Route path="/listing/:id" element={<Listing />} />
@@ -80,7 +90,7 @@ const App = () => {
                     <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
                     <Route path="/subscription-management" element={<SubscriptionManagement />} />
                     <Route path="/help-centre" element={<HelpCentre />} />
-                    <Route path="/Help-Centre/:category" element={<CategoryPage />} />
+                    <Route path="/help-centre/:category" element={<CategoryPage />} />
                     <Route path="/contact-us" element={<ContactUs />} />
                     <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
                     <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
@@ -102,6 +112,7 @@ const App = () => {
                     <Route path="/verify-account/:token" element={<VerifyAccount />} />
                     <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
                     <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
+                    <Route path="/successfullysetpassword" element={<SuccessfullyResetPassword />} />
                     <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
 
                 </Route>
@@ -112,12 +123,12 @@ const App = () => {
                     <Route path="rewards" element={<RewardManagement />} />
                     <Route path="orders" element={<OrdersManagement />} />
                     <Route path="gallery" element={<GalleryManagement />} />
-                    <Route path="subscription" element={<StaffSubscriptionManagement />} />
                     <Route path="support" element={<SupportManagement />} />
                     <Route path="support/:ticketId" element={<TicketManagement />} />
                     <Route path="help-centre" element={<HelpCentreManagement />} />
                     <Route path="help-centre/add-article" element={<AddArticle />} />
                     <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
+                    <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
 
                 </Route>
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Home, Gift, Image, Users, Package, HelpCircle, FileText } from "lucide-react"; // Importing HelpCircle for Support Management icon
+import { Home, Gift, Image, Users, Package, HelpCircle, FileText, Tag } from "lucide-react"; // Importing HelpCircle for Support Management icon
 
 const StaffSidebar = () => {
     return (
@@ -8,7 +8,7 @@ const StaffSidebar = () => {
             <h1 className="text-xl font-bold text-white mb-4">Staff Dashboard</h1>
             <nav className="flex flex-col space-y-2">
                 <NavItem to="/staff" icon={<Home size={20} />} label="Home" />
-                <NavItem to="/staff/subscription" icon={<Home size={20} />} label="Home" />
+                <NavItem to="/staff/subscription-management" icon={<Tag size={20} />} label="Subscription Management" />
                 <NavItem to="/staff/rewards" icon={<Gift size={20} />} label="Rewards Management" />
                 <NavItem to="/staff/gallery" icon={<Image size={20} />} label="Gallery Management" />
                 <NavItem to="/staff/accounts" icon={<Users size={20} />} label="Account Management" />
