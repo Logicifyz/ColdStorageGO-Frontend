@@ -11,24 +11,27 @@ const Forum = () => {
     // Fetch recipes and discussions
     useEffect(() => {
         const fetchData = async () => {
+            console.log("?? [FETCHING] Attempting to fetch recipes...");
+
             try {
                 const response = await fetch("http://localhost:5135/api/Recipes");
 
                 if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
+                    throw new Error(`? [API ERROR] HTTP Status: ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log("API Response (Recipes):", data);
+                console.log("? [API RESPONSE] Fetched Recipes:", data);
 
                 if (Array.isArray(data)) {
-                    setRecipes(data); // Ensure recipes are stored as an array
+                    console.log("?? [SETTING RECIPES] Data is valid. Storing recipes...");
+                    setRecipes(data);
                 } else {
-                    console.error("Unexpected API response structure", data);
+                    console.error("? [UNEXPECTED STRUCTURE] API response is not an array:", data);
                     setRecipes([]);
                 }
             } catch (error) {
-                console.error("Error fetching recipes:", error);
+                console.error("? [FETCH ERROR] Error fetching recipes:", error);
                 setRecipes([]);
             }
         };
@@ -37,11 +40,16 @@ const Forum = () => {
     }, []);
 
 
-
     const getCoverImageUrl = (recipe) => {
-        if (recipe.CoverImages && recipe.CoverImages.length > 0) {
-            return `data:image/jpeg;base64,${recipe.CoverImages[0]}`; // Convert Base64 properly
+        console.log("?? [IMAGE CHECK] Processing Recipe ID:", recipe.recipeId);
+        console.log("?? [IMAGE DATA] Cover Images Array:", recipe.coverImages);
+
+        if (Array.isArray(recipe.coverImages) && recipe.coverImages.length > 0) {
+            console.log("? [IMAGE FOUND] Using first cover image.");
+            return `data:image/jpeg;base64,${recipe.coverImages[0]}`;
         }
+
+        console.warn("?? [NO IMAGE] Using default placeholder.");
         return "/placeholder-image.png"; // Default image
     };
 
