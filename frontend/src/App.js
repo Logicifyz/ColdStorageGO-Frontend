@@ -27,6 +27,7 @@ import Forum from "./pages/Forum";
 import CreateRecipe from "./pages/CreateRecipe";
 import DisplayForumRecipe from "./pages/DisplayForumRecipe";
 import CreateDiscussion from "./pages/CreateDiscussion";
+import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
 import Home from "./pages/Home";
 // Authentication Pages
@@ -80,9 +81,8 @@ const App = () => {
                     <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
                     <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
                     <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
+                    <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
                     <Route path="/cheffie-ai" element={<CheffieAI />} />
-
-
                     <Route path="/listing/:id" element={<Listing />} />
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/subscriptions" element={<SubscriptionForm />} />

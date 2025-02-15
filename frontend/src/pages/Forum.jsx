@@ -11,28 +11,35 @@ const Forum = () => {
     // Fetch recipes and discussions
     useEffect(() => {
         const fetchData = async () => {
-            console.log("?? [FETCHING] Attempting to fetch recipes...");
+            console.log("?? [FETCHING] Attempting to fetch recipes & discussions...");
 
             try {
-                const response = await fetch("http://localhost:5135/api/Recipes");
+                // ? Fetch Recipes
+                const recipesResponse = await fetch("http://localhost:5135/api/Recipes");
+                if (!recipesResponse.ok) {
+                    throw new Error(`? [API ERROR] Recipes HTTP Status: ${recipesResponse.status}`);
+                }
+                const recipesData = await recipesResponse.json();
+                setRecipes(Array.isArray(recipesData) ? recipesData : []);
 
-                if (!response.ok) {
-                    throw new Error(`? [API ERROR] HTTP Status: ${response.status}`);
+                // ? Fetch Discussions (With Credentials for Auth)
+                const discussionsResponse = await fetch("http://localhost:5135/api/Discussions", {
+                    method: "GET",
+                    credentials: "include", // ? Ensures session authentication is sent
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (!discussionsResponse.ok) {
+                    throw new Error(`? [API ERROR] Discussions HTTP Status: ${discussionsResponse.status}`);
                 }
 
-                const data = await response.json();
-                console.log("? [API RESPONSE] Fetched Recipes:", data);
+                const discussionsData = await discussionsResponse.json();
+                setDiscussions(Array.isArray(discussionsData) ? discussionsData : []);
 
-                if (Array.isArray(data)) {
-                    console.log("?? [SETTING RECIPES] Data is valid. Storing recipes...");
-                    setRecipes(data);
-                } else {
-                    console.error("? [UNEXPECTED STRUCTURE] API response is not an array:", data);
-                    setRecipes([]);
-                }
             } catch (error) {
-                console.error("? [FETCH ERROR] Error fetching recipes:", error);
+                console.error("? [FETCH ERROR] Error fetching data:", error);
                 setRecipes([]);
+                setDiscussions([]); // ? Ensure discussions reset if error occurs
             }
         };
 
@@ -40,18 +47,20 @@ const Forum = () => {
     }, []);
 
 
-    const getCoverImageUrl = (recipe) => {
-        console.log("?? [IMAGE CHECK] Processing Recipe ID:", recipe.recipeId);
-        console.log("?? [IMAGE DATA] Cover Images Array:", recipe.coverImages);
 
-        if (Array.isArray(recipe.coverImages) && recipe.coverImages.length > 0) {
+    const getCoverImageUrl = (item) => {
+        console.log("?? [IMAGE CHECK] Processing Item ID:", item.recipeId || item.discussionId);
+        console.log("?? [IMAGE DATA] Cover Images Array:", item.coverImages);
+
+        if (Array.isArray(item.coverImages) && item.coverImages.length > 0) {
             console.log("? [IMAGE FOUND] Using first cover image.");
-            return `data:image/jpeg;base64,${recipe.coverImages[0]}`;
+            return `data:image/jpeg;base64,${item.coverImages[0]}`;
         }
 
         console.warn("?? [NO IMAGE] Using default placeholder.");
         return "/placeholder-image.png"; // Default image
     };
+
 
 
     const filterResults = (items) =>
@@ -152,9 +161,27 @@ const Forum = () => {
                         {filterResults(discussions).map((discussion) => (
                             <div
                                 key={discussion.discussionId}
-                                className="bg-[#2f2f2f] p-4 rounded shadow-lg flex items-start space-x-4 border border-gray-700 cursor-pointer"
-                                onClick={() => navigate(`/forum/discussion/${discussion.discussionId}`)} // Navigate to discussion page
+                                className="bg-[#2f2f2f] p-4 rounded shadow-lg flex items-start space-x-4 border border-gray-700 cursor-pointer hover:bg-[#444]"
+                                onClick={() => {
+                                    console.log("?? [NAVIGATING] Navigating to discussion:", discussion.discussionId);
+                                    if (discussion.discussionId) {
+                                        navigate(`/forum/discussion/${discussion.discussionId}`);
+                                    } else {
+                                        console.error("? Discussion ID is missing in Forum.jsx");
+                                    }
+                                }}
+
                             >
+                                {/* ? Display Cover Image (If Exists) */}
+                                {discussion.coverImages && discussion.coverImages.length > 0 && (
+                                    <div className="w-20 h-20 overflow-hidden rounded-md">
+                                        <img
+                                            src={getCoverImageUrl(discussion)}
+                                            alt="Discussion Cover"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                )}
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
                                         <p className="text-white font-bold">{discussion.title}</p>

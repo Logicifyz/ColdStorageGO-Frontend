@@ -8,8 +8,7 @@ import MyRedemptions from './AccountFlowComponents/MyRedemptions';
 import MyOrders from './AccountFlowComponents/MyOrders';
 import MyOrderDetail from './AccountFlowComponents/MyOrderDetail';
 import MyTickets from './AccountFlowComponents/MyTickets';
-import MyOrders from './AccountFlowComponents/MyOrders';
-import MyRedemptions from './AccountFlowComponents/MyRedemptions';
+
 
 import SubscriptionManagement from './AccountFlowComponents/SubscriptionManagement';
 import SubscriptionHistory from './AccountFlowComponents/SubscriptionHistory';
