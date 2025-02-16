@@ -6,7 +6,7 @@ import SessionProtectedRoute from "./SessionHandler"; // Import your session han
 
 const ProtectedLayout = () => {
     return (
-        <SessionProtectedRoute>
+        <SessionProtectedRoute isPublic={false}>
             <Navbar />
             <Outlet />
             <Footer />

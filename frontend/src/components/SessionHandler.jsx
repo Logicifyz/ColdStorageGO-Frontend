@@ -23,7 +23,7 @@ const SessionProtectedRoute = ({ children, isPublic = false }) => {
 
     // Function to check the session validity
     const checkSession = useCallback(async () => {
-        if (sessionExpired || isPublic) return; // Skip session check if expired or public page
+        if (sessionExpired || (isPublic && !isLoggedIn)) return; // Skip session check if expired or public page
 
         try {
             const response = await api.get("api/Auth/check-session");
@@ -34,10 +34,26 @@ const SessionProtectedRoute = ({ children, isPublic = false }) => {
                 expiryTimeRef.current = Date.now() + SESSION_EXPIRATION; // Reset expiry time
                 setShowExpiryWarningModal(false); // Hide warning modal
                 setTimeLeft(SESSION_EXPIRATION); // Reset countdown
+                setIsLoggedIn(true);
             } else {
+                console.log(reason)
+                setIsLoggedIn(false);
+                console.log("Is logged in:", isLoggedIn)
                 switch (reason) {
                     case "NoSession":
+                        if (!isPublic) {
+                            console.log("No active session. Redirecting to PleaseLogin.");
+                            setIsLoggedIn(false);
+                            navigate("/please-login");
+                        }
+                        break;
                     case "SessionNotFound":
+                        if (!isPublic) {
+                            console.log("No active session. Redirecting to PleaseLogin.");
+                            setIsLoggedIn(false);
+                            navigate("/please-login");
+                        }
+                        break;
                     case "SessionInactive":
                         if (!isPublic) {
                             console.log("No active session. Redirecting to PleaseLogin.");
@@ -66,7 +82,13 @@ const SessionProtectedRoute = ({ children, isPublic = false }) => {
 
     // Timer to check session status at regular intervals
     useEffect(() => {
-        if (sessionExpired || (isPublic && !isLoggedIn)) return; // Stop checking if session has expired or page is public and not logged in
+        checkSession(); // Ensure session is checked as soon as the page loads
+    }, [checkSession]);
+
+    useEffect(() => {
+        console.log(isLoggedIn)
+        console.log(isPublic)
+        if (sessionExpired || (isPublic && !isLoggedIn)) return;
 
         const interval = setInterval(() => {
             const now = Date.now();
