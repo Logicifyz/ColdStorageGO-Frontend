@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import api from '../api';
 
 const Navigation = () => {
     const navigate = useNavigate();
+    const location = useLocation();  // Add useLocation hook to track route changes
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [profilePic, setProfilePic] = useState(null); // State to store profile picture
     const [forumDropdown, setForumDropdown] = useState(false);
     const [createPostDropdown, setCreatePostDropdown] = useState(false);
+    const [username, setUsername] = useState(''); // State to store username
 
     useEffect(() => {
         // Function to check session validity
@@ -18,8 +20,12 @@ const Navigation = () => {
                 const response = await api.get("api/Auth/check-session");
                 setIsLoggedIn(response.data.sessionValid); // Update isLoggedIn state based on session validity
                 if (response.data.sessionValid) {
-                    // Assuming the profile picture URL is part of the response
-                    setProfilePic(response.data.profilePic || null);
+                    // Format the profile picture if it exists
+                    const profilePicBase64 = response.data.profilePic
+                        ? `data:image/png;base64,${response.data.profilePic}`
+                        : null;
+                    setProfilePic(profilePicBase64); // Set the formatted profile picture
+                    setUsername(response.data.username || ''); // Store the username
                 }
             } catch (error) {
                 console.error("Error checking session:", error);
@@ -27,8 +33,8 @@ const Navigation = () => {
             }
         };
 
-        checkSession(); // Call the function to check session validity
-    }, []);
+        checkSession(); // Call the function to check session validity when component mounts or location changes
+    }, [location]); // Dependency on location means it will re-run when the route changes
 
     const handleLoginClick = () => {
         navigate("/login");
@@ -36,6 +42,13 @@ const Navigation = () => {
 
     const handleProfileClick = () => {
         navigate("/account-dashboard");
+    };
+
+    const getInitials = (name) => {
+        if (!name) return ''; // Return empty string if no name
+        const nameParts = name.split(' ');
+        const initials = nameParts[0].charAt(0).toUpperCase() + (nameParts[1] ? nameParts[1].charAt(0).toUpperCase() : '');
+        return initials; // Combine initials from first and last name
     };
 
     return (
@@ -98,12 +111,15 @@ const Navigation = () => {
                         <div className="cursor-pointer" onClick={handleProfileClick}>
                             {profilePic ? (
                                 <img
-                                    src={profilePic}
+                                    src={profilePic} // Use the formatted Base64 string
                                     alt="Profile"
                                     className="w-8 h-8 rounded-full border-2 border-white"
                                 />
                             ) : (
-                                <div className="w-8 h-8 rounded-full border-2 border-white bg-white"></div>
+                                    <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center">
+                                        <span className="text-gray-800">{getInitials(username)}</span> {/* Show initials if no profile picture */}
+                                    </div>
+
                             )}
                         </div>
                     ) : (

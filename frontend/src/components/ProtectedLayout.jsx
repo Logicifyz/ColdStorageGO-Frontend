@@ -1,21 +1,18 @@
-// PublicLayout.jsx
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navigation";
 import Footer from "./Footer";
 import SessionProtectedRoute from "./SessionHandler"; // Import your session handler
 
-const PublicLayout = () => {
+const ProtectedLayout = () => {
     return (
-        <>
-            <SessionProtectedRoute isPublic={true}>
+        <SessionProtectedRoute isPublic={false}>
             <Navbar />
             <Outlet />
             <Footer />
-            </SessionProtectedRoute>
-
-        </>
+        </SessionProtectedRoute>
     );
 };
 
-export default PublicLayout;
+
+export default ProtectedLayout;
