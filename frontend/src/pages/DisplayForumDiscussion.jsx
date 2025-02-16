@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import CommentsSection from "../components/CommentsSection";
 import { FaThumbsUp, FaThumbsDown, FaCommentAlt } from "react-icons/fa";
 
 const DisplayForumDiscussion = () => {
@@ -118,10 +119,9 @@ const DisplayForumDiscussion = () => {
                 </button>
             </div>
 
-            {/* TODO: Comments Section (To Be Added Later) */}
+            
             <div className="mt-10 max-w-2xl mx-auto">
-                <h2 className="text-3xl font-semibold mb-6 text-[#ff6b6b]">Comments</h2>
-                <p className="text-gray-400 text-lg">Commenting feature coming soon...</p>
+                <CommentsSection postId={discussionId} postType="discussion" />
             </div>
         </div>
     );

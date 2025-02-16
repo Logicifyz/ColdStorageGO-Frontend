@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FaClock, FaTags, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import CommentsSection from "../components/CommentsSection";
 
 const DisplayForumRecipe = () => {
     const { recipeId } = useParams();
@@ -146,6 +147,11 @@ const DisplayForumRecipe = () => {
                 ) : (
                     <p className="text-red-400">?? Instructions data is not an array!</p>
                 )}
+            </div>
+
+            {/* ? Comments Section */}
+            <div className="mt-10 max-w-2xl mx-auto">
+                <CommentsSection postId={recipeId} postType="recipe" />
             </div>
         </div>
     );
