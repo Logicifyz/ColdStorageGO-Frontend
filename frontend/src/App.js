@@ -2,11 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { EmailProvider } from "./context/EmailContext";
-
 // Layouts
 import PublicLayout from "./components/PublicLayout";
 import StaffLayout from "./components/StaffLayout";
-
 // Public Pages
 import Gallery from "./pages/Gallery";
 import SubscriptionForm from "./pages/Subscriptions";
@@ -35,6 +33,8 @@ import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAc
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 import SetPassword from "./pages/AuthFlow/SetPassword";
+import SuccessfullySentSetPasswordEmail from "./pages/AuthFlow/SuccessfullySentSetPasswordEmail";
+import SuccessfullySetPassword from "./pages/AuthFlow/SuccessfullySetPassword";
 
 // Staff Pages
 import StaffLogin from "./pages/StaffFlow/StaffLogin";
@@ -50,7 +50,8 @@ import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
 import TicketDetails from "./pages/AccountFlow/AccountFlowComponents/TicketDetails";
 import AnalyticsDashboard from "./pages/StaffFlow/StaffFlowComponents/AnalyticsDashboard";
 import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
-
+import ProtectedLayout from "./components/ProtectedLayout";
+import PleaseLogin from "./pages/PleaseLogin"
 
 
 
@@ -61,10 +62,17 @@ const App = () => {
     return (
         <Router>
             <Routes>
+
+                <Route element={<ProtectedLayout />}>
+                <Route path="/account-dashboard" element={<AccountDashboard />} />
+                <Route path="/contact-us" element={<ContactUs />} />
+                <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
+                </Route>
+
                 {/* Public Routes using PublicLayout */}
                 <Route element={<PublicLayout />}>
+                    <Route path="/please-login" element={<PleaseLogin />} />
                     <Route path="/" element={<Home />} />
-                    <Route path="/account-dashboard" element={<AccountDashboard />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/rewards" element={<Rewards />} />
                     <Route path="/redemptions" element={<Redemption />} />
@@ -79,12 +87,12 @@ const App = () => {
                     <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
                     <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
                     <Route path="/subscription-management" element={<SubscriptionManagement />} />
-                    <Route path="/help-centre" element={<HelpCentre />} />
-                    <Route path="/help-centre/:category" element={<CategoryPage />} />
-                    <Route path="/contact-us" element={<ContactUs />} />
-                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                    <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
 
+                    <Route path="/help-centre" element={<HelpCentre />} />
+                    <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
+
+                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
+                   
                     {/* Wrap only the Login page with GoogleOAuthProvider */}
                     <Route
                         path="/login"
@@ -96,15 +104,15 @@ const App = () => {
                     />
 
                     <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
-                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                    <Route path="/setpassword/:token" element={<SetPassword />} />
                     <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
                     <Route path="/verify-account/:token" element={<VerifyAccount />} />
                     <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
                     <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
-                    <Route path="/successfullysetpassword" element={<SuccessfullyResetPassword />} />
+                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
                     <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
-
+                    <Route path="/successfullysetpassword" element={<SuccessfullySetPassword />} />
+                    <Route path="/setpassword/:token" element={<SetPassword />} />
+                    <Route path="/successfullysentsetpasswordemail" element={<SuccessfullySentSetPasswordEmail />} />
                 </Route>
 
                 {/* Staff Routes using StaffLayout */}

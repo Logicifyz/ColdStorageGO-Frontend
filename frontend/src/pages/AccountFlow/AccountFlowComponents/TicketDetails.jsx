@@ -57,60 +57,85 @@ const TicketDetails = () => {
     }
 
     return (
-        <div className="ticket-details container mx-auto p-6 max-w-4xl">
-            {/* Ticket Header */}
-            <div className="bg-white shadow-md rounded-lg p-6">
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">Ticket Details</h2>
-                <div className="space-y-4">
-                    <p className="text-gray-700"><strong>Subject:</strong> {ticket.subject}</p>
-                    <p className="text-gray-700"><strong>Category:</strong> {ticket.category}</p>
-                    <p className="text-gray-700"><strong>Priority:</strong> {ticket.priority}</p>
-                    <p className="text-gray-700"><strong>Status:</strong> {ticket.status}</p>
-                    <p className="text-gray-700"><strong>Created At:</strong> {new Date(ticket.createdAt).toLocaleString()}</p>
-                    {ticket.resolvedAt && (
-                        <p className="text-gray-700"><strong>Resolved At:</strong> {new Date(ticket.resolvedAt).toLocaleString()}</p>
-                    )}
-                    <p className="text-gray-700"><strong>Details:</strong> {ticket.details}</p>
-                </div>
-            </div>
-
-            {/* Ticket Images */}
-            {ticket.images && ticket.images.length > 0 && (
-                <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-                    <h3 className="text-2xl font-bold text-gray-800 mb-4">Ticket Images</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {ticket.images.map((img) => (
-                            <div key={img.imageId} className="image-item">
-                                <img
-                                    src={`data:image/jpeg;base64,${img.imageData}`} // Corrected field name
-                                    alt="Ticket Image"
-                                    className="w-full h-auto rounded-lg shadow-sm"
-                                    style={{ objectFit: 'cover', maxWidth: '100%', maxHeight: '400px' }}
-                                />
-
+        <div className="container mx-auto p-6 max-w-7xl">
+            {/* Main Grid Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-[40%_60%] gap-8">
+                {/* Left Column: Ticket Details (40%) */}
+                <div className="space-y-6">
+                    {/* Ticket Header */}
+                    <div className="bg-white shadow-lg rounded-lg p-6">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-6">Ticket Details</h2>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500">Subject</label>
+                                <p className="mt-1 text-lg font-semibold text-gray-800">{ticket.subject}</p>
                             </div>
-                        ))}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500">Category</label>
+                                <p className="mt-1 text-lg font-semibold text-gray-800">{ticket.category}</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500">Priority</label>
+                                <p className="mt-1 text-lg font-semibold text-gray-800">{ticket.priority}</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500">Status</label>
+                                <p className="mt-1 text-lg font-semibold text-gray-800">{ticket.status}</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500">Created At</label>
+                                <p className="mt-1 text-lg font-semibold text-gray-800">{new Date(ticket.createdAt).toLocaleString()}</p>
+                            </div>
+                            {ticket.resolvedAt && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-500">Resolved At</label>
+                                    <p className="mt-1 text-lg font-semibold text-gray-800">{new Date(ticket.resolvedAt).toLocaleString()}</p>
+                                </div>
+                            )}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-500">Details</label>
+                                <p className="mt-1 text-lg text-gray-800">{ticket.details}</p>
+                            </div>
+                        </div>
                     </div>
+
+                    {/* Ticket Images */}
+                    {ticket.images && ticket.images.length > 0 && (
+                        <div className="bg-white shadow-lg rounded-lg p-6">
+                            <h3 className="text-2xl font-bold text-gray-800 mb-4">Ticket Images</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {ticket.images.map((img) => (
+                                    <div key={img.imageId} className="image-item">
+                                        <img
+                                            src={`data:image/jpeg;base64,${img.imageData}`} // Corrected field name
+                                            alt="Ticket Image"
+                                            className="w-full h-auto rounded-lg shadow-sm"
+                                            style={{ objectFit: 'cover', maxWidth: '100%', maxHeight: '400px' }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
-            )}
 
-
-            {/* Chat Section */}
-            <div className="bg-white shadow-md rounded-lg p-6 mt-6">
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">Chat</h3>
-                <Chat
-                    userId={userId}
-                    staffId={staffId}
-                    ticketId={ticketId}
-                    isStaff={false}
-                />
+                {/* Right Column: Chat Section (60%) */}
+                <div className="bg-white shadow-lg rounded-lg p-6">
+                    <h3 className="text-2xl font-bold text-gray-800 mb-6">Chat</h3>
+                    <Chat
+                        userId={userId}
+                        staffId={staffId}
+                        ticketId={ticketId}
+                        isStaff={false}
+                    />
+                </div>
             </div>
 
             {/* Back Button */}
-            <div className="mt-6">
+            <div className="mt-8 flex justify-center">
                 <button
                     onClick={() => navigate("/account-dashboard")}
-                    className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
                 >
                     Back to Dashboard
                 </button>

@@ -36,7 +36,7 @@ const DeleteAccount = () => {
                 setSuccessMessage('Your account has been deleted successfully.');
                 setPassword('');
                 setTimeout(() => {
-                    navigate('/account-dashboard');
+                    navigate('/');
                 }, 2000);
             }
         } catch (error) {
