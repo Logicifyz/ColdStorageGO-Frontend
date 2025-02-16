@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaReply } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown, FaReply } from "react-icons/fa";
 import { formatDistanceToNow, parseISO, format } from "date-fns";
 
 
@@ -58,13 +58,19 @@ const CommentsSection = ({ postId, postType }) => {
 
             if (!response.ok) throw new Error("Failed to fetch comments");
             const data = await response.json();
-            setComments(data);
+
+            // ? Ensure that UserVote is stored correctly
+            setComments(data.map(comment => ({
+                ...comment,
+                userVote: comment.userVote // Preserve vote state on refresh
+            })));
         } catch (err) {
             console.error("[ERROR] Fetching Comments:", err);
         } finally {
             setLoading(false);
         }
     };
+
 
     const postComment = async (parentCommentId = null) => {
         if (!newComment.trim() || !userId) {
@@ -101,6 +107,59 @@ const CommentsSection = ({ postId, postType }) => {
         }
     };
 
+    const handleVote = async (commentId, voteType) => {
+        try {
+            const response = await fetch(`http://localhost:5135/api/Comments/${commentId}/vote`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(voteType),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                // ? Recursive function to update votes in nested structure
+                const updateComments = (commentsList) => {
+                    return commentsList.map(comment => {
+                        if (comment.commentId === commentId) {
+                            let newUserVote = voteType;
+
+                            // Toggle vote if the same button is clicked
+                            if (comment.userVote === voteType) {
+                                newUserVote = 0; // Reset vote
+                            }
+
+                            return {
+                                ...comment,
+                                upvotes: data.upvotes,
+                                downvotes: data.downvotes,
+                                userVote: newUserVote,
+                            };
+                        } else if (comment.replies && comment.replies.length > 0) {
+                            return {
+                                ...comment,
+                                replies: updateComments(comment.replies), // Recursively update replies
+                            };
+                        }
+                        return comment;
+                    });
+                };
+
+                setComments(prevComments => updateComments(prevComments));
+            } else {
+                console.error("[ERROR] Voting Failed:", data);
+            }
+        } catch (err) {
+            console.error("[ERROR] Voting Request Failed:", err);
+        }
+    };
+
+
+
+
+
+
+
     const renderComments = (comments, level = 0) => {
         return comments.map((comment) => (
             <div key={comment.commentId} className={`border-l-4 pl-4 mt-4 ${level > 0 ? 'ml-6' : ''}`}>
@@ -119,8 +178,23 @@ const CommentsSection = ({ postId, postType }) => {
                 </div>
 
                 <p className="text-gray-300 ml-12">{comment.content}</p>
-                <div className="flex space-x-4 text-gray-400 ml-12">
-                    <button className="flex items-center" onClick={() => setReplyingTo(comment.commentId)}>
+                {/* ? Voting and Reply Actions */}
+                <div className="flex space-x-4 text-gray-400 ml-12 items-center">
+                    {/* ? Upvote Button */}
+                    <button className={`flex items-center ${comment.userVote === 1 ? "text-blue-500" : ""}`} onClick={() => handleVote(comment.commentId, 1)}>
+                        <FaArrowUp className="mr-1" />
+                    </button>
+
+                    {/* ? Vote Count (Upvotes - Downvotes) */}
+                    <span className="text-gray-300 font-bold">{comment.upvotes}</span>
+
+                    {/* ? Downvote Button */}
+                    <button className={`flex items-center ${comment.userVote === -1 ? "text-red-500" : ""}`} onClick={() => handleVote(comment.commentId, -1)}>
+                        <FaArrowDown className="mr-1" />
+                    </button>
+
+                    {/* ? Reply Button */}
+                    <button className="flex items-center text-gray-400 ml-4" onClick={() => setReplyingTo(comment.commentId)}>
                         <FaReply className="mr-1 text-[#ff6b6b]" /> Reply
                     </button>
                 </div>
