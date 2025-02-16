@@ -8,6 +8,8 @@ import MyRedemptions from './AccountFlowComponents/MyRedemptions';
 import MyOrders from './AccountFlowComponents/MyOrders';
 import MyOrderDetail from './AccountFlowComponents/MyOrderDetail';
 import MyTickets from './AccountFlowComponents/MyTickets';
+
+
 import SubscriptionManagement from './AccountFlowComponents/SubscriptionManagement';
 import SubscriptionHistory from './AccountFlowComponents/SubscriptionHistory';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirecting
@@ -166,7 +168,7 @@ const AccountDashboard = () => {
                     ) : activeTab === 'My Orders' ? (
                         <MyOrders />
                     ) : activeTab === 'My Redemptions' ? (
-                        <MyRedemptions />
+                        <MyRedemptions/>
                     ) : (
                         <p>Currently viewing the {activeTab} section.</p>
                     )}
