@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { EmailProvider } from "./context/EmailContext";
 // Layouts
 import PublicLayout from "./components/PublicLayout";
+import ProtectedLayout from "./components/ProtectedLayout";
 import StaffLayout from "./components/StaffLayout";
 // Public Pages
 import Gallery from "./pages/Gallery";
@@ -28,6 +29,8 @@ import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
 import Home from "./pages/Home";
+import PleaseLogin from "./pages/PleaseLogin"
+
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
 import Login from "./pages/AuthFlow/Login";
@@ -56,10 +59,8 @@ import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
 import TicketDetails from "./pages/AccountFlow/AccountFlowComponents/TicketDetails";
 import AnalyticsDashboard from "./pages/StaffFlow/StaffFlowComponents/AnalyticsDashboard";
 import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
-import ProtectedLayout from "./components/ProtectedLayout";
-import PleaseLogin from "./pages/PleaseLogin"
-
-
+import AccountManagement from "./pages/StaffFlow/StaffFlowComponents/AccountManagement";
+import AccountDetails from "./pages/StaffFlow/StaffFlowComponents/AccountDetails";
 
 
 
@@ -137,6 +138,8 @@ const App = () => {
                     <Route path="help-centre/add-article" element={<AddArticle />} />
                     <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
                     <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
+                    <Route path="account-management" element={<AccountManagement />} />
+                    <Route path="account-management/:userID" element={<AccountDetails />} />
 
                 </Route>
 

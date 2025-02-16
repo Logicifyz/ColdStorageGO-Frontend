@@ -5,6 +5,7 @@ import StaffSidebar from "./StaffSideBar";
 
 const StaffLayout = () => {
     return (
+
         <div className="flex min-h-screen font-inter bg-gray-100">
             <StaffSidebar />
             <main className="flex-1 p-8 overflow-auto">

@@ -4,18 +4,11 @@
     "\\frontend",
     "\\frontend\\src",
     "\\frontend\\src\\components",
-    "\\frontend\\src\\context",
-    "\\frontend\\src\\context",
-    "\\frontend\\src\\context",
     "\\frontend\\src\\pages",
-    "\\frontend\\src\\pages\\AuthFlow",
-    "\\frontend\\src\\pages\\HelpCentreFlow",
-    "\\frontend\\src\\pages\\StaffFlow",
+    "\\frontend\\src\\pages\\AccountFlow",
     "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
-    "\\frontend\\src\\pages\\StaffFlow",
-  "SelectedNode": "\\frontend\\src\\pages\\SubscriptionChoicePage.jsx",
-  "SelectedNode": "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\MyOrders.jsx",
+    "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents"
   ],
-  "SelectedNode": "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents\\TicketManagement.jsx",
+  "SelectedNode": "\\frontend\\src\\components\\SessionHandler.jsx",
   "PreviewInSolutionExplorer": false
 }
