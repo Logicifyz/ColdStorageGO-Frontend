@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowUp, FaArrowDown, FaCommentAlt, FaBookmark } from "react-icons/fa";
+import VoteButton from "../components/VoteButton"; 
 
 const Forum = () => {
     const [recipes, setRecipes] = useState([]);
@@ -11,35 +12,24 @@ const Forum = () => {
     // Fetch recipes and discussions
     useEffect(() => {
         const fetchData = async () => {
-            console.log("?? [FETCHING] Attempting to fetch recipes & discussions...");
-
             try {
-                // ? Fetch Recipes
-                const recipesResponse = await fetch("http://localhost:5135/api/Recipes");
-                if (!recipesResponse.ok) {
-                    throw new Error(`? [API ERROR] Recipes HTTP Status: ${recipesResponse.status}`);
-                }
+                const recipesResponse = await fetch("http://localhost:5135/api/Recipes", {
+                    credentials: "include",
+                });
+                if (!recipesResponse.ok) throw new Error(`Failed to fetch recipes: ${recipesResponse.status}`);
                 const recipesData = await recipesResponse.json();
                 setRecipes(Array.isArray(recipesData) ? recipesData : []);
 
-                // ? Fetch Discussions (With Credentials for Auth)
                 const discussionsResponse = await fetch("http://localhost:5135/api/Discussions", {
-                    method: "GET",
-                    credentials: "include", // ? Ensures session authentication is sent
-                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
                 });
-
-                if (!discussionsResponse.ok) {
-                    throw new Error(`? [API ERROR] Discussions HTTP Status: ${discussionsResponse.status}`);
-                }
-
+                if (!discussionsResponse.ok) throw new Error(`Failed to fetch discussions: ${discussionsResponse.status}`);
                 const discussionsData = await discussionsResponse.json();
                 setDiscussions(Array.isArray(discussionsData) ? discussionsData : []);
-
             } catch (error) {
-                console.error("? [FETCH ERROR] Error fetching data:", error);
+                console.error("Error fetching data:", error);
                 setRecipes([]);
-                setDiscussions([]); // ? Ensure discussions reset if error occurs
+                setDiscussions([]);
             }
         };
 
@@ -71,6 +61,22 @@ const Forum = () => {
                 item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 item.content?.toLowerCase().includes(searchQuery.toLowerCase())
         );
+
+    const handleVoteUpdate = (updatedData, discussionId) => {
+        setDiscussions((prevDiscussions) =>
+            prevDiscussions.map((discussion) =>
+                discussion.discussionId === discussionId
+                    ? {
+                        ...discussion,
+                        upvotes: updatedData.upvotes,
+                        downvotes: updatedData.downvotes,
+                        voteScore: updatedData.voteScore,
+                        userVote: updatedData.userVote,
+                    }
+                    : discussion
+            )
+        );
+    };
 
 
     return (
@@ -130,14 +136,15 @@ const Forum = () => {
 
                                     {/* Action Buttons */}
                                     <div className="flex items-center space-x-4 text-gray-400 mt-3">
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowUp />
-                                            <span>{recipe.upvotes || 0}</span>
-                                        </button>
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowDown />
-                                            <span>{recipe.downvotes || 0}</span>
-                                        </button>
+                                        {/* Replaced Upvote/Downvote Buttons with VoteButton */}
+                                        <VoteButton
+                                            id={recipe.recipeId}
+                                            upvotes={recipe.upvotes}
+                                            downvotes={recipe.downvotes}
+                                            userVote={recipe.userVote}
+                                            type="recipe"
+                                            onVoteUpdate={(data) => handleVoteUpdate(data, recipe.recipeId)}
+                                        />
                                         <button className="hover:text-white">
                                             <FaCommentAlt />
                                         </button>
@@ -191,14 +198,15 @@ const Forum = () => {
                                     </div>
                                     <p className="text-gray-300 text-sm mb-2">{discussion.content}</p>
                                     <div className="flex items-center space-x-4 text-gray-400">
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowUp />
-                                            <span>{discussion.upvotes || 0}</span>
-                                        </button>
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowDown />
-                                            <span>{discussion.downvotes || 0}</span>
-                                        </button>
+                                        <VoteButton
+                                            key={discussion.discussionId}
+                                            id={discussion.discussionId}
+                                            upvotes={discussion.upvotes}
+                                            downvotes={discussion.downvotes}
+                                            userVote={discussion.userVote}
+                                            type="discussion"
+                                            onVoteUpdate={(data) => handleVoteUpdate(data, discussion.discussionId)}
+                                        />
                                         <button className="hover:text-white">
                                             <FaCommentAlt />
                                         </button>

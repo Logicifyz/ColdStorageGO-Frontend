@@ -1,73 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CommentsSection from "../components/CommentsSection";
 import { FaThumbsUp, FaThumbsDown, FaCommentAlt } from "react-icons/fa";
+import CommentsSection from "../components/CommentsSection";
+import VoteButton from "../components/VoteButton";
 
 const DisplayForumDiscussion = () => {
     const { discussionId } = useParams();
-    console.log("?? [DEBUG] Extracted discussionId from URL:", discussionId);
-
     const [discussion, setDiscussion] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const fetchDiscussion = async () => {
+        try {
+            const response = await fetch(`http://localhost:5135/api/Discussions/${discussionId}`, {
+                credentials: "include",
+            });
+            if (!response.ok) throw new Error(`Failed to fetch discussion: ${response.status}`);
+            const data = await response.json();
+            setDiscussion(data);
+        } catch (err) {
+            console.error("Failed to load discussion:", err);
+            setError("Failed to load discussion.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        console.log("?? [DEBUG] useParams() returned discussionId:", discussionId);
-
         if (!discussionId || discussionId === "undefined") {
-            console.error("? [ERROR] Invalid Discussion ID detected.");
             setError("Invalid Discussion ID.");
             setLoading(false);
             return;
         }
-
-        const fetchDiscussion = async () => {
-            console.log("?? [FETCHING] Attempting to fetch discussion with ID:", discussionId);
-            try {
-                const response = await fetch(`http://localhost:5135/api/Discussions/${discussionId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include"
-                });
-
-
-                if (!response.ok) {
-                    throw new Error(`? [API ERROR] Failed to fetch discussion: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log("? [API RESPONSE] Fetched Discussion Data:", data);
-                setDiscussion(data);
-            } catch (err) {
-                console.error("? [FETCH ERROR] Failed to load discussion:", err);
-                setError("Failed to load discussion.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchDiscussion();
     }, [discussionId]);
 
-    if (loading) {
-        console.log("? [LOADING] Displaying loading message...");
-        return <p className="text-center text-gray-300 text-xl">Loading...</p>;
-    }
+    const handleVoteUpdate = (updatedData) => {
+        setDiscussion((prevDiscussion) => ({
+            ...prevDiscussion,
+            upvotes: updatedData.upvotes,
+            downvotes: updatedData.downvotes,
+            voteScore: updatedData.voteScore,
+            userVote: updatedData.userVote,
+        }));
+    };
 
-    if (error) {
-        console.error("? [ERROR] Displaying error message:", error);
-        return <p className="text-center text-red-500 text-xl">{error}</p>;
-    }
-
-    if (!discussion) {
-        console.warn("?? [WARNING] Discussion not found.");
-        return <p className="text-center text-gray-400 text-xl">Discussion not found.</p>;
-    }
-
-    console.log("?? [DEBUG] Rendering Discussion:", discussion);
+    if (loading) return <p className="text-center text-gray-300 text-xl">Loading...</p>;
+    if (error) return <p className="text-center text-red-500 text-xl">{error}</p>;
+    if (!discussion) return <p className="text-center text-gray-400 text-xl">Discussion not found.</p>;
 
     return (
         <div className="p-6 bg-[#1e1e1e] text-white min-h-screen">
@@ -105,14 +85,14 @@ const DisplayForumDiscussion = () => {
 
             {/* Discussion Actions */}
             <div className="flex justify-center space-x-12 text-gray-400 my-8 border-b border-gray-600 pb-6">
-                <button className="flex items-center space-x-2 hover:text-white">
-                    <FaThumbsUp className="text-[#ff6b6b]" />
-                    <span>{discussion.upvotes || 0} Upvotes</span>
-                </button>
-                <button className="flex items-center space-x-2 hover:text-white">
-                    <FaThumbsDown className="text-[#ff6b6b]" />
-                    <span>{discussion.downvotes || 0} Downvotes</span>
-                </button>
+                <VoteButton
+                    id={discussion.discussionId}
+                    upvotes={discussion.upvotes}
+                    downvotes={discussion.downvotes}
+                    userVote={discussion.userVote}
+                    type="discussion"
+                    onVoteUpdate={handleVoteUpdate}
+                />
                 <button className="flex items-center space-x-2 hover:text-white">
                     <FaCommentAlt className="text-[#ff6b6b]" />
                     <span>Add Comment</span>
