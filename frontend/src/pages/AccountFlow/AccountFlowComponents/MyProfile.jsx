@@ -5,7 +5,7 @@ import FollowList from './FollowList';
 import Modal from 'react-modal';
 import { motion } from 'framer-motion';
 
-const Profile = () => {
+const MyProfile = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         Email: '',
@@ -459,4 +459,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default MyProfile;

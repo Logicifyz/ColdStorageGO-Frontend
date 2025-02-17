@@ -5,9 +5,10 @@ import api from "../api";
 
 // Session timing constants
 const SESSION_CHECK_INTERVAL = 1000; // Check every second
-const SESSION_EXPIRATION_WARNING = 30000; // Show warning at 30 seconds left
-const SESSION_EXPIRATION = 60000; // Expire after 1 minute
+const SESSION_EXPIRATION_WARNING = 1800000 - 300000; // 5 minutes before expiry (25 minutes)
+const SESSION_EXPIRATION = 1800000; // Expire after 30 minutes (30 minutes = 1800000 ms)
 const DEBOUNCE_DELAY = 500; // 500ms debounce delay
+
 
 // Set the app element for react-modal (for accessibility)
 Modal.setAppElement("#root");
