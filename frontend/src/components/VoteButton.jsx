@@ -47,7 +47,10 @@ const VoteButton = ({ id, upvotes, downvotes, userVote, type, onVoteUpdate }) =>
             <button
                 className={`flex items-center space-x-1 transition-colors ${voteState.userVote === 1 ? "text-blue-500" : "text-gray-400 hover:text-white"
                     }`}
-                onClick={() => handleVote(1)}
+                onClick={(e) => {
+                    e.stopPropagation(); 
+                    handleVote(1);
+                }}
             >
                 <FaArrowUp />
                 <span>{voteState.upvotes}</span>
@@ -56,7 +59,10 @@ const VoteButton = ({ id, upvotes, downvotes, userVote, type, onVoteUpdate }) =>
             <button
                 className={`flex items-center transition-colors ${voteState.userVote === -1 ? "text-red-500" : "text-gray-400 hover:text-white"
                     }`}
-                onClick={() => handleVote(-1)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleVote(-1);
+                }}
             >
                 <FaArrowDown />
             </button>
