@@ -1,6 +1,6 @@
 ﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const BackgroundBlobs = () => (
     <div className="absolute inset-0 overflow-hidden">
@@ -173,64 +173,87 @@ const SubscriptionForm = () => {
         }
     };
 
-    const progressPercentage = (step / 3) * 100;
-
     return (
         <div className="min-h-screen bg-[#0b0b1a] text-gray-100 relative overflow-hidden p-8">
             <BackgroundBlobs />
             <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center justify-center h-full">
                 {/* Progress Bar */}
-                <div className="w-full max-w-2xl mb-8">
-                    <div className="relative h-2 bg-[#555555] rounded-full overflow-hidden">
-                        {/* Progress Bar Fill */}
-                        <div
-                            className="h-full bg-purple-500 transition-all duration-700"
-                            style={{ width: `${progressPercentage}%` }}
-                        />
-                    </div>
-                    {/* Checkpoints */}
-                    <div className="absolute top-0 left-0 w-full flex justify-between">
-                        {[1, 2, 3].map((checkpoint) => (
-                            <div
+                <div className="w-full max-w-2xl mb-8 flex justify-center items-center text-center">
+                    <motion.ol
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="flex items-center w-full text-sm font-medium text-center text-gray-400 sm:text-base"
+                    >
+                        {[1, 2, 3].map((checkpoint, index) => (
+                            <motion.li
                                 key={checkpoint}
-                                className="relative"
-                                style={{
-                                    left: `${((checkpoint - 1) / 2) * 100}%`, // Evenly spaced checkpoints
-                                    transform: 'translateX(-50%)', // Center the checkpoints
-                                }}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.5, delay: checkpoint * 0.2 }}
+                                className={`flex md:w-full items-center ${step >= checkpoint ? 'text-purple-500' : 'text-gray-400'
+                                    } ${index < 2 ? 'sm:after:content-[""] after:w-full after:h-1 after:border-b after:border-gray-600 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10' : ''}`} // Only add the line for the first two steps
                             >
-                                <div
-                                    className={`w-6 h-6 rounded-full flex items-center justify-center 
-                    ${step >= checkpoint ? 'bg-purple-500' : 'bg-[#555555]'
-                                        } transition-all duration-300`}
-                                >
+                                <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-600">
                                     {step > checkpoint ? (
-                                        <span className="text-white text-sm">✓</span>
+                                        <svg
+                                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                        </svg>
                                     ) : (
-                                        <span className="text-gray-200 text-sm">{checkpoint}</span>
+                                        <span className="me-2">{checkpoint}</span>
                                     )}
-                                </div>
-                            </div>
+                                    {checkpoint === 1 && 'Appetite'}
+                                    {checkpoint === 2 && 'Delivery'}
+                                    {checkpoint === 3 && 'Plan'}
+                                </span>
+                            </motion.li>
                         ))}
-                    </div>
-                    <p className="text-center mt-2 text-lg text-gray-300">{`Step ${step} of 3`}</p>
+                    </motion.ol>
                 </div>
 
                 {/* Header Section */}
-                <h1 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                <motion.h1
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent"
+                >
                     {renderQuestion()}
-                </h1>
+                </motion.h1>
 
                 {/* Dynamic Description Box */}
-                <p className="text-lg text-gray-400 text-center mb-8 max-w-2xl">
+                <motion.p
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    className="text-lg text-gray-400 text-center mb-8 max-w-2xl"
+                >
                     {renderDescription()}
-                </p>
+                </motion.p>
 
                 {/* Options Section */}
-                <div className="w-full max-w-2xl">{renderOptions()}</div>
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="w-full max-w-2xl"
+                >
+                    {renderOptions()}
+                </motion.div>
 
                 {/* Button Section */}
-                <div className="flex justify-center w-full max-w-md mt-12 space-x-6">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                    className="flex justify-center w-full max-w-md mt-12 space-x-6"
+                >
                     {step > 1 && (
                         <GlowingButton
                             onClick={handleBack}
@@ -251,7 +274,7 @@ const SubscriptionForm = () => {
                     >
                         {step === 3 ? 'Confirm & Next' : 'Next'}
                     </GlowingButton>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

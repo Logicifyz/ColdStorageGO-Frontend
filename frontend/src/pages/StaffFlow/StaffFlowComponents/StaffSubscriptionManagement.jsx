@@ -26,6 +26,8 @@ const StaffSubscriptionManagement = () => {
     const [subscriptions, setSubscriptions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [filterStatus, setFilterStatus] = useState("all"); // "all", "active", "expired", "canceled"
+    const [modal, setModal] = useState({ isOpen: false, subscriptionId: null });
 
     useEffect(() => {
         fetchSubscriptions();
@@ -43,10 +45,29 @@ const StaffSubscriptionManagement = () => {
         }
     };
 
-    const filteredSubscriptions = subscriptions.filter(sub =>
-        sub.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        sub.subscriptionType.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredSubscriptions = subscriptions.filter(sub => {
+        const matchesSearchTerm =
+            sub.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            sub.subscriptionType.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus =
+            filterStatus === "all" || sub.status.toLowerCase() === filterStatus.toLowerCase();
+
+        return matchesSearchTerm && matchesStatus;
+    });
+
+    const handleCancelSubscription = async () => {
+        if (!modal.subscriptionId) return;
+        try {
+            await api.delete(`/api/subscriptions/cancel/${modal.subscriptionId}`, { withCredentials: true });
+            toast.success("Subscription canceled successfully.");
+            fetchSubscriptions(); // Refresh the list
+        } catch (error) {
+            toast.error("Error canceling subscription");
+        } finally {
+            setModal({ isOpen: false, subscriptionId: null });
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#0b0b1a] text-gray-100 relative overflow-hidden p-8">
@@ -74,6 +95,47 @@ const StaffSubscriptionManagement = () => {
                     </div>
                 </header>
 
+                {/* Filter Tabs */}
+                <div className="flex gap-4 mb-8">
+                    <button
+                        onClick={() => setFilterStatus("all")}
+                        className={`px-4 py-2 rounded-lg transition-all duration-300 ${filterStatus === "all"
+                                ? "bg-purple-600 hover:bg-purple-700"
+                                : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                    >
+                        All
+                    </button>
+                    <button
+                        onClick={() => setFilterStatus("active")}
+                        className={`px-4 py-2 rounded-lg transition-all duration-300 ${filterStatus === "active"
+                                ? "bg-green-600 hover:bg-green-700"
+                                : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                    >
+                        Active
+                    </button>
+                    <button
+                        onClick={() => setFilterStatus("expired")}
+                        className={`px-4 py-2 rounded-lg transition-all duration-300 ${filterStatus === "expired"
+                                ? "bg-yellow-600 hover:bg-yellow-700"
+                                : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                    >
+                        Expired
+                    </button>
+                    <button
+                        onClick={() => setFilterStatus("canceled")}
+                        className={`px-4 py-2 rounded-lg transition-all duration-300 ${filterStatus === "canceled"
+                                ? "bg-red-600 hover:bg-red-700"
+                                : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                    >
+                        Canceled
+                    </button>
+                </div>
+
+                {/* Subscription Cards */}
                 <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
                     <AnimatePresence>
                         {filteredSubscriptions.map((subscription) => (
@@ -91,12 +153,55 @@ const StaffSubscriptionManagement = () => {
                                     <p className="text-gray-400 mb-4">User ID: {subscription.userId}</p>
                                     <p>Status: <span className={`text-${subscription.status === "Active" ? "green" : "red"}-400`}>{subscription.status}</span></p>
                                     <p>Auto-Renew: {subscription.autoRenewal ? "Yes" : "No"}</p>
+
+                                    {/* Cancel Button for Active Subscriptions */}
+                                    {subscription.status === "Active" && (
+                                        <button
+                                            onClick={() => setModal({ isOpen: true, subscriptionId: subscription.subscriptionId })}
+                                            className="mt-4 w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                                        >
+                                            Cancel Subscription
+                                        </button>
+                                    )}
                                 </FloatingCard>
                             </motion.div>
                         ))}
                     </AnimatePresence>
                 </motion.div>
             </div>
+
+            {/* Confirmation Modal */}
+            <AnimatePresence>
+                {modal.isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                    >
+                        <div className="bg-[#1a1a2e]/50 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-[#ffffff10] text-center w-80">
+                            <h2 className="text-2xl font-bold mb-4">Confirm Action</h2>
+                            <p className="mb-6 text-gray-300">
+                                Are you sure you want to cancel this subscription?
+                            </p>
+                            <div className="flex justify-center space-x-4">
+                                <button
+                                    onClick={() => setModal({ isOpen: false, subscriptionId: null })}
+                                    className="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
+                                >
+                                    No
+                                </button>
+                                <button
+                                    onClick={handleCancelSubscription}
+                                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
+                                >
+                                    Yes
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
