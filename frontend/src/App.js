@@ -71,6 +71,7 @@ import Notifications from "./pages/AccountFlow/AccountFlowComponents/Notificatio
 import AccountDashboardLayout from "./pages/AccountFlow/AccountDashboardLayout";
 import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
 import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
+import MyForumActivity from "./pages/AccountFlow/AccountFlowComponents/MyForumActivity";
 
 
 const App = () => {
@@ -94,6 +95,7 @@ const App = () => {
                         <Route path="subscription-history" element={<SubscriptionHistory />} />
                         <Route path="notifications" element={<Notifications />} />
                         <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
+                        <Route path="my-forum-activity" element={<MyForumActivity />} />
 
                     </Route>
 

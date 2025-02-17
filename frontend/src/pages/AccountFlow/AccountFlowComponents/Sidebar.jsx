@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Gift, Image, Users, Package, HelpCircle, FileText, Tag, LogOut } from "lucide-react"; // Importing icons
+import { Home, Gift, Image, Users, Package, HelpCircle, FileText, Tag, LogOut, MessageSquare } from "lucide-react"; // Importing icons
 import api from '../../../api';
 
 const Sidebar = () => {
@@ -29,6 +29,7 @@ const Sidebar = () => {
                 <NavItem to="/account-dashboard/my-orders" icon={<Tag size={20} />} label="My Orders" />
                 <NavItem to="/account-dashboard/my-tickets" icon={<Gift size={20} />} label="My Tickets" />
                 <NavItem to="/account-dashboard/my-redemptions" icon={<Image size={20} />} label="My Redemptions" />
+                <NavItem to="/account-dashboard/my-forum-activity" icon={<MessageSquare size={20} />} label="My Forum Activity" />
                 <NavItem to="/account-dashboard/subscription-management" icon={<Package size={20} />} label="Subscription Management" />
                 <NavItem to="/account-dashboard/subscription-history" icon={<Users size={20} />} label="Subscription History" />
                 <NavItem to="/account-dashboard/notifications" icon={<HelpCircle size={20} />} label="Notifications" />
