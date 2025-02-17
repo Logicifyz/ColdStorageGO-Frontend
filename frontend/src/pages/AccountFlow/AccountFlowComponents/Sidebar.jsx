@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Gift, Image, Users, Package, HelpCircle, FileText, Tag, LogOut, MessageSquare } from "lucide-react"; // Importing icons
+import { Home, Gift, Image, Users, Package, HelpCircle, FileText, Tag, LogOut, MessageSquare,MapPinHouse } from "lucide-react"; // Importing icons
 import api from '../../../api';
 
 const Sidebar = () => {
@@ -26,6 +26,7 @@ const Sidebar = () => {
             <h1 className="text-xl font-bold text-white mb-4">Account Dashboard</h1>
             <nav className="flex flex-col space-y-2">
                 <NavItem to="/account-dashboard/profile" icon={<Home size={20} />} label="Profile" />
+                <NavItem to="/account-dashboard/address" icon={<MapPinHouse size={20} />} label="Address" />
                 <NavItem to="/account-dashboard/my-orders" icon={<Tag size={20} />} label="My Orders" />
                 <NavItem to="/account-dashboard/my-tickets" icon={<Gift size={20} />} label="My Tickets" />
                 <NavItem to="/account-dashboard/my-redemptions" icon={<Image size={20} />} label="My Redemptions" />

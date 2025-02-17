@@ -31,6 +31,7 @@ const SubscriptionManagement = () => {
     const [scheduledFreezes, setScheduledFreezes] = useState([]);
     const [userId, setUserId] = useState(null);
     const [freezeMessage, setFreezeMessage] = useState({ type: "", text: "" }); // type: "error" or "success", text: message
+    const [canceledFreezes, setCanceledFreezes] = useState(new Set());
 
     useEffect(() => {
         const fetchSubscription = async () => {
@@ -52,6 +53,8 @@ const SubscriptionManagement = () => {
                 setSubscription(response.data);
                 const freezeResponse = await api.get(`/api/subscriptions/scheduled-freezes/${response.data.subscriptionId}`, { withCredentials: true });
                 setScheduledFreezes(freezeResponse.data);  // ✅ Ensure FreezeId is received and stored
+                const storedCanceledFreezes = JSON.parse(localStorage.getItem('canceledFreezes')) || [];
+                setCanceledFreezes(new Set(storedCanceledFreezes));
             } catch (error) {
                 console.error('Error fetching subscription:', error);
                 setSubscription(null);
@@ -128,8 +131,7 @@ const SubscriptionManagement = () => {
 
                 // Fetch the updated list of scheduled freezes
                 const freezeResponse = await api.get(`/api/subscriptions/scheduled-freezes/${subscription.subscriptionId}`, { withCredentials: true });
-                setScheduledFreezes(freezeResponse.data);
-
+                setScheduledFreezes(freezeResponse.data)
                 setFreezeDates({ startDate: "", endDate: "" });
                 setFreezeMessage({ type: "success", text: `Freeze scheduled from ${freezeDates.startDate} to ${freezeDates.endDate}` });
             } else if (modal.action === 'cancelScheduledFreeze') {
@@ -145,7 +147,9 @@ const SubscriptionManagement = () => {
 
                 // Update the UI by removing the canceled freeze
                 setScheduledFreezes(prev => prev.filter(f => f.id !== modal.freezeId));
-
+                const updatedCanceledFreezes = new Set([...canceledFreezes, modal.freezeId]);
+                setCanceledFreezes(prev => new Set([...prev, modal.freezeId])); 
+                localStorage.setItem('canceledFreezes', JSON.stringify([...updatedCanceledFreezes]));
                 setFreezeMessage({ type: "success", text: "Scheduled freeze canceled successfully." });
             }
         } catch (error) {
@@ -313,17 +317,15 @@ const SubscriptionManagement = () => {
                                                     <p>
                                                         <strong>{formatDate(freeze.startDate)}</strong> to <strong>{formatDate(freeze.endDate)}</strong>
                                                     </p>
-
-                                                    {/* Remove cancel button if the freeze has been canceled (endDate is today + 1) */}
-                                                    {freezeEndDate.getTime() !== todayPlusOne.getTime() && (
+                                                    {!canceledFreezes.has(freeze.freezeId) && (
                                                         <button
                                                             onClick={() => openModal('cancelScheduledFreeze', freeze.freezeId)}
                                                             className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 transform hover:scale-110"
-                                                        >
+                                                    >
                                                             Cancel
                                                         </button>
                                                     )}
-                                                </div>
+                                                </div>  
                                             );
                                         })}
                                     </div>
