@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { motion } from "framer-motion";
 import "tailwindcss/tailwind.css";
@@ -41,6 +41,12 @@ const formatSelectedTime = (isoString) => {
     }).toUpperCase() + " DELIVERY";
 };
 
+// Helper function to validate GUID format.
+const isValidGuid = (value) => {
+    const guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return guidRegex.test(value);
+};
+
 const OrderCheckout = () => {
     const navigate = useNavigate();
     const [cartItems, setCartItems] = useState([]);
@@ -64,6 +70,11 @@ const OrderCheckout = () => {
     const [expiry, setExpiry] = useState("");
     const [cvc, setCvc] = useState("");
 
+    // Discount code fields
+    const [discountCode, setDiscountCode] = useState("");
+    const [discount, setDiscount] = useState(0);
+    const [discountApplied, setDiscountApplied] = useState(false);
+
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(true);
@@ -76,13 +87,15 @@ const OrderCheckout = () => {
         setDeliveryAddress(`${street}, ${city}, ${region} ${postalCode}`);
     }, [street, city, region, postalCode]);
 
+    // Recalculate taxes, shipping, and total using discounted subtotal (if applied)
     useEffect(() => {
-        const newTax = subtotal * taxRate;
-        const newShipping = subtotal * deliveryRate;
+        const effectiveSubtotal = discountApplied ? Math.max(subtotal - discount, 0) : subtotal;
+        const newTax = effectiveSubtotal * taxRate;
+        const newShipping = effectiveSubtotal * deliveryRate;
         setTaxes(newTax);
         setShippingCost(newShipping);
-        setTotal(subtotal + newTax + newShipping);
-    }, [subtotal, taxRate, deliveryRate]);
+        setTotal(effectiveSubtotal + newTax + newShipping);
+    }, [subtotal, discount, discountApplied, taxRate, deliveryRate]);
 
     const fetchCartItems = async () => {
         try {
@@ -159,6 +172,55 @@ const OrderCheckout = () => {
         }
     }, [cartItems, navigate, loading]);
 
+    // Function to apply discount code and update discount value
+    const applyDiscount = async () => {
+        setError("");
+        setSuccess("");
+        try {
+            const response = await api.get("/api/wallet/redemptions");
+            const redemptions = response.data;
+            // Find a redemption with matching redemptionId (case-insensitive)
+            const redemption = redemptions.find(
+                (r) => r.redemptionId.toLowerCase() === discountCode.trim().toLowerCase()
+            );
+            if (!redemption) {
+                setError("Invalid discount code.");
+                return;
+            }
+            if (!redemption.rewardUsable) {
+                setError("Discount code has already been used.");
+                return;
+            }
+            // Fetch the associated reward to determine discount amount
+            const rewardResponse = await api.get(`/api/rewards/${redemption.rewardId}`);
+            const reward = rewardResponse.data;
+            let discountAmount = 0;
+            switch (reward.rewardType) {
+                case "Voucher5":
+                    discountAmount = 5;
+                    break;
+                case "Voucher10":
+                    discountAmount = 10;
+                    break;
+                case "Voucher15":
+                    discountAmount = 15;
+                    break;
+                case "Voucher20":
+                    discountAmount = 20;
+                    break;
+                default:
+                    discountAmount = 0;
+                    break;
+            }
+            setDiscount(discountAmount);
+            setDiscountApplied(true);
+            setSuccess(`Discount code applied: -$${discountAmount}`);
+        } catch (err) {
+            console.error(err);
+            setError("Error applying discount code.");
+        }
+    };
+
     const handleCheckout = async (e) => {
         e.preventDefault();
         setError("");
@@ -166,6 +228,7 @@ const OrderCheckout = () => {
 
         if (!validateForm()) return;
 
+        // If a discount was applied, ensure the discountCode is a valid GUID
         const orderPayload = {
             orderType: "Single-Order",
             deliveryAddress,
@@ -173,6 +236,15 @@ const OrderCheckout = () => {
             tax: taxes,
             shipTime: selectedShippingTime
         };
+
+        if (discountApplied) {
+            if (!isValidGuid(discountCode.trim())) {
+                setError("Discount code format is invalid. Please enter a valid code.");
+                return;
+            }
+            // Include the RedemptionId (model binder will convert the valid GUID string)
+            orderPayload.RedemptionId = discountCode.trim();
+        }
 
         try {
             const orderResponse = await api.post("/api/order", orderPayload);
@@ -191,6 +263,10 @@ const OrderCheckout = () => {
             setCardNumber("");
             setExpiry("");
             setCvc("");
+            // Reset discount state if applied.
+            setDiscountCode("");
+            setDiscount(0);
+            setDiscountApplied(false);
             navigate("/ordersuccess");
         } catch (err) {
             console.error("Checkout error", err);
@@ -339,6 +415,27 @@ const OrderCheckout = () => {
                             </div>
                         </div>
 
+                        {/* Discount Code Input */}
+                        <div className="mb-8">
+                            <h2 className="text-2xl font-semibold mb-4">Discount Code</h2>
+                            <div className="flex">
+                                <input
+                                    type="text"
+                                    placeholder="Enter discount code"
+                                    value={discountCode}
+                                    onChange={(e) => setDiscountCode(e.target.value)}
+                                    className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={applyDiscount}
+                                    className="ml-4 px-6 py-4 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] text-white rounded-2xl"
+                                >
+                                    Apply
+                                </button>
+                            </div>
+                        </div>
+
                         {/* Payment Information */}
                         <div className="mb-8">
                             <h2 className="text-2xl font-semibold mb-4">Payment Information</h2>
@@ -420,7 +517,7 @@ const OrderCheckout = () => {
                     <div className="mt-6 space-y-4">
                         <div className="flex justify-between text-xl">
                             <span>Subtotal:</span>
-                            <span>${subtotal.toFixed(2)}</span>
+                            <span>${(discountApplied ? Math.max(subtotal - discount, 0) : subtotal).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-xl">
                             <span>Delivery (5%):</span>

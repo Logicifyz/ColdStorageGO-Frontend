@@ -47,7 +47,8 @@ const RewardManagement = () => {
         coinsCost: 0,
         availabilityStatus: "Available",
         expiryDate: "",
-        rewardType: "Vouchers",
+        // Changed default value from "Vouchers" to "Voucher5"
+        rewardType: "Voucher5",
         tags: [],
     });
     const [pointsFormData, setPointsFormData] = useState({
@@ -64,6 +65,10 @@ const RewardManagement = () => {
     const [users, setUsers] = useState([]);
     const [userSearchTerm, setUserSearchTerm] = useState("");
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+
+    // New state for delete confirmation modal.
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [rewardToDelete, setRewardToDelete] = useState(null);
 
     // Fetch rewards and redemption counts together
     useEffect(() => {
@@ -99,9 +104,6 @@ const RewardManagement = () => {
             toast.error(message);
         }
     };
-
-   
-
 
     useEffect(() => {
         if (isPointsFormOpen) {
@@ -187,7 +189,8 @@ const RewardManagement = () => {
                 coinsCost: 0,
                 availabilityStatus: "Available",
                 expiryDate: "",
-                rewardType: "Vouchers",
+                // Changed default value here as well
+                rewardType: "Voucher5",
                 tags: [],
             });
         }
@@ -281,10 +284,15 @@ const RewardManagement = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this reward?")) return;
+    // Remove window.confirm and use a modal instead.
+    const openDeleteModal = (id) => {
+        setRewardToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
         try {
-            await api.delete(`/api/Rewards/${id}`);
+            await api.delete(`/api/Rewards/${rewardToDelete}`);
             // Refresh rewards after deletion
             const [rewardsResponse, redemptionCountsResponse] = await Promise.all([
                 api.get("/api/Rewards"),
@@ -303,6 +311,8 @@ const RewardManagement = () => {
 
             setRewards(rewardsWithCounts);
             showNotification("Reward deleted successfully", "success");
+            setIsDeleteModalOpen(false);
+            setRewardToDelete(null);
         } catch (error) {
             console.error("Error deleting reward:", error);
             showNotification("Failed to delete reward", "error");
@@ -448,8 +458,10 @@ const RewardManagement = () => {
                                                 onChange={handleFormChange}
                                                 className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3"
                                             >
-                                                <option value="Vouchers">Digital Voucher</option>
-                                                <option value="Gifts">Physical Gift</option>
+                                                <option value="Voucher5">5$ Discount Voucher</option>
+                                                <option value="Voucher10">10$ Discount Voucher</option>
+                                                <option value="Voucher15">15$ Discount Voucher</option>
+                                                <option value="Voucher20">20$ Discount Voucher</option>
                                             </select>
                                         </div>
                                     </div>
@@ -602,7 +614,7 @@ const RewardManagement = () => {
                                             Edit
                                         </GlowingButton>
                                         <GlowingButton
-                                            onClick={() => handleDelete(reward.rewardId)}
+                                            onClick={() => openDeleteModal(reward.rewardId)}
                                             className="bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm"
                                         >
                                             Delete
@@ -611,9 +623,48 @@ const RewardManagement = () => {
                                 </div>
                             </motion.div>
                         ))}
-                    </AnimatePresence>  
+                    </AnimatePresence>
                 </motion.div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+                {isDeleteModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 flex items-center justify-center z-50 bg-black/70"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0.8 }}
+                            className="bg-[#0b0b1a] p-6 rounded-xl shadow-lg border border-[#ffffff10] w-96"
+                        >
+                            <h3 className="text-xl font-bold text-white mb-4">Confirm Deletion</h3>
+                            <p className="text-gray-300 mb-6">Are you sure you want to delete this reward?</p>
+                            <div className="flex justify-end gap-4">
+                                <GlowingButton
+                                    onClick={() => {
+                                        setIsDeleteModalOpen(false);
+                                        setRewardToDelete(null);
+                                    }}
+                                    className="bg-gray-500 hover:bg-gray-400 text-white"
+                                >
+                                    Cancel
+                                </GlowingButton>
+                                <GlowingButton
+                                    onClick={confirmDelete}
+                                    className="bg-red-600 hover:bg-red-500 text-white"
+                                >
+                                    Delete
+                                </GlowingButton>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
