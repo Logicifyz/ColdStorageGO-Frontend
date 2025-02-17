@@ -14,22 +14,30 @@ const Forum = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // ? Fetch Recipes (Public Only)
                 const recipesResponse = await fetch("http://localhost:5135/api/Recipes", {
                     credentials: "include",
                 });
                 if (!recipesResponse.ok) throw new Error(`Failed to fetch recipes: ${recipesResponse.status}`);
                 const recipesData = await recipesResponse.json();
-                setRecipes(Array.isArray(recipesData) ? recipesData : []);
 
+                // ? Filter out private recipes (extra safety in case API fails)
+                const publicRecipes = recipesData.filter(recipe => recipe.visibility === "public");
+                setRecipes(publicRecipes);
+
+                // ? Fetch Discussions (Public Only)
                 const discussionsResponse = await fetch("http://localhost:5135/api/Discussions", {
                     credentials: "include",
                 });
                 if (!discussionsResponse.ok) throw new Error(`Failed to fetch discussions: ${discussionsResponse.status}`);
                 const discussionsData = await discussionsResponse.json();
 
-                console.log("? [DEBUG] Discussions API Response:", discussionsData); // ?? Log Here
+                console.log("? [DEBUG] Discussions API Response:", discussionsData);
 
-                setDiscussions(Array.isArray(discussionsData) ? discussionsData : []);
+                // ? Filter out private discussions (extra safety in case API fails)
+                const publicDiscussions = discussionsData.filter(discussion => discussion.visibility === "public");
+                setDiscussions(publicDiscussions);
+
             } catch (error) {
                 console.error("Error fetching data:", error);
                 setRecipes([]);
@@ -39,6 +47,7 @@ const Forum = () => {
 
         fetchData();
     }, []);
+
 
 
 
