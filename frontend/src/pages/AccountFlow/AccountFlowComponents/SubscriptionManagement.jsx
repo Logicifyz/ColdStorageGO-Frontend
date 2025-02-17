@@ -26,10 +26,11 @@ const formatDate = (dateString) => {
 const SubscriptionManagement = () => {
     const [subscription, setSubscription] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [modal, setModal] = useState({ isOpen: false, action: null });
+    const [modal, setModal] = useState({ isOpen: false, action: null, freezeId: null });
     const [freezeDates, setFreezeDates] = useState({ startDate: "", endDate: "" });
     const [scheduledFreezes, setScheduledFreezes] = useState([]);
     const [userId, setUserId] = useState(null);
+    const [freezeMessage, setFreezeMessage] = useState({ type: "", text: "" }); // type: "error" or "success", text: message
 
     useEffect(() => {
         const fetchSubscription = async () => {
@@ -50,7 +51,7 @@ const SubscriptionManagement = () => {
                 }
                 setSubscription(response.data);
                 const freezeResponse = await api.get(`/api/subscriptions/scheduled-freezes/${response.data.subscriptionId}`, { withCredentials: true });
-                setScheduledFreezes(freezeResponse.data);
+                setScheduledFreezes(freezeResponse.data);  // ✅ Ensure FreezeId is received and stored
             } catch (error) {
                 console.error('Error fetching subscription:', error);
                 setSubscription(null);
@@ -61,6 +62,32 @@ const SubscriptionManagement = () => {
 
         fetchSubscription();
     }, []);
+
+    const validateFreezeDates = () => {
+        if (!freezeDates.startDate || !freezeDates.endDate) {
+            setFreezeMessage({ type: "error", text: "Please select both start and end dates." });
+            return false;
+        }
+
+        if (new Date(freezeDates.startDate) >= new Date(freezeDates.endDate)) {
+            setFreezeMessage({ type: "error", text: "End date must be after start date." });
+            return false;
+        }
+
+        if (subscription && (new Date(freezeDates.startDate) > new Date(subscription.endDate) || new Date(freezeDates.endDate) > new Date(subscription.endDate))) {
+            setFreezeMessage({ type: "error", text: "Freeze dates cannot be after the subscription's end date." });
+            return false;
+        }
+
+        setFreezeMessage({ type: "", text: "" }); // Clear any previous messages
+        return true;
+    };
+
+    const handleScheduleFreeze = () => {
+        if (validateFreezeDates()) {
+            openModal('scheduleFreeze');
+        }
+    };
 
     const openModal = (action, freezeId = null) => {
         setModal({ isOpen: true, action, freezeId });
@@ -78,7 +105,7 @@ const SubscriptionManagement = () => {
             if (modal.action === 'cancel') {
                 await api.delete(`/api/subscriptions/cancel/${subscription.subscriptionId}`, { withCredentials: true });
                 setSubscription(null);
-                alert('Subscription canceled successfully.');
+                setFreezeMessage({ type: "success", text: "Subscription canceled successfully." });
             } else if (modal.action === 'autoRenew') {
                 await api.put(`/api/subscriptions/toggle-autorenewal/${subscription.subscriptionId}`, {}, { withCredentials: true });
                 setSubscription(prev => ({
@@ -98,16 +125,36 @@ const SubscriptionManagement = () => {
                     { startDate: freezeDates.startDate, endDate: freezeDates.endDate },
                     { withCredentials: true }
                 );
-                setScheduledFreezes([...scheduledFreezes, response.data]);
+
+                // Fetch the updated list of scheduled freezes
+                const freezeResponse = await api.get(`/api/subscriptions/scheduled-freezes/${subscription.subscriptionId}`, { withCredentials: true });
+                setScheduledFreezes(freezeResponse.data);
+
                 setFreezeDates({ startDate: "", endDate: "" });
-                alert(`Freeze scheduled from ${freezeDates.startDate} to ${freezeDates.endDate}`);
+                setFreezeMessage({ type: "success", text: `Freeze scheduled from ${freezeDates.startDate} to ${freezeDates.endDate}` });
             } else if (modal.action === 'cancelScheduledFreeze') {
-                await api.delete(`/api/subscriptions/cancel-scheduled-freeze/${subscription.subscriptionId}`, { withCredentials: true });
-                setScheduledFreezes(scheduledFreezes.filter(f => f.id !== modal.freezeId));
-                alert("Scheduled freeze canceled.");
+                if (!modal.freezeId) {
+                    setFreezeMessage({ type: "error", text: "Freeze ID is missing." });
+                    return;
+                }
+
+                await api.delete(
+                    `/api/subscriptions/cancel-scheduled-freeze/${subscription.subscriptionId}/${modal.freezeId}`,
+                    { withCredentials: true }
+                );
+
+                // Update the UI by removing the canceled freeze
+                setScheduledFreezes(prev => prev.filter(f => f.id !== modal.freezeId));
+
+                setFreezeMessage({ type: "success", text: "Scheduled freeze canceled successfully." });
             }
         } catch (error) {
             console.error('Error executing action:', error);
+            if (error.response) {
+                setFreezeMessage({ type: "error", text: error.response.data || "An unexpected error occurred. Please try again." });
+            } else {
+                setFreezeMessage({ type: "error", text: "An unexpected error occurred. Please try again." });
+            }
         }
     };
 
@@ -235,8 +282,13 @@ const SubscriptionManagement = () => {
                                         min={freezeDates.startDate || new Date().toISOString().split('T')[0]}
                                     />
                                 </div>
+                                {freezeMessage.text && (
+                                    <p className={`text-sm ${freezeMessage.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                                        {freezeMessage.text}
+                                    </p>
+                                )}
                                 <button
-                                    onClick={() => openModal('scheduleFreeze')}
+                                    onClick={handleScheduleFreeze}
                                     className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
                                 >
                                     Schedule Freeze
@@ -248,22 +300,32 @@ const SubscriptionManagement = () => {
                                 <div className="space-y-4">
                                     <h3 className="text-xl font-semibold">Scheduled Freezes</h3>
                                     <div className="max-h-40 overflow-y-auto pr-2">
-                                        {scheduledFreezes.map((freeze) => (
-                                            <div
-                                                key={freeze.id}
-                                                className="flex justify-between items-center text-gray-300 border-b border-[#ffffff10] pb-2"
-                                            >
-                                                <p>
-                                                    <strong>{formatDate(freeze.startDate)}</strong> to <strong>{formatDate(freeze.endDate)}</strong>
-                                                </p>
-                                                <button
-                                                    onClick={() => openModal('cancelScheduledFreeze', freeze.id)}
-                                                    className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 transform hover:scale-110"
+                                        {scheduledFreezes.map((freeze) => {
+                                            const freezeEndDate = new Date(freeze.endDate);
+                                            const todayPlusOne = new Date();
+                                            todayPlusOne.setDate(todayPlusOne.getDate() + 1);
+
+                                            return (
+                                                <div
+                                                    key={freeze.freezeId}
+                                                    className="flex justify-between items-center text-gray-300 border-b border-[#ffffff10] pb-2"
                                                 >
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        ))}
+                                                    <p>
+                                                        <strong>{formatDate(freeze.startDate)}</strong> to <strong>{formatDate(freeze.endDate)}</strong>
+                                                    </p>
+
+                                                    {/* Remove cancel button if the freeze has been canceled (endDate is today + 1) */}
+                                                    {freezeEndDate.getTime() !== todayPlusOne.getTime() && (
+                                                        <button
+                                                            onClick={() => openModal('cancelScheduledFreeze', freeze.freezeId)}
+                                                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 transform hover:scale-110"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}

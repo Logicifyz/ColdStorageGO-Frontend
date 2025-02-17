@@ -10,8 +10,7 @@ const BackgroundBlobs = () => (
 );
 
 const statusColors = {
-    Active: "bg-green-500 text-white",
-    Frozen: "bg-blue-500 text-white",
+    Expired: "bg-blue-500 text-white",
     Canceled: "bg-red-500 text-white",
 };
 
@@ -30,6 +29,8 @@ const formatDate = (dateString) => {
 const SubscriptionHistory = () => {
     const [history, setHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filterStatus, setFilterStatus] = useState("all"); // "all", "active", "frozen", "canceled"
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -47,6 +48,17 @@ const SubscriptionHistory = () => {
         fetchHistory();
     }, []);
 
+    const filteredHistory = history.filter(sub => {
+        const matchesSearchTerm =
+            sub.subscriptionId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            sub.subscriptionChoice.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus =
+            filterStatus === "all" || sub.status.toLowerCase() === filterStatus.toLowerCase();
+
+        return matchesSearchTerm && matchesStatus;
+    });
+
     return (
         <div className="min-h-screen bg-[#0b0b1a] text-gray-100 relative overflow-hidden p-8">
             <BackgroundBlobs />
@@ -55,12 +67,56 @@ const SubscriptionHistory = () => {
                     Subscription History
                 </h1>
 
+                {/* Search Bar and Filter Tabs */}
+                <div className="flex flex-col md:flex-row gap-4 mb-8">
+                    <input
+                        type="text"
+                        placeholder="Search by Subscription ID or Choice..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="py-2 px-4 rounded-lg bg-[#ffffff05] border border-[#ffffff15] text-white focus:ring-2 focus:ring-cyan-500 w-full md:w-96"
+                    />
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => setFilterStatus("all")}
+                            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                                filterStatus === "all"
+                                    ? "bg-purple-600 hover:bg-purple-700"
+                                    : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                        >
+                            All
+                        </button>
+                        <button
+                            onClick={() => setFilterStatus("expired")}
+                            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                                filterStatus === "expired"
+                                    ? "bg-blue-600 hover:bg-blue-700"
+                                    : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                        >
+                            Expired
+                        </button>
+                        <button
+                            onClick={() => setFilterStatus("canceled")}
+                            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                                filterStatus === "canceled"
+                                    ? "bg-red-600 hover:bg-red-700"
+                                    : "bg-[#ffffff05] hover:bg-[#ffffff10]"
+                            }`}
+                        >
+                            Canceled
+                        </button>
+                    </div>
+                </div>
+
+                {/* Subscription History Cards */}
                 <div className="bg-[#1a1a2e]/50 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-[#ffffff10]">
                     {isLoading ? (
                         <p className="text-center text-lg animate-pulse">Loading subscription history...</p>
-                    ) : history.length > 0 ? (
+                    ) : filteredHistory.length > 0 ? (
                         <div className="max-h-[calc(100vh-12rem)] overflow-y-auto space-y-4 p-2">
-                            {history.map((subscription, index) => (
+                            {filteredHistory.map((subscription, index) => (
                                 <motion.div
                                     key={index}
                                     initial={{ opacity: 0, y: 20 }}
