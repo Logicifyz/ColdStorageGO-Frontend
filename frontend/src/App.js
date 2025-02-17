@@ -12,7 +12,6 @@ import SubscriptionForm from "./pages/Subscriptions";
 import SubscriptionChoicePage from "./pages/SubscriptionChoicePage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import SubscriptionManagement from "./pages/AccountFlow/AccountFlowComponents/SubscriptionManagement";
-import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 import Listing from "./pages/Listing";
 import Cart from "./pages/Cart";
 import OrderSuccess from "./pages/OrderSuccess";
@@ -62,7 +61,16 @@ import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/S
 import AccountManagement from "./pages/StaffFlow/StaffFlowComponents/AccountManagement";
 import AccountDetails from "./pages/StaffFlow/StaffFlowComponents/AccountDetails";
 
-
+import ChangePassword from "./pages/AccountFlow/AccountFlowComponents/ChangePassword";
+import DeleteAccount from "./pages/AccountFlow/AccountFlowComponents/DeleteAccount";
+import MyOrders from "./pages/AccountFlow/AccountFlowComponents/MyOrders";
+import MyTickets from "./pages/AccountFlow/AccountFlowComponents/MyTickets";
+import MyRedemptions from "./pages/AccountFlow/AccountFlowComponents/MyRedemptions";
+import SubscriptionHistory from "./pages/AccountFlow/AccountFlowComponents/SubscriptionHistory";
+import Notifications from "./pages/AccountFlow/AccountFlowComponents/Notifications";
+import AccountDashboardLayout from "./pages/AccountFlow/AccountDashboardLayout";
+import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
+import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
 
 
 const App = () => {
@@ -71,9 +79,25 @@ const App = () => {
             <Routes>
 
                 <Route element={<ProtectedLayout />}>
-                <Route path="/account-dashboard" element={<AccountDashboard />} />
                 <Route path="/contact-us" element={<ContactUs />} />
                 <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
+
+                    {/* Account Dashboard Individual Tab Routes */}
+                    <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
+                        <Route path="profile" element={<MyProfile />} />
+                        <Route path="change-password" element={<ChangePassword />} />
+                        <Route path="delete-account" element={<DeleteAccount />} />
+                        <Route path="my-orders" element={<MyOrders />} />
+                        <Route path="my-tickets" element={<MyTickets />} />
+                        <Route path="my-redemptions" element={<MyRedemptions />} />
+                        <Route path="subscription-management" element={<SubscriptionManagement />} />
+                        <Route path="subscription-history" element={<SubscriptionHistory />} />
+                        <Route path="notifications" element={<Notifications />} />
+                        <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
+
+                    </Route>
+
+
                 </Route>
 
                 {/* Public Routes using PublicLayout */}

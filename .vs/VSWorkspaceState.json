@@ -9,6 +9,6 @@
     "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
     "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents"
   ],
-  "SelectedNode": "\\frontend\\src\\components\\SessionHandler.jsx",
+  "SelectedNode": "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\NotificationDetails.jsx",
   "PreviewInSolutionExplorer": false
 }

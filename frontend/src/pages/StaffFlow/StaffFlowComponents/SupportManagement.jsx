@@ -25,7 +25,6 @@ const SupportManagement = () => {
         try {
             const { status, priority, staffId, category, subject, ticketId } = filters;
             const response = await api.get("/api/StaffSupport/tickets", {
-                headers: { SessionId: sessionId },
                 params: { status, priority, staffId, category, subject, ticketId },
             });
 
