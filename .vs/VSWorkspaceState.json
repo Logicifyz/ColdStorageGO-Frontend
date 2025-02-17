@@ -3,14 +3,12 @@
     "",
     "\\frontend",
     "\\frontend\\src",
+    "\\frontend\\src\\components",
     "\\frontend\\src\\pages",
     "\\frontend\\src\\pages\\AccountFlow",
     "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
-    "\\frontend\\src\\pages\\AuthFlow",
-    "\\frontend\\src\\pages\\HelpCentreFlow",
-    "\\frontend\\src\\pages\\StaffFlow",
     "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents"
   ],
-  "SelectedNode": "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\MyOrders.jsx",
+  "SelectedNode": "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\NotificationDetails.jsx",
   "PreviewInSolutionExplorer": false
 }

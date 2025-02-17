@@ -14,12 +14,7 @@ import {
 
 const HelpCentre = () => {
     const [faqs, setFaqs] = useState([]);
-    const [resources] = useState([
-        "User Guide",
-        "Privacy Policy",
-        "Terms of Service",
-        "Refund Policy",
-    ]);
+    const [resources, setResources] = useState([]); // Added state for resources
 
     const categories = [
         { name: "Order and Delivery", icon: <FaTruck /> },
@@ -33,17 +28,22 @@ const HelpCentre = () => {
     ];
 
     useEffect(() => {
-        const fetchFaqs = async () => {
+        const fetchFaqsAndResources = async () => {
             try {
-                const response = await api.get("/api/HelpCentre", { params: { faq: true } });
-                setFaqs(response.data);
+                // Fetch FAQs
+                const faqResponse = await api.get("/api/HelpCentre", { params: { faq: true } });
+                setFaqs(faqResponse.data);
+
+                // Fetch Resources articles
+                const resourcesResponse = await api.get("/api/HelpCentre", { params: { category: 'Resources' } });
+                setResources(resourcesResponse.data);
             } catch (error) {
-                console.error("Error fetching FAQs:", error);
+                console.error("Error fetching FAQs and resources:", error);
             }
         };
 
-        fetchFaqs();
-    }, []);
+        fetchFaqsAndResources();
+    }, []); // Run on component mount
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#1a1a1a] to-[#2c2c2c] text-white p-8">
@@ -62,6 +62,7 @@ const HelpCentre = () => {
                         Contact Us
                     </Link>
                 </div>
+
                 {/* Top Section: FAQs (Left) & Resources (Right) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     {/* FAQs Section */}
@@ -73,24 +74,32 @@ const HelpCentre = () => {
                                     key={index}
                                     className="text-gray-300 hover:text-white transition-colors cursor-pointer"
                                 >
-                                    {faq.title}
+                                    <Link to={`/help-centre/${faq.category}/${faq.articleId}`} className="text-gray-300 hover:text-white">
+                                        {faq.title}
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    {/* Help Resources (Right) */}
+                    {/* Help Resources Section */}
                     <div className="bg-[#ffffff08] backdrop-blur-lg p-6 rounded-xl border border-[#ffffff15] hover:border-[#ffffff30] transition-all">
                         <h2 className="text-2xl font-semibold mb-4">Resources</h2>
                         <ul className="space-y-2">
-                            {resources.map((resource, index) => (
-                                <li
-                                    key={index}
-                                    className="text-gray-300 hover:text-white transition-colors cursor-pointer"
-                                >
-                                    {resource}
-                                </li>
-                            ))}
+                            {resources.length > 0 ? (
+                                resources.map((resource, index) => (
+                                    <li
+                                        key={index}
+                                        className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                                    >
+                                        <Link to={`/help-centre/${resource.category}/${resource.articleId}`} className="text-gray-300 hover:text-white">
+                                            {resource.title}
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <p className="text-gray-300">No resources available.</p>
+                            )}
                         </ul>
                     </div>
                 </div>

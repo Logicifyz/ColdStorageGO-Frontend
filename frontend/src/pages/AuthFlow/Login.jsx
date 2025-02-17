@@ -85,7 +85,12 @@ const Login = () => {
             }
         } catch (error) {
             console.error(error);
-            setError('There was an issue with Google login. Please try again later.');
+            if (error.response?.status === 403) {
+                setError('Account is deactivated. Please contact support.');
+            } else {
+                setError('There was an issue with Google login. Please try again later.');
+            }
+
         }
     };
 

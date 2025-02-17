@@ -5,7 +5,7 @@ import FollowList from './FollowList';
 import Modal from 'react-modal';
 import { motion } from 'framer-motion';
 
-const Profile = () => {
+const MyProfile = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         Email: '',
@@ -21,6 +21,7 @@ const Profile = () => {
         FullName: '',
         ProfilePicture: '',
     });
+    
     const [isEditing, setIsEditing] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -30,7 +31,6 @@ const Profile = () => {
     const [isFollowersListOpen, setIsFollowersListOpen] = useState(false);
     const [isFollowingListOpen, setIsFollowingListOpen] = useState(false);
     const [profilePicturePreview, setProfilePicturePreview] = useState('');
-        const [isPasswordNotSet, setIsPasswordNotSet] = useState(false); // State for password setup
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -45,13 +45,13 @@ const Profile = () => {
                         ProfilePicture: response.data.profilePicture || '',
                     };
                     setFormData(userData);
-                    if (!response.data.passwordHash || response.data.passwordHash === "google-login") {
-                        setIsPasswordNotSet(true);
-                        console.log("ispasswordnotset:",isPasswordNotSet)
-                    }
                     setOriginalData(userData);
                     setIsVerified(response.data.verified);
-                    setProfilePicturePreview(userData.ProfilePicture ? `data:image/png;base64,${userData.ProfilePicture}` : 'default-profile.jpg');
+                    setProfilePicturePreview(
+                        userData.ProfilePicture
+                            ? `data:image/png;base64,${userData.ProfilePicture}`
+                            : ''
+                    );
                     fetchFollowersFollowing(response.data.username);
                 }
             } catch (error) {
@@ -77,25 +77,26 @@ const Profile = () => {
         const { name, value, files } = e.target;
         if (name === 'ProfilePicture' && files && files[0]) {
             const file = files[0];
-            const allowedTypes = ['image/jpeg', 'image/png'];
-            const maxSize = 2 * 1024 * 1024;
+            const allowedTypes = ['image/jpeg', 'image/png']; // Allowed image types
+            const maxSize = 2 * 1024 * 1024; // Maximum file size: 2MB
 
             if (!allowedTypes.includes(file.type)) {
                 setErrorMessage('Invalid file type. Only JPG and PNG images are allowed.');
-                return;
+                return; // Prevent further processing
             }
 
             if (file.size > maxSize) {
                 setErrorMessage('File size exceeds the maximum allowed size (2MB).');
-                return;
+                return; // Prevent further processing
             }
 
+            // Only set form data and preview if the file is valid
             setFormData({
                 ...formData,
                 ProfilePicture: file,
             });
-            setProfilePicturePreview(URL.createObjectURL(file));
-            setErrorMessage('');
+            setProfilePicturePreview(URL.createObjectURL(file)); // Preview image
+            setErrorMessage(''); // Clear any previous error message
         } else {
             setFormData({
                 ...formData,
@@ -109,6 +110,19 @@ const Profile = () => {
         setSuccessMessage('');
         setErrorMessage('');
 
+        // Validate that all required fields are entered
+        const missingFields = [];
+        if (!formData.Email) missingFields.push('Email');
+        if (!formData.Username) missingFields.push('Username');
+        if (!formData.PhoneNumber) missingFields.push('Phone Number');
+        if (!formData.FullName) missingFields.push('Full Name');
+
+        if (missingFields.length > 0) {
+            setErrorMessage(`Please complete the following fields: ${missingFields.join(', ')}`);
+            return;
+        }
+
+        // Proceed if no fields are missing
         if (JSON.stringify(formData) === JSON.stringify(originalData)) {
             setIsEditing(false);
             return;
@@ -123,6 +137,9 @@ const Profile = () => {
 
             if (formData.ProfilePicture instanceof File) {
                 formDataToSend.append('ProfilePicture', formData.ProfilePicture);
+            } else if (formData.ProfilePicture === '') {
+                // If profile picture is removed, send an empty string
+                formDataToSend.append('ProfilePicture', '');
             }
 
             const response = await api.put('/api/Account/update-profile', formDataToSend, {
@@ -153,7 +170,6 @@ const Profile = () => {
                     });
                 }
             }
-
         } catch (error) {
             if (error.response && error.response.data) {
                 setErrorMessage(error.response.data.message || 'An error occurred while updating the profile.');
@@ -165,10 +181,11 @@ const Profile = () => {
 
     const handleCancel = () => {
         setFormData(originalData);
-        setProfilePicturePreview(originalData.ProfilePicture ? `data:image/png;base64,${originalData.ProfilePicture}` : 'default-profile.jpg');
+        setProfilePicturePreview(originalData.ProfilePicture ? `data:image/png;base64,${originalData.ProfilePicture}` : '');
         setIsEditing(false);
         setErrorMessage('');
     };
+
     const handleSetPassword = async () => {
         console.log("Requesting password setup...");
         try {
@@ -176,7 +193,7 @@ const Profile = () => {
             if (response.data.success) {
                 console.log("Password set token received:", response.data.Token);
                 alert("Check your email to set your password.");
-                navigate(`/sentpasswordresetemailsuccess`);
+                navigate(`/successfullysentsetpasswordemail`);
             } else {
                 alert(response.data.Message);
             }
@@ -185,6 +202,7 @@ const Profile = () => {
             alert("Error requesting password setup.");
         }
     };
+
     const requestVerificationEmail = async () => {
         try {
             const response = await api.post('/api/Auth/request-verification-email', { Email: formData.Email });
@@ -200,6 +218,21 @@ const Profile = () => {
         }
     };
 
+    const getInitials = (username) => {
+        if (!username) return ''; // Return empty string if no username is provided
+        // Match all uppercase letters and join the first two
+        const initials = username.match(/[A-Z]/g) || [];
+        return initials.slice(0, 2).join('');
+    };
+
+    const handleRemoveProfilePicture = () => {
+        setFormData({
+            ...formData,
+            ProfilePicture: '', // Set to an empty string when the picture is removed
+        });
+        setProfilePicturePreview(''); // Clear the preview
+    };
+        
     const openFollowersModal = () => setIsFollowersListOpen(true);
     const closeFollowersModal = () => setIsFollowersListOpen(false);
 
@@ -219,14 +252,6 @@ const Profile = () => {
                         Profile
                     </h1>
                 </div>
-                {isPasswordNotSet && (
-                    <button
-                        onClick={handleSetPassword}
-                        className="bg-green-500 text-white p-3 rounded-lg mt-6 block w-full text-center font-bold hover:bg-green-600 transition duration-200"
-                    >
-                        Set Password
-                    </button>
-                )}
 
                 <div className="grid gap-4">
                     {successMessage && (
@@ -254,23 +279,21 @@ const Profile = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-2xl border border-[#ffffff10] shadow-2xl overflow-hidden p-6"
                     >
-                        <div className="flex items-center space-x-6">
-                            <img
-                                src={profilePicturePreview}
-                                alt="Profile"
-                                className="w-32 h-32 rounded-full border-4 border-white"
-                            />
+                        <div className="flex items-center gap-4">
+                            {profilePicturePreview ? (
+                                <img
+                                    src={profilePicturePreview}
+                                    alt="Profile"
+                                    className="w-24 h-24 rounded-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl font-bold text-white">
+                                    {getInitials(formData.Username)} {/* Use Username for initials */}
+                                </div>
+                            )}
                             <div>
                                 <h2 className="text-2xl font-bold text-white">{formData.Username}</h2>
                                 <p className="text-gray-400">{formData.Email}</p>
-                                <div className="flex items-center space-x-6 mt-4">
-                                    <div className="text-white cursor-pointer" onClick={openFollowersModal}>
-                                        <strong>{followers.length}</strong> Followers
-                                    </div>
-                                    <div className="text-white cursor-pointer" onClick={openFollowingModal}>
-                                        <strong>{following.length}</strong> Following
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -333,16 +356,29 @@ const Profile = () => {
                                         className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
                                     />
                                 </div>
-                                <div className="mb-4">
-                                    <label htmlFor="ProfilePicture" className="text-white text-lg">Profile Picture</label>
-                                    <input
-                                        type="file"
-                                        id="ProfilePicture"
-                                        name="ProfilePicture"
-                                        onChange={handleInputChange}
-                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
-                                    />
-                                </div>
+                                    <div className="mt-6 flex gap-4">
+                                        {formData.ProfilePicture ? (
+                                            <button
+                                                onClick={handleRemoveProfilePicture}
+                                                className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition"
+                                            >
+                                                Remove Picture
+                                            </button>
+                                        ) : (
+                                            <label
+                                                className="bg-blue-500 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-blue-600 transition"
+                                            >
+                                                Add Picture
+                                                <input
+                                                    type="file"
+                                                    name="ProfilePicture"
+                                                    accept="image/jpeg, image/png"
+                                                    className="hidden"
+                                                    onChange={handleInputChange}
+                                                />
+                                            </label>
+                                        )}
+                                    </div>
                                 <button
                                     type="submit"
                                     className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
@@ -361,7 +397,7 @@ const Profile = () => {
                     </motion.div>
                 </div>
             </div>
-            
+
             <Modal
                 isOpen={isFollowersListOpen}
                 onRequestClose={closeFollowersModal}
@@ -369,10 +405,10 @@ const Profile = () => {
                 style={{
                     overlay: {
                         backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                        zIndex: 1001 // Ensure it's above other content
+                        zIndex: 1001
                     },
                     content: {
-                        position: 'fixed', // Key change: fixed positioning
+                        position: 'fixed',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -380,10 +416,10 @@ const Profile = () => {
                         maxWidth: '400px',
                         backgroundColor: 'white',
                         borderRadius: '10px',
-                        zIndex: 1002, // Higher z-index for content
+                        zIndex: 1002,
                         width: '80%',
-                        maxHeight: '80vh', // Prevent modal from overflowing viewport
-                        overflowY: 'auto'  // Add scroll if content is too long
+                        maxHeight: '80vh',
+                        overflowY: 'auto'
                     },
                 }}
             >
@@ -401,7 +437,7 @@ const Profile = () => {
                         zIndex: 1001
                     },
                     content: {
-                        position: 'fixed', // Key change: fixed positioning
+                        position: 'fixed',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -423,4 +459,4 @@ const Profile = () => {
     );
 };
 
-export default Profile;
+export default MyProfile;

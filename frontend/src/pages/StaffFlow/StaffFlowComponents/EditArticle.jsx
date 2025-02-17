@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Editor } from "@tinymce/tinymce-react"; // Import TinyMCE
 import api from "../../../api";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -12,24 +13,37 @@ const EditArticle = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // Predefined categories
+    const categories = [
+        "Order and Delivery",
+        "Payments and Pricing",
+        "Returns and Refunds",
+        "Account and Membership",
+        "Technical Support",
+        "Community and Forum",
+        "Rewards and Redemptions",
+        "Recipes and Cooking",
+        "Resources",
+    ];
+
     useEffect(() => {
         // Fetch article details by articleId
         const fetchArticle = async () => {
             try {
                 const response = await api.get(`/api/StaffArticle/articles`, {
-                    params: { articleId }
+                    params: { articleId },
                 });
                 if (response.data.length > 0) {
                     const article = response.data[0];
                     setTitle(article.title);
-                    setContent(article.content);
+                    setContent(article.content); // Set TinyMCE content
                     setCategory(article.category);
                     setHighlighted(article.highlighted);
                 } else {
-                    setError('Article not found.');
+                    setError("Article not found.");
                 }
             } catch (err) {
-                setError('Failed to fetch article details.');
+                setError("Failed to fetch article details.");
             } finally {
                 setLoading(false);
             }
@@ -44,7 +58,7 @@ const EditArticle = () => {
 
         const updatedArticle = {
             Title: title,
-            Content: content,
+            Content: content, // TinyMCE's HTML content
             Category: category,
             Highlighted: highlighted,
         };
@@ -83,23 +97,34 @@ const EditArticle = () => {
 
                 <div>
                     <label className="block text-sm text-gray-700">Content:</label>
-                    <textarea
+                    <Editor
+                        apiKey="lgphqzixngekfoy75fvkupwl5350so0jovf1j1fnxedk8c1f" // Get a free API key from TinyMCE
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        className="border p-2 rounded bg-gray-100 w-full h-32 text-gray-900"
-                        required
+                        onEditorChange={(newContent) => setContent(newContent)}
+                        init={{
+                            height: 500,
+                            menubar: true,
+                            plugins: "link image table code",
+                            toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | table | link image | code",
+                        }}
                     />
                 </div>
 
                 <div>
                     <label className="block text-sm text-gray-700">Category:</label>
-                    <input
-                        type="text"
+                    <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         className="border p-2 rounded bg-gray-100 w-full text-gray-900"
                         required
-                    />
+                    >
+                        <option value="">Select Category</option>
+                        {categories.map((cat, index) => (
+                            <option key={index} value={cat}>
+                                {cat}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <div>

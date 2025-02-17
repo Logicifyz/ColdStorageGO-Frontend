@@ -1,13 +1,11 @@
-// StaffLayout.jsx
 import React from "react";
 import { Outlet } from "react-router-dom";
-import StaffSidebar from "./StaffSideBar";
+import Sidebar from "./AccountFlowComponents/Sidebar"; // Adjust the Sidebar import to the correct path
 
-const StaffLayout = () => {
+const AccountDashboardLayout = () => {
     return (
-
         <div className="flex min-h-screen font-inter bg-gray-100">
-            <StaffSidebar />
+            <Sidebar /> {/* This can be your sidebar component, adjust if needed */}
             <main className="flex-1 p-8 overflow-auto">
                 <Outlet />
             </main>
@@ -15,4 +13,4 @@ const StaffLayout = () => {
     );
 };
 
-export default StaffLayout;
+export default AccountDashboardLayout;

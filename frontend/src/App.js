@@ -2,18 +2,16 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { EmailProvider } from "./context/EmailContext";
-
 // Layouts
 import PublicLayout from "./components/PublicLayout";
+import ProtectedLayout from "./components/ProtectedLayout";
 import StaffLayout from "./components/StaffLayout";
-
 // Public Pages
 import Gallery from "./pages/Gallery";
 import SubscriptionForm from "./pages/Subscriptions";
 import SubscriptionChoicePage from "./pages/SubscriptionChoicePage";
 import SubscriptionSuccessPage from "./pages/SubscriptionSuccessPage";
 import SubscriptionManagement from "./pages/AccountFlow/AccountFlowComponents/SubscriptionManagement";
-import AccountDashboard from "./pages/AccountFlow/AccountDashboard";
 import Listing from "./pages/Listing";
 import Cart from "./pages/Cart";
 import OrderSuccess from "./pages/OrderSuccess";
@@ -30,6 +28,8 @@ import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
 import Home from "./pages/Home";
+import PleaseLogin from "./pages/PleaseLogin"
+
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
 import Login from "./pages/AuthFlow/Login";
@@ -41,6 +41,8 @@ import SuccessfullyVerifiedAccount from "./pages/AuthFlow/SuccessfullyVerifiedAc
 import SuccessfullySentPasswordResetEmail from "./pages/AuthFlow/SuccessfullySentPasswordResetEmail";
 import SuccessfullyResetPassword from "./pages/AuthFlow/SuccecssfullyResetPassword";
 import SetPassword from "./pages/AuthFlow/SetPassword";
+import SuccessfullySentSetPasswordEmail from "./pages/AuthFlow/SuccessfullySentSetPasswordEmail";
+import SuccessfullySetPassword from "./pages/AuthFlow/SuccessfullySetPassword";
 
 // Staff Pages
 import StaffLogin from "./pages/StaffFlow/StaffLogin";
@@ -56,21 +58,52 @@ import CategoryPage from "./pages/HelpCentreFlow/CategoryPage";
 import TicketDetails from "./pages/AccountFlow/AccountFlowComponents/TicketDetails";
 import AnalyticsDashboard from "./pages/StaffFlow/StaffFlowComponents/AnalyticsDashboard";
 import StaffSubscriptionManagement from "./pages/StaffFlow/StaffFlowComponents/StaffSubscriptionManagement";
+import AccountManagement from "./pages/StaffFlow/StaffFlowComponents/AccountManagement";
+import AccountDetails from "./pages/StaffFlow/StaffFlowComponents/AccountDetails";
 
-
-
-
-
+import ChangePassword from "./pages/AccountFlow/AccountFlowComponents/ChangePassword";
+import DeleteAccount from "./pages/AccountFlow/AccountFlowComponents/DeleteAccount";
+import MyOrders from "./pages/AccountFlow/AccountFlowComponents/MyOrders";
+import MyTickets from "./pages/AccountFlow/AccountFlowComponents/MyTickets";
+import MyRedemptions from "./pages/AccountFlow/AccountFlowComponents/MyRedemptions";
+import SubscriptionHistory from "./pages/AccountFlow/AccountFlowComponents/SubscriptionHistory";
+import Notifications from "./pages/AccountFlow/AccountFlowComponents/Notifications";
+import AccountDashboardLayout from "./pages/AccountFlow/AccountDashboardLayout";
+import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
+import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
 
 
 const App = () => {
     return (
         <Router>
             <Routes>
+
+                <Route element={<ProtectedLayout />}>
+                <Route path="/contact-us" element={<ContactUs />} />
+                <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
+
+                    {/* Account Dashboard Individual Tab Routes */}
+                    <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
+                        <Route path="profile" element={<MyProfile />} />
+                        <Route path="change-password" element={<ChangePassword />} />
+                        <Route path="delete-account" element={<DeleteAccount />} />
+                        <Route path="my-orders" element={<MyOrders />} />
+                        <Route path="my-tickets" element={<MyTickets />} />
+                        <Route path="my-redemptions" element={<MyRedemptions />} />
+                        <Route path="subscription-management" element={<SubscriptionManagement />} />
+                        <Route path="subscription-history" element={<SubscriptionHistory />} />
+                        <Route path="notifications" element={<Notifications />} />
+                        <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
+
+                    </Route>
+
+
+                </Route>
+
                 {/* Public Routes using PublicLayout */}
                 <Route element={<PublicLayout />}>
+                    <Route path="/please-login" element={<PleaseLogin />} />
                     <Route path="/" element={<Home />} />
-                    <Route path="/account-dashboard" element={<AccountDashboard />} />
                     <Route path="/gallery" element={<Gallery />} />
                     <Route path="/rewards" element={<Rewards />} />
                     <Route path="/redemptions" element={<Redemption />} />
@@ -89,12 +122,12 @@ const App = () => {
                     <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
                     <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
                     <Route path="/subscription-management" element={<SubscriptionManagement />} />
-                    <Route path="/help-centre" element={<HelpCentre />} />
-                    <Route path="/help-centre/:category" element={<CategoryPage />} />
-                    <Route path="/contact-us" element={<ContactUs />} />
-                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                    <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
 
+                    <Route path="/help-centre" element={<HelpCentre />} />
+                    <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
+
+                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
+                   
                     {/* Wrap only the Login page with GoogleOAuthProvider */}
                     <Route
                         path="/login"
@@ -106,15 +139,15 @@ const App = () => {
                     />
 
                     <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
-                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                    <Route path="/setpassword/:token" element={<SetPassword />} />
                     <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
                     <Route path="/verify-account/:token" element={<VerifyAccount />} />
                     <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
                     <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
-                    <Route path="/successfullysetpassword" element={<SuccessfullyResetPassword />} />
+                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
                     <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
-
+                    <Route path="/successfullysetpassword" element={<SuccessfullySetPassword />} />
+                    <Route path="/setpassword/:token" element={<SetPassword />} />
+                    <Route path="/successfullysentsetpasswordemail" element={<SuccessfullySentSetPasswordEmail />} />
                 </Route>
 
                 {/* Staff Routes using StaffLayout */}
@@ -129,6 +162,8 @@ const App = () => {
                     <Route path="help-centre/add-article" element={<AddArticle />} />
                     <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
                     <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
+                    <Route path="account-management" element={<AccountManagement />} />
+                    <Route path="account-management/:userID" element={<AccountDetails />} />
 
                 </Route>
 

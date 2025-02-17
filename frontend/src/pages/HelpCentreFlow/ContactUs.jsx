@@ -26,20 +26,27 @@ const ContactUs = () => {
     const maxFiles = 5;
 
     // Handle image file change
-    const handleImageChange = (e, index) => {
-        const newImages = [...images];
-        newImages[index] = e.target.files[0]; // Update the image at the given index
-        setImages(newImages);
-    };
-
-    // Handle adding new file input
     const addNewFileInput = () => {
         if (images.filter(img => img === null).length > 0) {
             setImages(images.map(img => img === null ? null : img)); // Make sure to add a new empty slot if there are null slots
         } else if (images.length < maxFiles) {
-            setImages([...images, null]); // Add a new slot if less than 5 images
+            setImages([...images, null]); // Add a new slot if less than maxFiles
         }
     };
+
+    const handleImageChange = (e, index) => {
+        const file = e.target.files[0];
+
+        // Check if the file is an image (JPEG or PNG)
+        if (file && (file.type === 'image/jpeg' || file.type === 'image/png')) {
+            const newImages = [...images];
+            newImages[index] = file; // Update the image at the given index
+            setImages(newImages);
+        } else {
+            toast.error('Only JPEG and PNG images are allowed.');
+        }
+    };
+
 
     // Handle removing a file
     const removeFile = (index) => {
@@ -177,7 +184,7 @@ const ContactUs = () => {
 
                     {/* Attach Images Section */}
                     <div className="mb-6">
-                        <label htmlFor="images" className="text-gray-300 text-lg font-semibold mb-2 block">Attach Images (optional)</label>
+                        <label htmlFor="images" className="text-gray-300 text-lg font-semibold mb-2 block">    Attach Images (max 5 files, optional)</label>
                         <div className="flex flex-col gap-4">
                             {images.map((image, index) => (
                                 <div key={index} className="flex items-center gap-4">
@@ -186,17 +193,19 @@ const ContactUs = () => {
                                         className="w-full h-14 px-4 bg-[#ffffff05] rounded-xl border border-[#ffffff15] text-gray-200 flex items-center justify-between cursor-pointer hover:bg-[#ffffff10] transition-colors"
                                     >
                                         <span className="truncate">
-                                            {image ? image.name : "Choose file"}
+                                            {image ? image.name : "Choose file (JPEG, PNG only)"}
                                         </span>
                                         <FiImage className="text-gray-400" />
                                     </label>
+
                                     <input
                                         type="file"
                                         id={`file-${index}`}
                                         onChange={(e) => handleImageChange(e, index)}
                                         className="hidden"
-                                        disabled={images.length >= maxFiles && !image}
+                                        disabled={images.length > maxFiles && !image} // Disable file input if maxFiles is reached
                                     />
+
                                     {image && (
                                         <div className="flex items-center gap-2">
                                             <img
