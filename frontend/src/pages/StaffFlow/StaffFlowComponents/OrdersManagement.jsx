@@ -56,6 +56,7 @@ const OrdersManagement = () => {
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [statusToUpdate, setStatusToUpdate] = useState("");
+    const [orderUserProfile, setOrderUserProfile] = useState(null);
 
     // Valid status options aligned with progress tracker
     const validStatuses = ["Preparing", "Out For Delivery", "Delivered", "Completed"];
@@ -64,6 +65,7 @@ const OrdersManagement = () => {
         fetchOrders();
     }, []);
 
+    // Fetch orders along with enriched order items
     const fetchOrders = async () => {
         setLoading(true);
         try {
@@ -140,6 +142,24 @@ const OrdersManagement = () => {
             }
         }
     };
+
+    // Fetch user profile when a new order is selected
+    useEffect(() => {
+        if (selectedOrder && selectedOrder.userId) {
+            console.log("Fetching user profile for userId:", selectedOrder.userId);
+            api.get(`/api/Account/user/${selectedOrder.userId}`)
+                .then(response => {
+                    console.log("User profile response:", response.data);
+                    setOrderUserProfile(response.data);
+                })
+                .catch(error => {
+                    console.error("Error fetching user profile", error.response);
+                    toast.error("Failed to fetch user profile");
+                });
+        } else {
+            setOrderUserProfile(null);
+        }
+    }, [selectedOrder]);
 
     return (
         <div className="min-h-screen bg-[#0f0f1f] relative overflow-hidden p-8">
@@ -268,10 +288,23 @@ const OrdersManagement = () => {
                                             <p className="text-sm text-gray-400">Status</p>
                                             <StatusBadge status={selectedOrder.orderStatus || selectedOrder.OrderStatus} />
                                         </div>
-                                        <div className="bg-[#ffffff05] p-4 rounded-xl col-span-2">
+                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
                                             <p className="text-sm text-gray-400">Delivery Address</p>
                                             <p className="font-medium">
                                                 {selectedOrder.deliveryAddress || selectedOrder.DeliveryAddress}
+                                            </p>
+                                        </div>
+                                        {/* Customer information using fetched profile */}
+                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
+                                            <p className="text-sm text-gray-400">Customer Name</p>
+                                            <p className="font-medium">
+                                                {orderUserProfile ? (orderUserProfile.fullName || "Name not set") : "Loading..."}
+                                            </p>
+                                        </div>
+                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
+                                            <p className="text-sm text-gray-400">Customer Email</p>
+                                            <p className="font-medium">
+                                                {orderUserProfile ? orderUserProfile.email : "Loading..."}
                                             </p>
                                         </div>
                                     </div>
