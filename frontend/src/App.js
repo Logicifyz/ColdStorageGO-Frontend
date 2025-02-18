@@ -27,6 +27,7 @@ import DisplayForumRecipe from "./pages/DisplayForumRecipe";
 import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
+import DisplayFullAIRecipe from "./pages/DisplayFullAIRecipe";
 import EditDiscussion from "./pages/EditDiscussion";  
 import EditRecipe from "./pages/EditRecipe";
 import Home from "./pages/Home";
@@ -75,6 +76,7 @@ import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
 import MyAddress from "./pages/AccountFlow/AccountFlowComponents/MyAddress";
 import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
 import MyForumActivity from "./pages/AccountFlow/AccountFlowComponents/MyForumActivity";
+import MySavedItems from "./pages/AccountFlow/AccountFlowComponents/MySavedItems";
 
 
 const App = () => {
@@ -100,6 +102,7 @@ const App = () => {
                         <Route path="notifications" element={<Notifications />} />
                         <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
                         <Route path="my-forum-activity" element={<MyForumActivity />} />
+                        <Route path="my-saved-items" element={<MySavedItems />} />
 
                     </Route>
 
@@ -124,6 +127,7 @@ const App = () => {
                     <Route path="/forum/recipe/edit/:id" element={<EditRecipe />} /> 
                     <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
                     <Route path="/cheffie-ai" element={<CheffieAI />} />
+                    <Route path="/ai-recipe/:id" element={<DisplayFullAIRecipe />} />
                     <Route path="/listing/:id" element={<Listing />} />
                     <Route path="/profile/:username" element={<Profile />} />
                     <Route path="/subscriptions" element={<SubscriptionForm />} />
