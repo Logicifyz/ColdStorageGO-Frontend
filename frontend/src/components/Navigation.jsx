@@ -3,14 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import api from '../api';
+import { FaPlus } from "react-icons/fa";
 
 const Navigation = () => {
     const navigate = useNavigate();
     const location = useLocation();  // Add useLocation hook to track route changes
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [profilePic, setProfilePic] = useState(null); // State to store profile picture
-    const [forumDropdown, setForumDropdown] = useState(false);
-    const [createPostDropdown, setCreatePostDropdown] = useState(false);
+    const [showCreatePostDropdown, setShowCreatePostDropdown] = useState(false);
     const [username, setUsername] = useState(''); // State to store username
 
     useEffect(() => {
@@ -44,6 +44,10 @@ const Navigation = () => {
         navigate("/account-dashboard");
     };
 
+    const toggleCreatePostDropdown = () => {
+        setShowCreatePostDropdown(!showCreatePostDropdown);
+    };
+
     const getInitials = (name) => {
         if (!name) return ''; // Return empty string if no name
         const nameParts = name.split(' ');
@@ -52,58 +56,21 @@ const Navigation = () => {
     };
 
     return (
-        <nav className="bg-white text-black sticky top-0 z-50">
+        <>
+        <nav className="bg-[#383838] text-white sticky top-0 z-50">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 <div className="flex items-center space-x-2">
                     <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
                 </div>
 
                 <div className="flex space-x-6">
-                    <Link to="/" className="hover:text-gray-700">Home</Link>
-                    <Link to="/gallery" className="hover:text-gray-700">Gallery</Link>
-                    <Link to="/subscriptions" className="hover:text-gray-700">Subscribe</Link>
-                    <Link to="/rewards" className="hover:text-gray-700">Rewards</Link>
-                    <Link to="/help-centre" className="hover:text-gray-700">Help Centre</Link>
-
-                    {/* Forum Dropdown */}
-                    <div
-                        className="relative"
-                        onMouseEnter={() => setForumDropdown(true)}
-                        onMouseLeave={() => {
-                            setForumDropdown(false);
-                            setCreatePostDropdown(false);
-                        }}
-                    >
-                        <button className="hover:text-gray-700">Forum</button>
-                        {forumDropdown && (
-                            <div className="absolute bg-white text-black rounded shadow-lg mt-2 w-40">
-                                <Link to="/forum" className="block px-4 py-2 hover:bg-gray-200">
-                                    Home
-                                </Link>
-                                <div
-                                    className="relative"
-                                    onMouseEnter={() => setCreatePostDropdown(true)}
-                                    onMouseLeave={() => setCreatePostDropdown(false)}
-                                >
-                                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-200">
-                                        Create New Post
-                                    </button>
-                                    {createPostDropdown && (
-                                        <div className="absolute left-full top-0 bg-white text-black rounded shadow-lg mt-0 w-48">
-                                            <Link to="/create-recipe" className="block px-4 py-2 hover:bg-gray-200">
-                                                Create Recipe
-                                            </Link>
-                                            <Link to="/create-discussion" className="block px-4 py-2 hover:bg-gray-200">
-                                                Create Discussion
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <Link to="/cheffie-ai" className="hover:text-gray-700">Cheffie AI</Link>
+                    <Link to="/" className="hover:text-gray-300">Home</Link>
+                    <Link to="/gallery" className="hover:text-gray-300">Gallery</Link>
+                    <Link to="/subscriptions" className="hover:text-gray-300">Subscribe</Link>
+                    <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
+                    <Link to="/help-centre" className="hover:text-gray-300">Help Centre</Link>
+                    <Link to="/forum" className="hover:text-gray-300">Forum</Link>
+                    <Link to="/cheffie-ai" className="hover:text-gray-300">Cheffie AI</Link>
                 </div>
 
                 <div className="flex items-center space-x-4">
@@ -138,6 +105,49 @@ const Navigation = () => {
                 </div>
             </div>
         </nav>
+
+            {location.pathname.startsWith("/forum") && (
+                <div className="bg-[#f0f0e0] text-[#123524] py-4 px-6 flex justify-between items-center sticky top-[85px] w-full z-40">
+                    <div className="flex items-center space-x-2">
+                        <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-10 w-auto" />
+                        <h1 className="text-2xl font-semibold">Community</h1>
+                    </div>
+                    <div className="relative flex items-center space-x-4">
+                        {isLoggedIn ? (
+                            <div className="cursor-pointer" onClick={handleProfileClick}>
+                                {profilePic ? (
+                                    <img
+                                        src={profilePic}
+                                        alt="Profile"
+                                        className="w-8 h-8 rounded-full border-2 border-[#123524]"
+                                    />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full border-2 border-[#123524] bg-[#e0e0d0] flex items-center justify-center">
+                                        <span className="text-[#123524]">{getInitials(username)}</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : null}
+                        <div className="relative">
+                            <button
+                                className="bg-[#204037] px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-[#2a5246] text-[#f0f0e0]"
+                                onClick={toggleCreatePostDropdown}
+                            >
+                                <span>Share a recipe or ask something to everyone!</span>
+                                <FaPlus />
+                            </button>
+                            {showCreatePostDropdown && (
+                                <div className="absolute right-0 top-full mt-2 bg-[#204037] text-[#f0f0e0] rounded shadow-lg w-48">
+                                    <Link to="/create-recipe" className="block px-4 py-2 hover:bg-[#2a5246]">Create Recipe</Link>
+                                    <Link to="/create-discussion" className="block px-4 py-2 hover:bg-[#2a5246]">Create Discussion</Link>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+        </>
     );
 };
 

@@ -1,50 +1,53 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowUp, FaArrowDown, FaCommentAlt, FaBookmark } from "react-icons/fa";
+import VoteButton from "../components/VoteButton"; 
 
 const Forum = () => {
     const [recipes, setRecipes] = useState([]);
     const [discussions, setDiscussions] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate(); // For navigation
+    const loggedInUsername = localStorage.getItem("loggedInUsername");
 
     // Fetch recipes and discussions
     useEffect(() => {
         const fetchData = async () => {
-            console.log("?? [FETCHING] Attempting to fetch recipes & discussions...");
-
             try {
-                // ? Fetch Recipes
-                const recipesResponse = await fetch("http://localhost:5135/api/Recipes");
-                if (!recipesResponse.ok) {
-                    throw new Error(`? [API ERROR] Recipes HTTP Status: ${recipesResponse.status}`);
-                }
-                const recipesData = await recipesResponse.json();
-                setRecipes(Array.isArray(recipesData) ? recipesData : []);
-
-                // ? Fetch Discussions (With Credentials for Auth)
-                const discussionsResponse = await fetch("http://localhost:5135/api/Discussions", {
-                    method: "GET",
-                    credentials: "include", // ? Ensures session authentication is sent
-                    headers: { "Content-Type": "application/json" },
+                // ? Fetch Recipes (Public Only)
+                const recipesResponse = await fetch("http://localhost:5135/api/Recipes", {
+                    credentials: "include",
                 });
+                if (!recipesResponse.ok) throw new Error(`Failed to fetch recipes: ${recipesResponse.status}`);
+                const recipesData = await recipesResponse.json();
 
-                if (!discussionsResponse.ok) {
-                    throw new Error(`? [API ERROR] Discussions HTTP Status: ${discussionsResponse.status}`);
-                }
+                // ? Filter out private recipes (extra safety in case API fails)
+                const publicRecipes = recipesData.filter(recipe => recipe.visibility === "public");
+                setRecipes(publicRecipes);
 
+                // ? Fetch Discussions (Public Only)
+                const discussionsResponse = await fetch("http://localhost:5135/api/Discussions", {
+                    credentials: "include",
+                });
+                if (!discussionsResponse.ok) throw new Error(`Failed to fetch discussions: ${discussionsResponse.status}`);
                 const discussionsData = await discussionsResponse.json();
-                setDiscussions(Array.isArray(discussionsData) ? discussionsData : []);
+
+                console.log("? [DEBUG] Discussions API Response:", discussionsData);
+
+                // ? Filter out private discussions (extra safety in case API fails)
+                const publicDiscussions = discussionsData.filter(discussion => discussion.visibility === "public");
+                setDiscussions(publicDiscussions);
 
             } catch (error) {
-                console.error("? [FETCH ERROR] Error fetching data:", error);
+                console.error("Error fetching data:", error);
                 setRecipes([]);
-                setDiscussions([]); // ? Ensure discussions reset if error occurs
+                setDiscussions([]);
             }
         };
 
         fetchData();
     }, []);
+
 
 
 
@@ -58,7 +61,7 @@ const Forum = () => {
         }
 
         console.warn("?? [NO IMAGE] Using default placeholder.");
-        return "/placeholder-image.png"; // Default image
+        return "/placeholder-image.png"; 
     };
 
 
@@ -72,144 +75,251 @@ const Forum = () => {
                 item.content?.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
+    const handleVoteUpdate = (updatedData, discussionId) => {
+        setDiscussions((prevDiscussions) =>
+            prevDiscussions.map((discussion) =>
+                discussion.discussionId === discussionId
+                    ? {
+                        ...discussion,
+                        upvotes: updatedData.upvotes,
+                        downvotes: updatedData.downvotes,
+                        voteScore: updatedData.voteScore,
+                        userVote: updatedData.userVote,
+                    }
+                    : discussion
+            )
+        );
+    };
 
+    
     return (
-        <div className="p-6 bg-[#383838] text-white min-h-screen">
-            <h1 className="text-3xl font-bold text-center mb-8">Forum</h1>
+        <div className="p-6 bg-[#f0f0e0] text-[#123524] min-h-screen">
+            {/* Hero Section */}
+            <div className="relative w-full bg-[#e0e0d0] overflow-hidden mb-12">
+                {/* Background Image with Fade-In Animation */}
+                <div className="w-full h-[400px] md:h-[500px] flex items-center justify-center">
+                    <img
+                        src="/forumpic.jpg"
+                        alt="Featured Recipe"
+                        className="w-full h-full object-cover opacity-0 animate-fade-in"
+                    />
+                </div>
+
+                {/* Overlay Content with Pop-In Animation */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-40 p-6">
+                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-pop-in animate-delay-500">
+                        Join the Conversation!
+                    </h1>
+                    <p className="text-lg md:text-xl text-white mb-6 opacity-0 animate-pop-in animate-delay-700">
+                        Explore trending discussions, share your thoughts, and connect with fellow food lovers.
+                    </p>
+                </div>
+            </div>
+
 
             {/* Search Bar */}
-            <div className="mb-6">
+            <div className="mb-8 max-w-2xl mx-auto">
                 <input
                     type="text"
-                    placeholder="Search Forum"
+                    placeholder="Search for recipes or discussions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full p-2 rounded bg-[#282828] text-white border border-gray-500"
+                    className="w-full p-3 rounded-lg bg-[#e0e0d0] text-[#123524] border border-[#204037] focus:outline-none focus:ring-2 focus:ring-[#2a5246] focus:border-transparent"
                 />
             </div>
 
-            <h3 className="text-lg font-bold mb-4">Recently Added</h3>
-            <div className="space-y-8">
-
-                {/* Recipes Section */}
-                <div>
-                    <h4 className="text-md font-bold mb-4">Recipes</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {recipes.length > 0 ? (
-                            recipes.map((recipe) => (
+            {/* Recipes Section */}
+            <div className="mb-12">
+                <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#204037] to-[#2a5246] bg-clip-text text-transparent">
+                    Recipes
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {recipes.length > 0 ? (
+                        recipes.map((recipe) => {
+                            return (
                                 <div
                                     key={recipe.recipeId}
-                                    className="bg-[#2f2f2f] p-4 rounded shadow-lg border border-gray-700 cursor-pointer hover:bg-[#444]"
-                                    onClick={() => {
-                                        console.log("Navigating to recipe:", recipe.RecipeId || recipe.recipeId);
-                                        if (recipe.RecipeId || recipe.recipeId) {
+                                    className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                                    onClick={(e) => {
+                                        if (!e.target.closest(".no-navigation")) {
                                             navigate(`/forum/recipe/${recipe.RecipeId || recipe.recipeId}`);
-                                        } else {
-                                            console.error("Recipe ID is missing in Forum.jsx");
                                         }
                                     }}
                                 >
-
-                                    {/* Image Handling */}
-                                    <div className="w-full h-32 overflow-hidden rounded-md">
+                                    {/* Image */}
+                                    <div className="w-full h-48 overflow-hidden">
                                         <img
                                             src={getCoverImageUrl(recipe)}
                                             alt={recipe.name || "Recipe Image"}
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover transform hover:scale-105 transition-transform"
                                         />
+                                    </div>
+
+                                    {/* Profile Picture & Username */}
+                                    <div className="flex items-center space-x-3 p-4">
+                                        {recipe.user?.profilePicture ? (
+                                            <img
+                                                src={`data:image/jpeg;base64,${recipe.user.profilePicture}`}
+                                                alt={`${recipe.user?.username || "User"}'s profile`}
+                                                className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    recipe.user?.username && navigate(`/profile/${recipe.user.username}`);
+                                                }}
+                                            />
+                                        ) : (
+                                            <div
+                                                className="w-10 h-10 rounded-full bg-[#204037] cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    recipe.user?.username && navigate(`/profile/${recipe.user.username}`);
+                                                }}
+                                            ></div>
+                                        )}
+                                        <span
+                                            className="text-[#123524] font-semibold cursor-pointer hover:underline"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                recipe.user?.username && navigate(`/profile/${recipe.user.username}`);
+                                            }}
+                                        >
+                                            {recipe.user?.username ? recipe.user.username : "Deleted User"}
+                                        </span>
                                     </div>
 
                                     {/* Recipe Details */}
-                                    <div className="mt-2">
-                                        <p className="text-white font-bold text-lg">{recipe.name}</p>
-                                        <p className="text-gray-400 text-sm mb-2">
-                                            {new Date(recipe.date || Date.now()).toLocaleDateString()}
-                                        </p>
-                                        <p className="text-gray-300 text-sm">{recipe.description}</p>
+                                    <div className="p-4">
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-xl font-bold text-[#123524]">{recipe.name}</p>
+                                            <p className="text-sm text-[#2a5246]">
+                                                {new Date(recipe.date || Date.now()).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        <p className="text-sm text-[#204037] mt-2 line-clamp-2">{recipe.description}</p>
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="flex items-center space-x-4 text-gray-400 mt-3">
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowUp />
-                                            <span>{recipe.upvotes || 0}</span>
-                                        </button>
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowDown />
-                                            <span>{recipe.downvotes || 0}</span>
-                                        </button>
-                                        <button className="hover:text-white">
-                                            <FaCommentAlt />
-                                        </button>
-                                        <button className="hover:text-white">
-                                            <FaBookmark />
-                                        </button>
+                                    <div className="p-4 border-t border-[#204037] flex items-center justify-between">
+                                        <VoteButton
+                                            id={recipe.recipeId}
+                                            upvotes={recipe.upvotes}
+                                            downvotes={recipe.downvotes}
+                                            userVote={recipe.userVote}
+                                            type="recipe"
+                                            onVoteUpdate={(data) => handleVoteUpdate(data, recipe.recipeId)}
+                                            className="no-navigation"
+                                        />
+                                        <div className="flex space-x-4 text-[#204037]">
+                                            <button className="hover:text-[#2a5246]">
+                                                <FaCommentAlt />
+                                            </button>
+                                            <button className="hover:text-[#2a5246]">
+                                                <FaBookmark />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <p className="text-gray-400">No recipes found.</p>
-                        )}
-                    </div>
+                            );
+                        })
+                    ) : (
+                        <p className="text-[#204037]">No recipes found.</p>
+                    )}
                 </div>
+            </div>
 
 
-                {/* Discussions Section */}
-                <div>
-                    <h4 className="text-md font-bold mb-4">Discussions</h4>
-                    <div className="grid grid-cols-1 gap-4">
-                        {filterResults(discussions).map((discussion) => (
+            {/* Discussions Section */}
+            <div className="mb-12">
+                <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#204037] to-[#2a5246] bg-clip-text text-transparent">
+                    Discussions
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filterResults(discussions).map((discussion) => {
+                        return (
                             <div
                                 key={discussion.discussionId}
-                                className="bg-[#2f2f2f] p-4 rounded shadow-lg flex items-start space-x-4 border border-gray-700 cursor-pointer hover:bg-[#444]"
-                                onClick={() => {
-                                    console.log("?? [NAVIGATING] Navigating to discussion:", discussion.discussionId);
-                                    if (discussion.discussionId) {
-                                        navigate(`/forum/discussion/${discussion.discussionId}`);
-                                    } else {
-                                        console.error("? Discussion ID is missing in Forum.jsx");
-                                    }
-                                }}
-
+                                className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                                onClick={() => navigate(`/forum/discussion/${discussion.discussionId}`)}
                             >
-                                {/* ? Display Cover Image (If Exists) */}
+                                {/* Discussion Image (if available) */}
                                 {discussion.coverImages && discussion.coverImages.length > 0 && (
-                                    <div className="w-20 h-20 overflow-hidden rounded-md">
+                                    <div className="w-full h-48 overflow-hidden">
                                         <img
                                             src={getCoverImageUrl(discussion)}
                                             alt="Discussion Cover"
-                                            className="w-full h-full object-cover"
+                                            className="w-full h-full object-cover transform hover:scale-105 transition-transform"
                                         />
                                     </div>
                                 )}
-                                <div className="flex-1">
+
+                                {/* Profile Picture & Username */}
+                                <div className="flex items-center space-x-3 p-4">
+                                    {discussion.user?.profilePicture ? (
+                                        <img
+                                            src={`data:image/jpeg;base64,${discussion.user.profilePicture}`}
+                                            alt={`${discussion.user?.username || "User"}'s profile`}
+                                            className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                            }}
+                                        />
+                                    ) : (
+                                        <div
+                                            className="w-10 h-10 rounded-full bg-[#204037] cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                            }}
+                                        ></div>
+                                    )}
+                                    <span
+                                        className="text-[#123524] font-semibold cursor-pointer hover:underline"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                        }}
+                                    >
+                                        {discussion.user?.username ? discussion.user.username : "Deleted User"}
+                                    </span>
+                                </div>
+
+                                <div className="p-4">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-white font-bold">{discussion.title}</p>
-                                        <p className="text-gray-400 text-sm">
+                                        <p className="text-xl font-bold text-[#123524]">{discussion.title}</p>
+                                        <p className="text-sm text-[#2a5246]">
                                             {new Date(discussion.date || Date.now()).toLocaleDateString()}
                                         </p>
                                     </div>
-                                    <p className="text-gray-300 text-sm mb-2">{discussion.content}</p>
-                                    <div className="flex items-center space-x-4 text-gray-400">
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowUp />
-                                            <span>{discussion.upvotes || 0}</span>
-                                        </button>
-                                        <button className="flex items-center space-x-1 hover:text-white">
-                                            <FaArrowDown />
-                                            <span>{discussion.downvotes || 0}</span>
-                                        </button>
-                                        <button className="hover:text-white">
+                                    {/* Render Quill content properly */}
+                                    <div className="text-sm text-[#204037] mt-2 line-clamp-2"
+                                        dangerouslySetInnerHTML={{ __html: discussion.content }}
+                                    />
+                                </div>
+
+
+                                {/* Action Buttons */}
+                                <div className="p-4 border-t border-[#204037] flex items-center justify-between">
+                                    <VoteButton
+                                        id={discussion.discussionId}
+                                        upvotes={discussion.upvotes}
+                                        downvotes={discussion.downvotes}
+                                        userVote={discussion.userVote}
+                                        type="discussion"
+                                        onVoteUpdate={(data) => handleVoteUpdate(data, discussion.discussionId)}
+                                    />
+                                    <div className="flex space-x-4 text-[#204037]">
+                                        <button className="hover:text-[#2a5246]">
                                             <FaCommentAlt />
                                         </button>
-                                        <button className="hover:text-white">
+                                        <button className="hover:text-[#2a5246]">
                                             <FaBookmark />
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>

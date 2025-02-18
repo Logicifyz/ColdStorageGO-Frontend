@@ -37,7 +37,7 @@ const FloatingCard = ({ children }) => (
 );
 
 const RewardManagement = () => {
-    // States for rewards, form, and editing
+    // States for rewards, modals, forms, etc.
     const [rewards, setRewards] = useState([]);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isPointsFormOpen, setIsPointsFormOpen] = useState(false);
@@ -47,32 +47,54 @@ const RewardManagement = () => {
         coinsCost: 0,
         availabilityStatus: "Available",
         expiryDate: "",
-        rewardType: "Vouchers",
+        // Changed default value from "Vouchers" to "Voucher5"
+        rewardType: "Voucher5",
+        tags: [],
     });
-    const [pointsFormData, setPointsFormData] = useState({ userId: "", action: "Add", coins: 0 });
+    const [pointsFormData, setPointsFormData] = useState({
+        selectedUser: null,
+        action: "Add",
+        coins: 0
+    });
     const [isEditing, setIsEditing] = useState(false);
     const [editId, setEditId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [dishFormOpen, setDishFormOpen] = useState(false);
     const [newDish, setNewDish] = useState({ name: "", instructions: "" });
-
-    const dietaryOptions = [
-        "Vegan", "Vegetarian", "Pescatarian",
-        "Dairy-Free", "Gluten-Free", "Halal"
-    ];
-
     const fileInputRef = useRef();
+    const [users, setUsers] = useState([]);
+    const [userSearchTerm, setUserSearchTerm] = useState("");
+    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
+    // New state for delete confirmation modal.
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [rewardToDelete, setRewardToDelete] = useState(null);
+
+    // Fetch rewards and redemption counts together
     useEffect(() => {
-        const fetchRewards = async () => {
+        const fetchData = async () => {
             try {
-                const response = await api.get("/api/Rewards");
-                setRewards(response.data);
+                const [rewardsResponse, redemptionCountsResponse] = await Promise.all([
+                    api.get("/api/Rewards"),
+                    api.get("/api/Rewards/redemption-counts")
+                ]);
+
+                const redemptionCountsMap = redemptionCountsResponse.data.reduce((acc, curr) => {
+                    acc[curr.rewardId] = curr.redemptionCount;
+                    return acc;
+                }, {});
+
+                const rewardsWithCounts = rewardsResponse.data.map(reward => ({
+                    ...reward,
+                    redemptionCount: redemptionCountsMap[reward.rewardId] || 0
+                }));
+
+                setRewards(rewardsWithCounts);
             } catch (error) {
-                toast.error("Error fetching rewards");
+                toast.error("Error fetching data");
             }
         };
-        fetchRewards();
+        fetchData();
     }, []);
 
     const showNotification = (message, type) => {
@@ -83,17 +105,47 @@ const RewardManagement = () => {
         }
     };
 
+    useEffect(() => {
+        if (isPointsFormOpen) {
+            const fetchUsers = async () => {
+                try {
+                    const response = await api.get("/api/Account/all-users");
+                    setUsers(response.data);
+                } catch (error) {
+                    toast.error("Error fetching users");
+                }
+            };
+            fetchUsers();
+        }
+    }, [isPointsFormOpen]);
+
+    // Add user search handler
+    const filteredUsers = users.filter(user =>
+        user.email.toLowerCase().includes(userSearchTerm.toLowerCase())
+    );
+
     const handleFormChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // Update handlePointsFormChange
     const handlePointsFormChange = (e) => {
         const { name, value } = e.target;
         setPointsFormData(prev => ({
             ...prev,
             [name]: name === "coins" ? parseInt(value, 10) || 0 : value,
         }));
+    };
+
+    // Add user selection handler
+    const handleUserSelect = (user) => {
+        setPointsFormData(prev => ({
+            ...prev,
+            selectedUser: user
+        }));
+        setIsUserDropdownOpen(false);
+        setUserSearchTerm("");
     };
 
     const handleFileChange = (e) => {
@@ -137,7 +189,8 @@ const RewardManagement = () => {
                 coinsCost: 0,
                 availabilityStatus: "Available",
                 expiryDate: "",
-                rewardType: "Vouchers",
+                // Changed default value here as well
+                rewardType: "Voucher5",
                 tags: [],
             });
         }
@@ -150,7 +203,6 @@ const RewardManagement = () => {
             coinsCost: parseInt(formData.coinsCost, 10),
         };
 
-        // Add rewardId to payload for PUT requests
         if (isEditing) {
             payload.rewardId = editId;
         }
@@ -163,8 +215,23 @@ const RewardManagement = () => {
                 await api.post("/api/Rewards", payload);
                 showNotification("Reward created successfully!", "success");
             }
-            const res = await api.get("/api/Rewards");
-            setRewards(res.data);
+            // Refresh rewards after update
+            const [rewardsResponse, redemptionCountsResponse] = await Promise.all([
+                api.get("/api/Rewards"),
+                api.get("/api/Rewards/redemption-counts")
+            ]);
+
+            const redemptionCountsMap = redemptionCountsResponse.data.reduce((acc, curr) => {
+                acc[curr.rewardId] = curr.redemptionCount;
+                return acc;
+            }, {});
+
+            const rewardsWithCounts = rewardsResponse.data.map(reward => ({
+                ...reward,
+                redemptionCount: redemptionCountsMap[reward.rewardId] || 0
+            }));
+
+            setRewards(rewardsWithCounts);
             setIsFormOpen(false);
             setIsEditing(false);
             setEditId(null);
@@ -176,8 +243,13 @@ const RewardManagement = () => {
 
     const handlePointsSubmit = async (e) => {
         e.preventDefault();
+        if (!pointsFormData.selectedUser) {
+            toast.error("Please select a user");
+            return;
+        }
+
         const payload = {
-            userId: pointsFormData.userId,
+            userId: pointsFormData.selectedUser.userId,
             coins: parseInt(pointsFormData.coins, 10),
         };
 
@@ -189,7 +261,11 @@ const RewardManagement = () => {
             await api.post(endpoint, payload);
             showNotification(`${pointsFormData.action} coins successful!`, "success");
             setIsPointsFormOpen(false);
-            setPointsFormData({ userId: "", action: "Add", coins: 0 });
+            setPointsFormData({
+                selectedUser: null,
+                action: "Add",
+                coins: 0
+            });
         } catch (error) {
             console.error("Error updating points:", error);
             showNotification("Failed to update points", "error");
@@ -208,13 +284,35 @@ const RewardManagement = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this reward?")) return;
+    // Remove window.confirm and use a modal instead.
+    const openDeleteModal = (id) => {
+        setRewardToDelete(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
         try {
-            await api.delete(`/api/Rewards/${id}`);
-            const res = await api.get("/api/Rewards");
-            setRewards(res.data);
+            await api.delete(`/api/Rewards/${rewardToDelete}`);
+            // Refresh rewards after deletion
+            const [rewardsResponse, redemptionCountsResponse] = await Promise.all([
+                api.get("/api/Rewards"),
+                api.get("/api/Rewards/redemption-counts")
+            ]);
+
+            const redemptionCountsMap = redemptionCountsResponse.data.reduce((acc, curr) => {
+                acc[curr.rewardId] = curr.redemptionCount;
+                return acc;
+            }, {});
+
+            const rewardsWithCounts = rewardsResponse.data.map(reward => ({
+                ...reward,
+                redemptionCount: redemptionCountsMap[reward.rewardId] || 0
+            }));
+
+            setRewards(rewardsWithCounts);
             showNotification("Reward deleted successfully", "success");
+            setIsDeleteModalOpen(false);
+            setRewardToDelete(null);
         } catch (error) {
             console.error("Error deleting reward:", error);
             showNotification("Failed to delete reward", "error");
@@ -273,57 +371,6 @@ const RewardManagement = () => {
                         </GlowingButton>
                     </div>
                 </header>
-
-                <AnimatePresence>
-                    {dishFormOpen && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
-                        >
-                            <FloatingCard>
-                                <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold">New Culinary Creation</h2>
-                                    <button
-                                        onClick={() => setDishFormOpen(false)}
-                                        className="p-2 hover:bg-[#ffffff10] rounded-lg"
-                                    >
-                                        <XMarkIcon className="w-6 h-6" />
-                                    </button>
-                                </div>
-                                <form onSubmit={handleDishSubmit} className="space-y-6">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">Dish Name</label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={newDish.name}
-                                            onChange={(e) => setNewDish({ ...newDish, name: e.target.value })}
-                                            className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3"
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">Instructions</label>
-                                        <textarea
-                                            name="instructions"
-                                            value={newDish.instructions}
-                                            onChange={(e) => setNewDish({ ...newDish, instructions: e.target.value })}
-                                            className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3 h-32 resize-none"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="flex justify-end gap-4">
-                                        <GlowingButton type="submit" className="bg-green-600 hover:bg-green-500">
-                                            Create Dish
-                                        </GlowingButton>
-                                    </div>
-                                </form>
-                            </FloatingCard>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
 
                 <AnimatePresence>
                     {isFormOpen && (
@@ -411,8 +458,10 @@ const RewardManagement = () => {
                                                 onChange={handleFormChange}
                                                 className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3"
                                             >
-                                                <option value="Vouchers">Digital Voucher</option>
-                                                <option value="Gifts">Physical Gift</option>
+                                                <option value="Voucher5">5$ Discount Voucher</option>
+                                                <option value="Voucher10">10$ Discount Voucher</option>
+                                                <option value="Voucher15">15$ Discount Voucher</option>
+                                                <option value="Voucher20">20$ Discount Voucher</option>
                                             </select>
                                         </div>
                                     </div>
@@ -446,17 +495,48 @@ const RewardManagement = () => {
                                     </button>
                                 </div>
                                 <form onSubmit={handlePointsSubmit} className="space-y-6">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">User ID</label>
-                                        <input
-                                            type="text"
-                                            name="userId"
-                                            value={pointsFormData.userId}
-                                            onChange={handlePointsFormChange}
-                                            className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3"
-                                            required
-                                        />
+                                    <div className="relative">
+                                        <label className="block text-sm font-medium mb-2">Select User</label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                placeholder="Search by email..."
+                                                value={userSearchTerm}
+                                                onChange={(e) => setUserSearchTerm(e.target.value)}
+                                                onFocus={() => setIsUserDropdownOpen(true)}
+                                                className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3"
+                                            />
+                                            <AnimatePresence>
+                                                {isUserDropdownOpen && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: -10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -10 }}
+                                                        className="absolute z-10 w-full mt-2 bg-[#1a1a2e] rounded-xl shadow-lg max-h-60 overflow-y-auto"
+                                                    >
+                                                        {filteredUsers.map(user => (
+                                                            <div
+                                                                key={user.userId}
+                                                                onClick={() => handleUserSelect(user)}
+                                                                className="px-4 py-3 hover:bg-[#ffffff10] cursor-pointer transition-colors"
+                                                            >
+                                                                <p className="text-gray-100">{user.email}</p>
+                                                                <p className="text-xs text-gray-400">ID: {user.userId}</p>
+                                                            </div>
+                                                        ))}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                        {pointsFormData.selectedUser && (
+                                            <div className="mt-4 p-3 bg-[#ffffff05] rounded-lg">
+                                                <p className="text-sm font-medium">Selected User:</p>
+                                                <p className="text-cyan-400">{pointsFormData.selectedUser.email}</p>
+                                                <p className="text-xs text-gray-400">ID: {pointsFormData.selectedUser.userId}</p>
+                                            </div>
+                                        )}
                                     </div>
+
                                     <div>
                                         <label className="block text-sm font-medium mb-2">Action</label>
                                         <select
@@ -499,13 +579,10 @@ const RewardManagement = () => {
                         {filteredRewards.map((reward) => (
                             <motion.div
                                 key={reward.rewardId}
-                                layout
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                className="group relative"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 20 }}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="relative bg-[#161622]/80 backdrop-blur-sm rounded-3xl p-6 border border-[#ffffff10] hover:border-[#ffffff30] transition-all">
                                     <div className="flex justify-between items-start mb-4">
                                         <GiftIcon className="w-8 h-8 text-purple-400" />
@@ -515,7 +592,7 @@ const RewardManagement = () => {
                                     </div>
                                     <h3 className="text-xl font-bold mb-2">{reward.name}</h3>
                                     <p className="text-gray-400 mb-4">{reward.description}</p>
-                                    <div className="grid grid-cols-2 gap-4 mb-6">
+                                    <div className="grid grid-cols-3 gap-4 mb-6">
                                         <div>
                                             <span className="text-sm text-gray-500">Cost</span>
                                             <p className="text-2xl font-bold text-cyan-400">{reward.coinsCost} ⭐</p>
@@ -523,6 +600,10 @@ const RewardManagement = () => {
                                         <div>
                                             <span className="text-sm text-gray-500">Expires</span>
                                             <p className="text-purple-400">{new Date(reward.expiryDate).toLocaleDateString()}</p>
+                                        </div>
+                                        <div>
+                                            <span className="text-sm text-gray-500">Redemptions</span>
+                                            <p className="text-2xl font-bold text-green-400">{reward.redemptionCount}</p>
                                         </div>
                                     </div>
                                     <div className="flex gap-3">
@@ -533,7 +614,7 @@ const RewardManagement = () => {
                                             Edit
                                         </GlowingButton>
                                         <GlowingButton
-                                            onClick={() => handleDelete(reward.rewardId)}
+                                            onClick={() => openDeleteModal(reward.rewardId)}
                                             className="bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm"
                                         >
                                             Delete
@@ -545,6 +626,45 @@ const RewardManagement = () => {
                     </AnimatePresence>
                 </motion.div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+                {isDeleteModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 flex items-center justify-center z-50 bg-black/70"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            exit={{ scale: 0.8 }}
+                            className="bg-[#0b0b1a] p-6 rounded-xl shadow-lg border border-[#ffffff10] w-96"
+                        >
+                            <h3 className="text-xl font-bold text-white mb-4">Confirm Deletion</h3>
+                            <p className="text-gray-300 mb-6">Are you sure you want to delete this reward?</p>
+                            <div className="flex justify-end gap-4">
+                                <GlowingButton
+                                    onClick={() => {
+                                        setIsDeleteModalOpen(false);
+                                        setRewardToDelete(null);
+                                    }}
+                                    className="bg-gray-500 hover:bg-gray-400 text-white"
+                                >
+                                    Cancel
+                                </GlowingButton>
+                                <GlowingButton
+                                    onClick={confirmDelete}
+                                    className="bg-red-600 hover:bg-red-500 text-white"
+                                >
+                                    Delete
+                                </GlowingButton>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

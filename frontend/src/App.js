@@ -27,6 +27,8 @@ import DisplayForumRecipe from "./pages/DisplayForumRecipe";
 import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
+import EditDiscussion from "./pages/EditDiscussion";  
+import EditRecipe from "./pages/EditRecipe";
 import Home from "./pages/Home";
 import PleaseLogin from "./pages/PleaseLogin"
 
@@ -70,7 +72,9 @@ import SubscriptionHistory from "./pages/AccountFlow/AccountFlowComponents/Subsc
 import Notifications from "./pages/AccountFlow/AccountFlowComponents/Notifications";
 import AccountDashboardLayout from "./pages/AccountFlow/AccountDashboardLayout";
 import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
+import MyAddress from "./pages/AccountFlow/AccountFlowComponents/MyAddress";
 import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
+import MyForumActivity from "./pages/AccountFlow/AccountFlowComponents/MyForumActivity";
 
 
 const App = () => {
@@ -85,6 +89,7 @@ const App = () => {
                     {/* Account Dashboard Individual Tab Routes */}
                     <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
                         <Route path="profile" element={<MyProfile />} />
+                        <Route path="address" element={<MyAddress />} />
                         <Route path="change-password" element={<ChangePassword />} />
                         <Route path="delete-account" element={<DeleteAccount />} />
                         <Route path="my-orders" element={<MyOrders />} />
@@ -94,6 +99,7 @@ const App = () => {
                         <Route path="subscription-history" element={<SubscriptionHistory />} />
                         <Route path="notifications" element={<Notifications />} />
                         <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
+                        <Route path="my-forum-activity" element={<MyForumActivity />} />
 
                     </Route>
 
@@ -114,6 +120,8 @@ const App = () => {
                     <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
                     <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
                     <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
+                    <Route path="/forum/discussion/edit/:discussionId" element={<EditDiscussion />} />
+                    <Route path="/forum/recipe/edit/:id" element={<EditRecipe />} /> 
                     <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
                     <Route path="/cheffie-ai" element={<CheffieAI />} />
                     <Route path="/listing/:id" element={<Listing />} />
@@ -127,7 +135,7 @@ const App = () => {
                     <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
 
                     <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                   
+
                     {/* Wrap only the Login page with GoogleOAuthProvider */}
                     <Route
                         path="/login"
