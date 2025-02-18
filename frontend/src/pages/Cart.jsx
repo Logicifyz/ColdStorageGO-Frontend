@@ -110,7 +110,12 @@ const Cart = () => {
             calculateSubtotal(items);
         } catch (error) {
             console.error("Failed to fetch cart items", error);
-            setError("Failed to fetch cart items");
+            // If the error indicates an empty cart (e.g., 404), treat it as an empty cart.
+            if (error.response && error.response.status === 404) {
+                setCartItems([]);
+            } else {
+                setError("Failed to fetch cart items");
+            }
         }
     };
 
@@ -217,7 +222,7 @@ const Cart = () => {
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             />
 
-            <div className="relative z-10 max-w-6xl mx-auto">
+            <div className="relative z-10 max-w-7xl mx-auto">
                 <h1 className="text-5xl font-bold mb-8 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                     Shopping Cart
                 </h1>
