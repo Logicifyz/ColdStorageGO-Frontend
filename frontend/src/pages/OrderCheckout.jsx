@@ -34,9 +34,13 @@ const generateShippingTimes = () => {
 const formatSelectedTime = (isoString) => {
     if (!isoString) return "";
     const date = new Date(isoString);
-    return date
-        .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })
-        .toUpperCase() + " DELIVERY";
+    return (
+        date.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        }).toUpperCase() + " DELIVERY"
+    );
 };
 
 // Helper function to validate GUID format.
@@ -226,13 +230,17 @@ const OrderCheckout = () => {
 
         if (!validateForm()) return;
 
-        // If a discount was applied, ensure the discountCode is a valid GUID
+        // Build order payload including order items from the cart
         const orderPayload = {
             orderType: "Single-Order",
             deliveryAddress,
             shippingCost: shippingCost,
             tax: taxes,
-            shipTime: selectedShippingTime
+            shipTime: selectedShippingTime,
+            orderItems: cartItems.map(item => ({
+                mealKitId: item.mealKitId,
+                quantity: item.quantity
+            }))
         };
 
         if (discountApplied) {

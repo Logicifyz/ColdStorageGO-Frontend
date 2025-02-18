@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
 import api from '../api';
 import { FaPlus, FaBell } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -143,7 +144,7 @@ const Navigation = () => {
 
                     </div>
                 </div>
-        </nav>
+            </nav>
 
             {location.pathname.startsWith("/forum") && (
                 <div className="bg-[#f0f0e0] text-[#123524] py-4 px-6 flex justify-between items-center sticky top-[85px] w-full z-40">
