@@ -168,7 +168,6 @@ const CreateDiscussion = () => {
                 >
                     <option value="public">Public</option>
                     <option value="private">Private</option>
-                    <option value="friends-only">Friends Only</option>
                 </select>
 
                 {/* Submit Button */}
