@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowUp, FaArrowDown, FaCommentAlt, FaBookmark } from "react-icons/fa";
 import VoteButton from "../components/VoteButton"; 
+import SearchDropdown from "../components/SearchDropdown";
 
 const Forum = () => {
     const [recipes, setRecipes] = useState([]);
     const [discussions, setDiscussions] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate(); // For navigation
     const loggedInUsername = localStorage.getItem("loggedInUsername");
 
@@ -66,14 +68,18 @@ const Forum = () => {
 
 
 
-    const filterResults = (items) =>
-        items.filter(
-            (item) =>
-                item.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.content?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+    const filterResults = (items) => {
+        return items.filter((item) => {
+            const lowerQuery = searchQuery.toLowerCase();
+            return (
+                (item.name && item.name.toLowerCase().includes(lowerQuery)) ||
+                (item.title && item.title.toLowerCase().includes(lowerQuery)) ||
+                (item.description && item.description.toLowerCase().includes(lowerQuery)) ||
+                (item.content && item.content.toLowerCase().includes(lowerQuery)) ||
+                (item.user?.username && item.user.username.toLowerCase().includes(lowerQuery))
+            );
+        });
+    };
 
     const handleVoteUpdate = (updatedData, discussionId) => {
         setDiscussions((prevDiscussions) =>
@@ -90,6 +96,7 @@ const Forum = () => {
             )
         );
     };
+
 
     
     return (
@@ -118,14 +125,26 @@ const Forum = () => {
 
 
             {/* Search Bar */}
-            <div className="mb-8 max-w-2xl mx-auto">
+            <div className="relative max-w-2xl mx-auto">
                 <input
                     type="text"
                     placeholder="Search for recipes or discussions..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setShowDropdown(e.target.value.trim() !== "");
+                    }}
+                    onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
                     className="w-full p-3 rounded-lg bg-[#e0e0d0] text-[#123524] border border-[#204037] focus:outline-none focus:ring-2 focus:ring-[#2a5246] focus:border-transparent"
                 />
+                {showDropdown && (
+                    <SearchDropdown
+                        searchQuery={searchQuery}
+                        recipes={recipes}
+                        discussions={discussions}
+                        closeDropdown={() => setShowDropdown(false)}
+                    />
+                )}
             </div>
 
             {/* Recipes Section */}
@@ -134,18 +153,12 @@ const Forum = () => {
                     Recipes
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {recipes.length > 0 ? (
-                        recipes.map((recipe) => {
-                            return (
-                                <div
-                                    key={recipe.recipeId}
-                                    className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
-                                    onClick={(e) => {
-                                        if (!e.target.closest(".no-navigation")) {
-                                            navigate(`/forum/recipe/${recipe.RecipeId || recipe.recipeId}`);
-                                        }
-                                    }}
-                                >
+                    {filterResults(recipes).length > 0 ? (
+                        filterResults(recipes).map((recipe) => (
+                            <div key={recipe.recipeId}
+                                className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                                onClick={() => navigate(`/forum/recipe/${recipe.recipeId}`)}
+                            >
                                     {/* Image */}
                                     <div className="w-full h-48 overflow-hidden">
                                         <img
@@ -219,8 +232,7 @@ const Forum = () => {
                                         </div>
                                     </div>
                                 </div>
-                            );
-                        })
+                        ))
                     ) : (
                         <p className="text-[#204037]">No recipes found.</p>
                     )}
@@ -234,8 +246,8 @@ const Forum = () => {
                     Discussions
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filterResults(discussions).map((discussion) => {
-                        return (
+                    {filterResults(discussions).length > 0 ? (
+                        filterResults(discussions).map((discussion) => (
                             <div
                                 key={discussion.discussionId}
                                 className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
@@ -261,7 +273,8 @@ const Forum = () => {
                                             className="w-10 h-10 rounded-full object-cover cursor-pointer"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                                discussion.user?.username &&
+                                                    navigate(`/profile/${discussion.user.username}`);
                                             }}
                                         />
                                     ) : (
@@ -269,7 +282,8 @@ const Forum = () => {
                                             className="w-10 h-10 rounded-full bg-[#204037] cursor-pointer"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                                discussion.user?.username &&
+                                                    navigate(`/profile/${discussion.user.username}`);
                                             }}
                                         ></div>
                                     )}
@@ -277,13 +291,15 @@ const Forum = () => {
                                         className="text-[#123524] font-semibold cursor-pointer hover:underline"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                            discussion.user?.username &&
+                                                navigate(`/profile/${discussion.user.username}`);
                                         }}
                                     >
                                         {discussion.user?.username ? discussion.user.username : "Deleted User"}
                                     </span>
                                 </div>
 
+                                {/* Discussion Content */}
                                 <div className="p-4">
                                     <div className="flex items-center justify-between">
                                         <p className="text-xl font-bold text-[#123524]">{discussion.title}</p>
@@ -292,11 +308,11 @@ const Forum = () => {
                                         </p>
                                     </div>
                                     {/* Render Quill content properly */}
-                                    <div className="text-sm text-[#204037] mt-2 line-clamp-2"
+                                    <div
+                                        className="text-sm text-[#204037] mt-2 line-clamp-2"
                                         dangerouslySetInnerHTML={{ __html: discussion.content }}
                                     />
                                 </div>
-
 
                                 {/* Action Buttons */}
                                 <div className="p-4 border-t border-[#204037] flex items-center justify-between">
@@ -306,7 +322,9 @@ const Forum = () => {
                                         downvotes={discussion.downvotes}
                                         userVote={discussion.userVote}
                                         type="discussion"
-                                        onVoteUpdate={(data) => handleVoteUpdate(data, discussion.discussionId)}
+                                        onVoteUpdate={(data) =>
+                                            handleVoteUpdate(data, discussion.discussionId)
+                                        }
                                     />
                                     <div className="flex space-x-4 text-[#204037]">
                                         <button className="hover:text-[#2a5246]">
@@ -318,8 +336,10 @@ const Forum = () => {
                                     </div>
                                 </div>
                             </div>
-                        );
-                    })}
+                        ))
+                    ) : (
+                        <p className="text-[#204037]">No discussions found.</p>
+                    )}
                 </div>
             </div>
         </div>

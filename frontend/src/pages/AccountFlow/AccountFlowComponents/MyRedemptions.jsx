@@ -82,49 +82,50 @@ const MyRedemptions = () => {
         // Add toast notification here if needed
     };
 
+    // Updated status style for calm pastel tones
     const getStatusStyle = (usable, expiry) => {
-        if (new Date(expiry) < new Date()) return 'bg-red-900/30 text-red-300';
-        return usable ? 'bg-emerald-900/30 text-emerald-300' : 'bg-amber-900/30 text-amber-300';
+        if (new Date(expiry) < new Date()) return 'bg-red-200 text-red-700';
+        return usable ? 'bg-emerald-200 text-emerald-800' : 'bg-amber-200 text-amber-800';
     };
 
     if (loading)
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] flex items-center justify-center">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                    className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
+                    className="w-16 h-16 border-4 border-green-600/30 border-t-green-600 rounded-full"
                 />
             </div>
         );
 
     if (error)
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-red-400">
+            <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] flex items-center justify-center text-red-500">
                 {error}
             </div>
         );
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] relative overflow-hidden p-8">
             {/* Abstract background elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-purple-700/10 to-blue-500/10 rounded-full blur-3xl" />
-                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-pink-700/10 to-cyan-500/10 rounded-full blur-3xl" />
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-[#2D4B33]/10 to-[#355E3B]/10 rounded-full blur-3xl" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-[#355E3B]/10 to-[#2D4B33]/10 rounded-full blur-3xl" />
             </div>
 
             <div className="relative z-10 max-w-4xl mx-auto">
                 <div className="flex items-center gap-4 mb-12">
-                    <SparklesIcon className="w-12 h-12 text-purple-400" />
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    <SparklesIcon className="w-12 h-12 text-green-600" />
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                         My Rewards Vault
                     </h1>
                 </div>
 
                 {redemptions.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center text-gray-400 py-20">
+                    <div className="flex flex-col items-center justify-center text-green-700 py-20">
                         <p className="text-xl font-semibold mt-4">No rewards redeemed yet</p>
-                        <p className="mt-2 text-sm text-gray-500">
+                        <p className="mt-2 text-sm text-green-600">
                             Your redeemed rewards will appear here when available.
                         </p>
                     </div>
@@ -137,7 +138,7 @@ const MyRedemptions = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -20 }}
-                                    className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-2xl border border-[#ffffff10] shadow-2xl overflow-hidden"
+                                    className="bg-white/90 backdrop-blur-xl rounded-2xl border border-green-100 shadow-2xl overflow-hidden"
                                 >
                                     <div className="p-6 cursor-pointer" onClick={() => toggleExpand(redemption.redemptionId)}>
                                         <div className="flex items-center justify-between">
@@ -149,13 +150,12 @@ const MyRedemptions = () => {
                                                             ? 'Active'
                                                             : 'Used'}
                                                 </div>
-                                                <span className="text-gray-300">
+                                                <span className="text-green-800">
                                                     Reward: {redemption.rewardName}
                                                 </span>
                                             </div>
                                             <ChevronDownIcon
-                                                className={`w-6 h-6 transform transition-transform ${expandedRedemption === redemption.redemptionId ? 'rotate-180' : ''
-                                                    }`}
+                                                className={`w-6 h-6 transform transition-transform ${expandedRedemption === redemption.redemptionId ? 'rotate-180' : ''}`}
                                             />
                                         </div>
                                     </div>
@@ -166,41 +166,39 @@ const MyRedemptions = () => {
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: 'auto' }}
                                                 exit={{ opacity: 0, height: 0 }}
-                                                className="border-t border-[#ffffff10]"
+                                                className="border-t border-green-100"
                                             >
                                                 <div className="p-6 space-y-4">
                                                     <div className="grid grid-cols-2 gap-4">
-                                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                                            <p className="text-sm text-gray-400 mb-2">Expiry Date</p>
-                                                            <p className="text-gray-200">
+                                                        <div className="bg-white p-4 rounded-xl shadow-sm">
+                                                            <p className="text-sm text-green-600 mb-2">Expiry Date</p>
+                                                            <p className="text-green-800">
                                                                 {new Date(redemption.expiryDate).toLocaleDateString()}
                                                             </p>
                                                         </div>
-                                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                                            <p className="text-sm text-gray-400 mb-2">Reward Code</p>
+                                                        <div className="bg-white p-4 rounded-xl shadow-sm">
+                                                            <p className="text-sm text-green-600 mb-2">Reward Code</p>
                                                             <div className="flex items-center justify-between">
-                                                                <span className="font-mono text-purple-300">
+                                                                <span className="font-mono text-green-700">
                                                                     {redemption.redemptionId.slice(0, 8).toUpperCase()}
                                                                 </span>
                                                                 <button
                                                                     onClick={() => copyToClipboard(redemption.redemptionId)}
-                                                                    className="p-2 hover:bg-[#ffffff10] rounded-lg"
+                                                                    className="p-2 hover:bg-green-100 rounded-lg"
                                                                 >
-                                                                    <ClipboardIcon className="w-5 h-5 text-gray-400" />
+                                                                    <ClipboardIcon className="w-5 h-5 text-green-700" />
                                                                 </button>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                                        <p className="text-sm text-gray-400 mb-2">Terms & Conditions</p>
-                                                        <p className="text-gray-300">
+                                                    <div className="bg-white p-4 rounded-xl shadow-sm">
+                                                        <p className="text-sm text-green-600 mb-2">Terms & Conditions</p>
+                                                        <p className="text-green-800">
                                                             This reward is {redemption.rewardUsable ? 'ready to use' : 'already used'}.
                                                             Present this code at checkout to redeem your reward.
                                                         </p>
                                                     </div>
-
-                                                 
                                                 </div>
                                             </motion.div>
                                         )}

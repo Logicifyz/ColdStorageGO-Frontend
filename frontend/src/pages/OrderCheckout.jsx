@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
 import { motion } from "framer-motion";
+import api from "../api";
 import "tailwindcss/tailwind.css";
 
 const statusSteps = [
@@ -34,11 +34,9 @@ const generateShippingTimes = () => {
 const formatSelectedTime = (isoString) => {
     if (!isoString) return "";
     const date = new Date(isoString);
-    return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-    }).toUpperCase() + " DELIVERY";
+    return date
+        .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })
+        .toUpperCase() + " DELIVERY";
 };
 
 // Helper function to validate GUID format.
@@ -292,40 +290,24 @@ const OrderCheckout = () => {
         return true;
     };
 
-    const formatCardNumber = (value) => {
-        return value
-            .replace(/\D/g, "")
-            .match(/.{1,4}/g)
-            ?.join(" ")
-            .substr(0, 19) || "";
-    };
-
-    const formatExpiry = (value) => {
-        return value
-            .replace(/\D/g, "")
-            .match(/.{1,2}/g)
-            ?.join("/")
-            .substr(0, 5) || "";
-    };
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative overflow-hidden p-8 font-inter text-gray-100">
+        <div className="min-h-screen bg-[#F0EAD6] relative overflow-hidden p-8 font-inter text-[#2D4B33]">
             {/* Abstract Background Blobs */}
             <motion.div
-                className="absolute top-0 right-0 w-[40%] h-[60%] bg-[#ff6b6b10] rounded-full blur-3xl"
+                className="absolute top-0 right-0 w-[40%] h-[60%] bg-[#355E3B10] rounded-full blur-3xl"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
-                className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-[#ff8e5310] rounded-full blur-3xl"
+                className="absolute bottom-0 left-0 w-[50%] h-[50%] bg-[#2D4B3310] rounded-full blur-3xl"
                 animate={{ rotate: -360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             />
 
             <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column - Checkout Form */}
-                <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl">
-                    <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+                <div className="bg-white rounded-3xl p-8 shadow-2xl">
+                    <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                         Checkout Details
                     </h1>
                     <form onSubmit={handleCheckout}>
@@ -338,7 +320,7 @@ const OrderCheckout = () => {
                                     placeholder="Street Address"
                                     value={street}
                                     onChange={(e) => setStreet(e.target.value)}
-                                    className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] backdrop-blur-sm border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                    className="w-full px-6 py-4 rounded-2xl bg-white border border-[#E2F2E6] text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                     required
                                 />
                                 <div className="grid grid-cols-2 gap-4">
@@ -347,7 +329,7 @@ const OrderCheckout = () => {
                                         placeholder="City"
                                         value={city}
                                         onChange={(e) => setCity(e.target.value)}
-                                        className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                        className="p-6 border border-[#E2F2E6] rounded-2xl bg-white text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                         required
                                     />
                                     <input
@@ -355,7 +337,7 @@ const OrderCheckout = () => {
                                         placeholder="State/Region"
                                         value={region}
                                         onChange={(e) => setRegion(e.target.value)}
-                                        className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                        className="p-6 border border-[#E2F2E6] rounded-2xl bg-white text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                         required
                                     />
                                 </div>
@@ -364,42 +346,40 @@ const OrderCheckout = () => {
                                     placeholder="Postal Code"
                                     value={postalCode}
                                     onChange={(e) => setPostalCode(e.target.value)}
-                                    className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] backdrop-blur-sm border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                    className="w-full px-6 py-4 rounded-2xl bg-white border border-[#E2F2E6] text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                     required
                                 />
                                 <div className="mb-6">
-                                    <h2 className="text-xl font-semibold mb-3 text-gray-300">
-                                        Delivery Time Selection
-                                    </h2>
+                                    <h2 className="text-xl font-semibold mb-3">Delivery Time Selection</h2>
                                     <div className="relative group">
-                                        <div className="border-2 border-gray-600 rounded-xl focus-within:border-[#ff6b6b] transition-all">
+                                        <div className="border-2 border-[#E2F2E6] rounded-xl focus-within:border-[#355E3B] transition-all">
                                             <select
                                                 value={selectedShippingTime}
                                                 onChange={(e) => setSelectedShippingTime(e.target.value)}
-                                                className="w-full px-5 py-4 bg-gray-900 text-gray-200 rounded-xl appearance-none focus:outline-none"
+                                                className="w-full px-5 py-4 bg-white text-[#2D4B33] rounded-xl appearance-none border border-[#E2F2E6] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                             >
-                                                <option value="" className="bg-gray-800 text-gray-400">
+                                                <option value="" className="bg-white text-gray-500">
                                                     Select your delivery window
                                                 </option>
                                                 {generateShippingTimes().map((time, index) => (
                                                     <option
                                                         key={index}
                                                         value={time.value}
-                                                        className="bg-gray-900 text-gray-200 hover:bg-[#ff6b6b]"
+                                                        className="bg-white text-[#2D4B33]"
                                                     >
                                                         {time.label}
                                                     </option>
                                                 ))}
                                             </select>
                                             <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                                 </svg>
                                             </div>
                                         </div>
                                         {selectedShippingTime && (
-                                            <div className="mt-3 p-3 bg-gray-900/50 rounded-lg border border-[#ff6b6b]/30">
-                                                <p className="text-[#ff6b6b] font-medium flex items-center">
+                                            <div className="mt-3 p-3 bg-[#E2F2E6] rounded-lg border border-[#355E3B]/30">
+                                                <p className="text-[#2D4B33] font-medium flex items-center">
                                                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                     </svg>
@@ -408,7 +388,7 @@ const OrderCheckout = () => {
                                             </div>
                                         )}
                                     </div>
-                                    <p className="mt-2 text-sm text-gray-400">
+                                    <p className="mt-2 text-sm text-gray-500">
                                         Orders arrive within 15 minutes of selected time
                                     </p>
                                 </div>
@@ -424,12 +404,12 @@ const OrderCheckout = () => {
                                     placeholder="Enter discount code"
                                     value={discountCode}
                                     onChange={(e) => setDiscountCode(e.target.value)}
-                                    className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                    className="w-full px-6 py-4 rounded-2xl bg-white border border-[#E2F2E6] text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                 />
                                 <button
                                     type="button"
                                     onClick={applyDiscount}
-                                    className="ml-4 px-6 py-4 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] text-white rounded-2xl"
+                                    className="ml-4 px-6 py-4 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] text-white rounded-2xl"
                                 >
                                     Apply
                                 </button>
@@ -445,7 +425,7 @@ const OrderCheckout = () => {
                                     placeholder="Card Number"
                                     value={formatCardNumber(cardNumber)}
                                     onChange={(e) => setCardNumber(e.target.value)}
-                                    className="w-full px-6 py-4 rounded-2xl bg-[#ffffff08] backdrop-blur-sm border border-[#ffffff15] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                    className="w-full px-6 py-4 rounded-2xl bg-white border border-[#E2F2E6] text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                     maxLength={19}
                                 />
                                 <div className="grid grid-cols-2 gap-4">
@@ -454,7 +434,7 @@ const OrderCheckout = () => {
                                         placeholder="MM/YY"
                                         value={formatExpiry(expiry)}
                                         onChange={(e) => setExpiry(e.target.value)}
-                                        className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                        className="p-6 border border-[#E2F2E6] rounded-2xl bg-white text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                         maxLength={5}
                                     />
                                     <input
@@ -464,7 +444,7 @@ const OrderCheckout = () => {
                                         onChange={(e) =>
                                             setCvc(e.target.value.replace(/\D/g, "").substr(0, 3))
                                         }
-                                        className="p-6 border border-[#ffffff15] rounded-2xl bg-[#ffffff08] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ff6b6b] transition-all"
+                                        className="p-6 border border-[#E2F2E6] rounded-2xl bg-white text-[#2D4B33] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-all"
                                         maxLength={3}
                                     />
                                 </div>
@@ -472,11 +452,11 @@ const OrderCheckout = () => {
                         </div>
 
                         {error && <div className="text-red-500 mb-4">{error}</div>}
-                        {success && <div className="text-green-500 mb-4">{success}</div>}
+                        {success && <div className="text-green-600 mb-4">{success}</div>}
 
                         <button
                             type="submit"
-                            className="w-full py-4 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] hover:from-[#ff8e53] hover:to-[#ff6b6b] transition rounded-2xl font-bold text-xl flex justify-center items-center shadow-lg"
+                            className="w-full py-4 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] hover:from-[#355E3B] hover:to-[#2D4B33] transition rounded-2xl font-bold text-xl flex justify-center items-center shadow-lg text-white"
                         >
                             Pay ${total.toFixed(2)}
                         </button>
@@ -484,11 +464,11 @@ const OrderCheckout = () => {
                 </div>
 
                 {/* Right Column - Order Summary */}
-                <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl">
-                    <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+                <div className="bg-white rounded-3xl p-8 shadow-2xl">
+                    <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                         Order Summary
                     </h2>
-                    <div className="divide-y divide-gray-700">
+                    <div className="divide-y divide-[#E2F2E6]">
                         {cartItems.map((item, index) => (
                             <motion.div
                                 key={index}
@@ -504,7 +484,7 @@ const OrderCheckout = () => {
                                     <h3 className="font-semibold text-2xl">
                                         {item.mealKit?.name || "Meal Kit"}
                                     </h3>
-                                    <p className="text-gray-400">Qty: {item.quantity}</p>
+                                    <p className="text-gray-500">Qty: {item.quantity}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="font-semibold text-2xl">
@@ -539,19 +519,23 @@ const OrderCheckout = () => {
 };
 
 const formatCardNumber = (value) => {
-    return value
-        .replace(/\D/g, "")
-        .match(/.{1,4}/g)
-        ?.join(" ")
-        .substr(0, 19) || "";
+    return (
+        value
+            .replace(/\D/g, "")
+            .match(/.{1,4}/g)
+            ?.join(" ")
+            .substr(0, 19) || ""
+    );
 };
 
 const formatExpiry = (value) => {
-    return value
-        .replace(/\D/g, "")
-        .match(/.{1,2}/g)
-        ?.join("/")
-        .substr(0, 5) || "";
+    return (
+        value
+            .replace(/\D/g, "")
+            .match(/.{1,2}/g)
+            ?.join("/")
+            .substr(0, 5) || ""
+    );
 };
 
 export default OrderCheckout;

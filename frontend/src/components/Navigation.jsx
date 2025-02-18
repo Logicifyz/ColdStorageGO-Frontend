@@ -7,31 +7,29 @@ import { FaPlus, FaBell } from "react-icons/fa";
 
 const Navigation = () => {
     const navigate = useNavigate();
-    const location = useLocation();  // Add useLocation hook to track route changes
+    const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [profilePic, setProfilePic] = useState(null); // State to store profile picture
+    const [profilePic, setProfilePic] = useState(null); 
     const [showCreatePostDropdown, setShowCreatePostDropdown] = useState(false);
     const [username, setUsername] = useState(''); // State to store username
     const [unreadNotifications, setUnreadNotifications] = useState(0);  // State for unread notifications
 
 
     useEffect(() => {
-        // Function to check session validity
         const checkSession = async () => {
             try {
                 const response = await api.get("api/Auth/check-session");
-                setIsLoggedIn(response.data.sessionValid); // Update isLoggedIn state based on session validity
+                setIsLoggedIn(response.data.sessionValid);
                 if (response.data.sessionValid) {
-                    // Format the profile picture if it exists
                     const profilePicBase64 = response.data.profilePic
                         ? `data:image/png;base64,${response.data.profilePic}`
                         : null;
-                    setProfilePic(profilePicBase64); // Set the formatted profile picture
-                    setUsername(response.data.username || ''); // Store the username
+                    setProfilePic(profilePicBase64);
+                    setUsername(response.data.username || '');
                 }
             } catch (error) {
                 console.error("Error checking session:", error);
-                setIsLoggedIn(false); // Set logged out state on error
+                setIsLoggedIn(false);
             }
         };
         const fetchUnreadNotifications = async () => {
@@ -66,28 +64,28 @@ const Navigation = () => {
         navigate("/account-dashboard/notifications"); // Navigate to the notifications page
     };
     const getInitials = (name) => {
-        if (!name) return ''; // Return empty string if no name
+        if (!name) return '';
         const nameParts = name.split(' ');
         const initials = nameParts[0].charAt(0).toUpperCase() + (nameParts[1] ? nameParts[1].charAt(0).toUpperCase() : '');
-        return initials; // Combine initials from first and last name
+        return initials;
     };
 
     return (
         <>
-        <nav className="bg-[#383838] text-white sticky top-0 z-50">
+        <nav className="bg-[#F0EAD6] text-[#2D4B33] sticky top-0 z-50 shadow-md">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 <div className="flex items-center space-x-2">
                     <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
                 </div>
 
                 <div className="flex space-x-6">
-                    <Link to="/" className="hover:text-gray-300">Home</Link>
-                    <Link to="/gallery" className="hover:text-gray-300">Gallery</Link>
-                    <Link to="/subscriptions" className="hover:text-gray-300">Subscribe</Link>
-                    <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
-                    <Link to="/help-centre" className="hover:text-gray-300">Help Centre</Link>
-                    <Link to="/forum" className="hover:text-gray-300">Forum</Link>
-                    <Link to="/cheffie-ai" className="hover:text-gray-300">Cheffie AI</Link>
+                    <Link to="/" className="hover:text-[#355E3B]">Home</Link>
+                    <Link to="/gallery" className="hover:text-[#355E3B]">Gallery</Link>
+                    <Link to="/subscriptions" className="hover:text-[#355E3B]">Subscribe</Link>
+                    <Link to="/rewards" className="hover:text-[#355E3B]">Rewards</Link>
+                    <Link to="/help-centre" className="hover:text-[#355E3B]">Help Centre</Link>
+                    <Link to="/forum" className="hover:text-[#355E3B]">Forum</Link>
+                    <Link to="/cheffie-ai" className="hover:text-[#355E3B]">Cheffie AI</Link>
                 </div>
 
                 <div className="flex items-center space-x-4">
@@ -95,21 +93,20 @@ const Navigation = () => {
                         <div className="cursor-pointer" onClick={handleProfileClick}>
                             {profilePic ? (
                                 <img
-                                    src={profilePic} // Use the formatted Base64 string
+                                    src={profilePic}
                                     alt="Profile"
-                                    className="w-8 h-8 rounded-full border-2 border-black"
+                                    className="w-8 h-8 rounded-full border-2 border-[#2D4B33]"
                                 />
                             ) : (
-                                <div className="w-8 h-8 rounded-full border-2 border-black bg-gray-200 flex items-center justify-center">
-                                    <span className="text-gray-800">{getInitials(username)}</span> {/* Show initials if no profile picture */}
+                                <div className="w-8 h-8 rounded-full border-2 border-[#2D4B33] bg-[#E2F2E6] flex items-center justify-center">
+                                    <span className="text-[#2D4B33]">{getInitials(username)}</span>
                                 </div>
-
                             )}
                         </div>
                     ) : (
                         <button
                             onClick={handleLoginClick}
-                            className="border border-black px-4 py-2 rounded hover:bg-black hover:text-white"
+                            className="border border-[#2D4B33] px-4 py-2 rounded hover:bg-[#355E3B] hover:text-white"
                         >
                             Login
                         </button>
@@ -128,6 +125,11 @@ const Navigation = () => {
                                 </div>
                             )}
                         </div>
+                        <AiOutlineShoppingCart className="w-6 h-6" />
+                        <Link to="/cart" className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                            !
+                        </Link>
+                    </div>
                 </div>
             </div>
         </nav>
