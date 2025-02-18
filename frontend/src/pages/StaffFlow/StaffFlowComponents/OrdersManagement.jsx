@@ -1,50 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { XMarkIcon, TruckIcon, ClockIcon, CurrencyDollarIcon, ChartBarIcon } from "@heroicons/react/24/outline";
+import {
+    XMarkIcon,
+    TruckIcon,
+    ClockIcon,
+    CurrencyDollarIcon,
+    ChartBarIcon
+} from "@heroicons/react/24/outline";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../../api";
 
-const BackgroundBlobs = () => (
-    <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-[#1a2a3a] to-[#0d1a26] opacity-20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-[#2d3a4d] to-[#1a2633] opacity-20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-    </div>
-);
 
-const GlowingButton = ({ children, onClick, className = "" }) => (
+// A reusable glowing button with calm green gradient
+const GlowingButton = ({ children, onClick, className = "", ...props }) => (
     <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onClick}
         className={`relative overflow-hidden px-6 py-3 rounded-2xl font-medium ${className}`}
+        {...props}
     >
         <span className="relative z-10">{children}</span>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#3b82f6] to-[#6366f1] opacity-20 blur-md" />
+        {/* Soft glow layer */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#355e3b] to-[#3A5F0B] opacity-20 blur-md" />
     </motion.button>
 );
 
+// A floating card with a subtle greenish-beige gradient
 const FloatingCard = ({ children }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-3xl p-6 border border-[#ffffff10] shadow-2xl"
+        exit={{ opacity: 0 }}
+        className="bg-gradient-to-br from-[#E2F2E6] to-[#F0EAD6] backdrop-blur-xl rounded-xl p-6 border border-[#355e3b]/10 shadow-lg"
     >
         {children}
     </motion.div>
 );
 
+// Badge component with status-based color classes
 const StatusBadge = ({ status }) => {
     const statusColors = {
-        Preparing: "bg-yellow-500/20 text-yellow-400",
-        "Out For Delivery": "bg-blue-500/20 text-blue-400",
-        Delivered: "bg-green-500/20 text-green-400",
-        Completed: "bg-purple-500/20 text-purple-400",
-        Cancelled: "bg-red-500/20 text-red-400"
+        Preparing: "bg-yellow-200 text-yellow-700",
+        "Out For Delivery": "bg-blue-200 text-blue-700",
+        Delivered: "bg-green-200 text-green-700",
+        Completed: "bg-purple-200 text-purple-700",
+        Cancelled: "bg-red-200 text-red-700"
     };
 
     return (
-        <span className={`px-3 py-1 rounded-full text-sm ${statusColors[status]}`}>
+        <span
+            className={`px-3 py-1 rounded-full text-sm ${statusColors[status] || "bg-gray-200 text-gray-700"
+                }`}
+        >
             {status}
         </span>
     );
@@ -57,6 +66,8 @@ const OrdersManagement = () => {
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [statusToUpdate, setStatusToUpdate] = useState("");
     const [orderUserProfile, setOrderUserProfile] = useState(null);
+    const [searchOrderId, setSearchOrderId] = useState("");
+    const [filterStatus, setFilterStatus] = useState("All");
 
     // Valid status options aligned with progress tracker
     const validStatuses = ["Preparing", "Out For Delivery", "Delivered", "Completed"];
@@ -65,7 +76,6 @@ const OrdersManagement = () => {
         fetchOrders();
     }, []);
 
-    // Fetch orders along with enriched order items
     const fetchOrders = async () => {
         setLoading(true);
         try {
@@ -87,7 +97,13 @@ const OrdersManagement = () => {
                                     }
                                 };
                             } catch (error) {
-                                return { ...item, mealKit: { name: "Unknown Meal Kit", listingImage: "/default-image.png" } };
+                                return {
+                                    ...item,
+                                    mealKit: {
+                                        name: "Unknown Meal Kit",
+                                        listingImage: "/default-image.png"
+                                    }
+                                };
                             }
                         })
                     );
@@ -103,23 +119,29 @@ const OrdersManagement = () => {
         }
     };
 
-    const formatDate = (dateStr) => dateStr ? new Date(dateStr).toLocaleString() : "";
+    const formatDate = (dateStr) =>
+        dateStr ? new Date(dateStr).toLocaleString() : "";
 
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
             const payload = {
                 OrderStatus: statusToUpdate,
-                DeliveryAddress: selectedOrder.deliveryAddress || selectedOrder.DeliveryAddress,
+                DeliveryAddress:
+                    selectedOrder.deliveryAddress || selectedOrder.DeliveryAddress,
                 ShipTime: selectedOrder.shipTime || selectedOrder.ShipTime
             };
 
             const orderId = selectedOrder.id || selectedOrder.Id;
             const response = await api.put(`/api/order/${orderId}`, payload);
 
-            setOrders(prev => prev.map(o =>
-                (o.id || o.Id) === (response.data.id || response.data.Id) ? response.data : o
-            ));
+            setOrders((prev) =>
+                prev.map((o) =>
+                    (o.id || o.Id) === (response.data.id || response.data.Id)
+                        ? response.data
+                        : o
+                )
+            );
             setSelectedOrder(response.data);
             setUpdateModalOpen(false);
             toast.success("Order updated successfully");
@@ -133,7 +155,7 @@ const OrdersManagement = () => {
         if (window.confirm("Are you sure you want to delete this order?")) {
             try {
                 await api.delete(`/api/order/${orderId}`);
-                setOrders(prev => prev.filter(o => (o.id || o.Id) !== orderId));
+                setOrders((prev) => prev.filter((o) => (o.id || o.Id) !== orderId));
                 setSelectedOrder(null);
                 toast.success("Order deleted successfully");
             } catch (err) {
@@ -146,13 +168,12 @@ const OrdersManagement = () => {
     // Fetch user profile when a new order is selected
     useEffect(() => {
         if (selectedOrder && selectedOrder.userId) {
-            console.log("Fetching user profile for userId:", selectedOrder.userId);
-            api.get(`/api/Account/user/${selectedOrder.userId}`)
-                .then(response => {
-                    console.log("User profile response:", response.data);
+            api
+                .get(`/api/Account/user/${selectedOrder.userId}`)
+                .then((response) => {
                     setOrderUserProfile(response.data);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error("Error fetching user profile", error.response);
                     toast.error("Failed to fetch user profile");
                 });
@@ -161,35 +182,66 @@ const OrdersManagement = () => {
         }
     }, [selectedOrder]);
 
+    // Filter orders by searchOrderId and status
+    const filteredOrders = orders.filter((order) => {
+        const id = (order.id || order.Id)?.toString() || "";
+        const status = order.orderStatus || order.OrderStatus || "";
+        const matchesId = id.includes(searchOrderId);
+        const matchesStatus = filterStatus === "All" || status === filterStatus;
+        return matchesId && matchesStatus;
+    });
+
     return (
-        <div className="min-h-screen bg-[#0f0f1f] relative overflow-hidden p-8">
-            <BackgroundBlobs />
-            <ToastContainer position="top-right" theme="dark" />
+        <div className="min-h-screen bg-[#F5F5DC] relative overflow-hidden p-8 text-gray-800">
+       
+            <ToastContainer position="top-right" theme="light" />
 
             <div className="relative z-10 max-w-7xl mx-auto">
-                <header className="flex items-center justify-between mb-12">
+                <header className="flex flex-col gap-4 mb-12">
                     <motion.h1
                         initial={{ x: -20, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
-                        className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent"
+                        className="text-4xl font-bold bg-gradient-to-r from-[#355e3b] to-[#3A5F0B] bg-clip-text text-transparent"
                     >
                         <TruckIcon className="w-12 h-12 mr-4 inline-block" />
                         Orders Nexus
                     </motion.h1>
+                    {/* Search and filter controls */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <input
+                            type="text"
+                            placeholder="Search by Order ID"
+                            value={searchOrderId}
+                            onChange={(e) => setSearchOrderId(e.target.value)}
+                            className="py-2 px-4 rounded-lg bg-white text-gray-900 border border-gray-300 focus:ring-2 focus:ring-[#355e3b] w-64"
+                        />
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value)}
+                            className="py-2 px-4 rounded-lg bg-white text-gray-900 border border-gray-300 focus:ring-2 focus:ring-[#355e3b]"
+                        >
+                            <option value="All">All Statuses</option>
+                            {validStatuses.map((status) => (
+                                <option key={status} value={status}>
+                                    {status}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </header>
 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#355e3b]"></div>
                     </div>
-                ) : orders.length === 0 ? (
-                    <div className="text-center py-12 text-gray-400">
+                ) : filteredOrders.length === 0 ? (
+                    <div className="text-center py-12 text-gray-700">
                         <ChartBarIcon className="w-24 h-24 mx-auto mb-4" />
                         <p className="text-xl">No orders found</p>
                     </div>
                 ) : (
                     <motion.div layout className="grid grid-cols-1 gap-6">
-                        {orders.map((order) => (
+                        {filteredOrders.map((order) => (
                             <motion.div
                                 key={order.id || order.Id}
                                 layout
@@ -197,26 +249,28 @@ const OrdersManagement = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="group relative"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 to-purple-500/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <div className="relative bg-[#161622]/80 backdrop-blur-sm rounded-3xl p-6 border border-[#ffffff10] hover:border-[#ffffff30] transition-all">
+                                {/* Soft highlight on hover */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#355e3b]/20 to-[#3A5F0B]/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+                                <div className="relative bg-white rounded-xl p-6 border border-gray-300 hover:border-[#355e3b] transition-all">
                                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-4 mb-4">
-                                                <div className="bg-[#ffffff10] p-3 rounded-xl">
-                                                    <ClockIcon className="w-6 h-6 text-cyan-400" />
+                                                <div className="bg-[#F5F5DC] p-3 rounded-xl shadow">
+                                                    <ClockIcon className="w-6 h-6 text-[#355e3b]" />
                                                 </div>
                                                 <div>
-                                                    <h2 className="text-xl font-bold">
+                                                    <h2 className="text-xl font-bold text-[#355e3b]">
                                                         Order #{(order.id || order.Id)?.slice(-6)}
                                                     </h2>
-                                                    <p className="text-gray-400 text-sm">
+                                                    <p className="text-gray-700 text-sm">
                                                         {formatDate(order.orderTime || order.OrderTime)}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="flex flex-wrap gap-4 items-center">
                                                 <StatusBadge status={order.orderStatus || order.OrderStatus} />
-                                                <div className="flex items-center gap-2 text-cyan-400">
+                                                <div className="flex items-center gap-2 text-[#355e3b]">
                                                     <CurrencyDollarIcon className="w-5 h-5" />
                                                     <span className="font-bold">
                                                         ${Number(order.totalAmount || 0).toFixed(2)}
@@ -227,7 +281,7 @@ const OrdersManagement = () => {
                                         <div className="flex gap-3 mt-4 md:mt-0">
                                             <GlowingButton
                                                 onClick={() => setSelectedOrder(order)}
-                                                className="bg-[#ffffff10] hover:bg-[#ffffff20] text-sm"
+                                                className="bg-white text-[#355e3b] border border-[#355e3b] hover:bg-[#355e3b] hover:text-white text-sm"
                                             >
                                                 Details
                                             </GlowingButton>
@@ -237,13 +291,13 @@ const OrdersManagement = () => {
                                                     setStatusToUpdate(order.orderStatus || order.OrderStatus);
                                                     setUpdateModalOpen(true);
                                                 }}
-                                                className="bg-green-500/20 hover:bg-green-500/30 text-green-400 text-sm"
+                                                className="bg-[#355e3b] hover:bg-[#3A5F0B] text-white text-sm"
                                             >
                                                 Update
                                             </GlowingButton>
                                             <GlowingButton
                                                 onClick={() => handleDelete(order.id || order.Id)}
-                                                className="bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm"
+                                                className="bg-white text-red-600 border border-red-600 hover:bg-red-600 hover:text-white text-sm"
                                             >
                                                 Delete
                                             </GlowingButton>
@@ -255,22 +309,23 @@ const OrdersManagement = () => {
                     </motion.div>
                 )}
 
+                {/* Order Details Modal */}
                 <AnimatePresence>
                     {selectedOrder && !updateModalOpen && (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                            className="fixed inset-0 bg-[#355e3b]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                         >
                             <FloatingCard>
                                 <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold">
+                                    <h2 className="text-2xl font-bold text-[#355e3b]">
                                         Order #{(selectedOrder.id || selectedOrder.Id)?.slice(-6)}
                                     </h2>
                                     <button
                                         onClick={() => setSelectedOrder(null)}
-                                        className="p-2 hover:bg-[#ffffff10] rounded-lg"
+                                        className="p-2 hover:bg-gray-200 rounded-lg"
                                     >
                                         <XMarkIcon className="w-6 h-6" />
                                     </button>
@@ -278,80 +333,100 @@ const OrdersManagement = () => {
 
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                            <p className="text-sm text-gray-400">Order Date</p>
-                                            <p className="font-medium">
+                                        <div className="bg-white p-4 rounded-xl shadow">
+                                            <p className="text-sm text-gray-700">Order Date</p>
+                                            <p className="font-medium text-[#355e3b]">
                                                 {formatDate(selectedOrder.orderTime || selectedOrder.OrderTime)}
                                             </p>
                                         </div>
-                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                            <p className="text-sm text-gray-400">Status</p>
-                                            <StatusBadge status={selectedOrder.orderStatus || selectedOrder.OrderStatus} />
+                                        <div className="bg-white p-4 rounded-xl shadow">
+                                            <p className="text-sm text-gray-700">Status</p>
+                                            <StatusBadge
+                                                status={selectedOrder.orderStatus || selectedOrder.OrderStatus}
+                                            />
                                         </div>
-                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                            <p className="text-sm text-gray-400">Delivery Address</p>
-                                            <p className="font-medium">
+                                        <div className="bg-white p-4 rounded-xl shadow">
+                                            <p className="text-sm text-gray-700">Delivery Address</p>
+                                            <p className="font-medium text-[#355e3b]">
                                                 {selectedOrder.deliveryAddress || selectedOrder.DeliveryAddress}
                                             </p>
                                         </div>
-                                        {/* Customer information using fetched profile */}
-                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                            <p className="text-sm text-gray-400">Customer Name</p>
-                                            <p className="font-medium">
-                                                {orderUserProfile ? (orderUserProfile.fullName || "Name not set") : "Loading..."}
+                                        <div className="bg-white p-4 rounded-xl shadow">
+                                            <p className="text-sm text-gray-700">Customer Name</p>
+                                            <p className="font-medium text-[#355e3b]">
+                                                {orderUserProfile
+                                                    ? orderUserProfile.fullName || "Name not set"
+                                                    : "Loading..."}
                                             </p>
                                         </div>
-                                        <div className="bg-[#ffffff05] p-4 rounded-xl">
-                                            <p className="text-sm text-gray-400">Customer Email</p>
-                                            <p className="font-medium">
+                                        <div className="bg-white p-4 rounded-xl shadow">
+                                            <p className="text-sm text-gray-700">Customer Email</p>
+                                            <p className="font-medium text-[#355e3b]">
                                                 {orderUserProfile ? orderUserProfile.email : "Loading..."}
                                             </p>
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-[#ffffff10] pt-4">
-                                        <h3 className="text-xl font-bold mb-4">Order Items</h3>
+                                    <div className="border-t border-gray-300 pt-4">
+                                        <h3 className="text-xl font-bold mb-4 text-[#355e3b]">Order Items</h3>
                                         <div className="space-y-4">
-                                            {(selectedOrder.orderItems || selectedOrder.OrderItems || []).map((item, index) => (
-                                                <div key={index} className="flex items-center gap-4 bg-[#ffffff05] p-4 rounded-xl">
-                                                    <img
-                                                        src={item.mealKit?.listingImage}
-                                                        alt={item.mealKit?.name}
-                                                        className="w-16 h-16 rounded-xl object-cover"
-                                                    />
-                                                    <div className="flex-1">
-                                                        <p className="font-medium">{item.mealKit?.name || "Unknown Meal Kit"}</p>
-                                                        <p className="text-sm text-gray-400">Quantity: {item.quantity}</p>
+                                            {(selectedOrder.orderItems || selectedOrder.OrderItems || []).map(
+                                                (item, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="flex items-center gap-4 bg-white p-4 rounded-xl shadow"
+                                                    >
+                                                        <img
+                                                            src={item.mealKit?.listingImage}
+                                                            alt={item.mealKit?.name}
+                                                            className="w-16 h-16 rounded-xl object-cover"
+                                                        />
+                                                        <div className="flex-1">
+                                                            <p className="font-medium text-[#355e3b]">
+                                                                {item.mealKit?.name || "Unknown Meal Kit"}
+                                                            </p>
+                                                            <p className="text-sm text-gray-700">
+                                                                Quantity: {item.quantity}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="font-bold text-[#355e3b]">
+                                                                ${((item.unitPrice || 0) * item.quantity).toFixed(2)}
+                                                            </p>
+                                                            <p className="text-sm text-gray-700">
+                                                                ${(item.unitPrice || 0).toFixed(2)} each
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                    <div className="text-right">
-                                                        <p className="font-bold">
-                                                            ${((item.unitPrice || 0) * item.quantity).toFixed(2)}
-                                                        </p>
-                                                        <p className="text-sm text-gray-400">
-                                                            ${(item.unitPrice || 0).toFixed(2)} each
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                )
+                                            )}
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-[#ffffff10] pt-4 space-y-2">
+                                    <div className="border-t border-gray-300 pt-4 space-y-2">
                                         <div className="flex justify-between">
-                                            <span>Subtotal:</span>
-                                            <span>${Number(selectedOrder.subtotal || 0).toFixed(2)}</span>
+                                            <span className="text-gray-700">Subtotal:</span>
+                                            <span className="text-[#355e3b]">
+                                                ${Number(selectedOrder.subtotal || 0).toFixed(2)}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span>Shipping:</span>
-                                            <span>${Number(selectedOrder.shippingCost || 0).toFixed(2)}</span>
+                                            <span className="text-gray-700">Shipping:</span>
+                                            <span className="text-[#355e3b]">
+                                                ${Number(selectedOrder.shippingCost || 0).toFixed(2)}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span>Tax:</span>
-                                            <span>${Number(selectedOrder.tax || 0).toFixed(2)}</span>
+                                            <span className="text-gray-700">Tax:</span>
+                                            <span className="text-[#355e3b]">
+                                                ${Number(selectedOrder.tax || 0).toFixed(2)}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between font-bold text-lg pt-2">
-                                            <span>Total:</span>
-                                            <span>${Number(selectedOrder.totalAmount || 0).toFixed(2)}</span>
+                                            <span className="text-gray-700">Total:</span>
+                                            <span className="text-[#355e3b]">
+                                                ${Number(selectedOrder.totalAmount || 0).toFixed(2)}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -360,34 +435,39 @@ const OrdersManagement = () => {
                     )}
                 </AnimatePresence>
 
+                {/* Update Status Modal */}
                 <AnimatePresence>
                     {updateModalOpen && selectedOrder && (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                            className="fixed inset-0 bg-[#355e3b]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
                         >
                             <FloatingCard>
                                 <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold">Update Order Status</h2>
+                                    <h2 className="text-2xl font-bold text-[#355e3b]">
+                                        Update Order Status
+                                    </h2>
                                     <button
                                         onClick={() => setUpdateModalOpen(false)}
-                                        className="p-2 hover:bg-[#ffffff10] rounded-lg"
+                                        className="p-2 hover:bg-gray-200 rounded-lg"
                                     >
                                         <XMarkIcon className="w-6 h-6" />
                                     </button>
                                 </div>
                                 <form onSubmit={handleUpdate} className="space-y-6">
                                     <div>
-                                        <label className="block text-sm font-medium mb-2 text-gray-300">Status</label>
+                                        <label className="block text-sm font-medium mb-2 text-gray-700">
+                                            Status
+                                        </label>
                                         <select
                                             value={statusToUpdate}
                                             onChange={(e) => setStatusToUpdate(e.target.value)}
-                                            className="w-full bg-[#ffffff05] border border-[#ffffff15] rounded-xl px-4 py-3 text-gray-200 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            className="w-full bg-white text-gray-900 border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#355e3b] focus:border-transparent"
                                         >
                                             {validStatuses.map((status) => (
-                                                <option key={status} value={status} className="bg-[#1a1a2e] text-gray-200">
+                                                <option key={status} value={status} className="bg-white text-gray-900">
                                                     {status}
                                                 </option>
                                             ))}
@@ -395,7 +475,7 @@ const OrdersManagement = () => {
                                     </div>
                                     <GlowingButton
                                         type="submit"
-                                        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white"
+                                        className="w-full bg-[#355e3b] hover:bg-[#3A5F0B] text-white"
                                     >
                                         Update Status
                                     </GlowingButton>

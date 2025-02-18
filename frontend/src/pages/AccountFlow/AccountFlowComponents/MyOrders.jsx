@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import api from "../../../api";
 import MyOrderDetail from "./MyOrderDetail";
 
+// Updated status configuration using calm green tones
 const statusConfig = {
-    Preparing: { color: "bg-yellow-500/20 text-yellow-400", icon: "⏳", label: "Being Prepared" },
-    "Out For Delivery": { color: "bg-blue-500/20 text-blue-400", icon: "🚚", label: "On The Way" },
-    Delivered: { color: "bg-green-500/20 text-green-400", icon: "📦", label: "Delivered" },
-    Completed: { color: "bg-purple-500/20 text-purple-400", icon: "✅", label: "Completed" }
+    Preparing: { color: "bg-green-200/20 text-green-600", icon: "⏳", label: "Being Prepared" },
+    "Out For Delivery": { color: "bg-green-300/20 text-green-700", icon: "🚚", label: "On The Way" },
+    Delivered: { color: "bg-green-400/20 text-green-800", icon: "📦", label: "Delivered" },
+    Completed: { color: "bg-green-500/20 text-green-900", icon: "✅", label: "Completed" }
 };
 
 const MyOrders = () => {
@@ -15,6 +16,7 @@ const MyOrders = () => {
     const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [filterTab, setFilterTab] = useState("All");
 
     // Format time for display (order ship time)
     const formatTime = (dateStr) => {
@@ -58,9 +60,9 @@ const MyOrders = () => {
             const diff = shipTime - now;
             if (diff > 0) {
                 const seconds = Math.ceil(diff / 1000);
-                return { text: `Dispatch in ${seconds} secs`, color: "text-yellow-400" };
+                return { text: `Dispatch in ${seconds} secs`, color: "text-green-600" };
             }
-            return { text: "Dispatching now", color: "text-blue-400" };
+            return { text: "Dispatching now", color: "text-green-700" };
         }
 
         if (status === "Out For Delivery") {
@@ -68,51 +70,73 @@ const MyOrders = () => {
             const diff = estimatedDeliveryTime - now;
             if (diff > 0) {
                 const seconds = Math.ceil(diff / 1000);
-                return { text: `Arriving in ${seconds} secs`, color: "text-blue-400" };
+                return { text: `Arriving in ${seconds} secs`, color: "text-green-700" };
             }
-            return { text: "Arriving shortly", color: "text-green-400" };
+            return { text: "Arriving shortly", color: "text-green-800" };
         }
 
-        // For Delivered and Completed, simply return the status text with appropriate color.
+        // For Delivered and Completed, simply return the status text with an appropriate green tone.
         return {
             text: status,
             color: statusConfig[status]
                 ? statusConfig[status].color.split(" ")[1]
-                : "text-gray-400"
+                : "text-gray-600"
         };
     };
+
+    // Filter orders based on selected tab
+    const filteredOrders = orders.filter(order => {
+        if (filterTab === "All") return true;
+        return order.orderStatus === filterTab;
+    });
 
     if (selectedOrderId) {
         return <MyOrderDetail orderId={selectedOrderId} onBack={() => setSelectedOrderId(null)} />;
     }
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] p-8">
             <div className="max-w-4xl mx-auto">
                 <div className="flex items-center gap-4 mb-8">
-                    <div className="p-3 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl shadow-lg">
+                    <div className="p-3 bg-gradient-to-br from-[#2D4B33] to-[#355E3B] rounded-xl shadow-lg">
                         <span className="text-2xl">📦</span>
                     </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                         Active Orders
                     </h1>
                 </div>
 
+                {/* Tab Navigation */}
+                <div className="flex space-x-4 mb-6">
+                    {["All", "Preparing", "Out For Delivery", "Delivered", "Completed"].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setFilterTab(tab)}
+                            className={`px-4 py-2 rounded-full font-semibold border transition-colors ${filterTab === tab
+                                ? "bg-[#2D4B33] text-white"
+                                : "bg-white text-[#2D4B33] border-[#2D4B33] hover:bg-[#2D4B33] hover:text-white"
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
+
                 {loading ? (
-                    <div className="text-center text-gray-400 py-12">
+                    <div className="text-center text-green-700 py-12">
                         <div className="animate-pulse">Loading your orders...</div>
                     </div>
                 ) : error ? (
                     <div className="text-center text-red-500 py-12">{error}</div>
-                ) : orders.length === 0 ? (
-                    <div className="text-center text-gray-400 py-12">
-                        <p className="mb-4">No active orders found</p>
-                        <p className="text-sm">Your upcoming orders will appear here</p>
+                ) : filteredOrders.length === 0 ? (
+                    <div className="text-center text-green-700 py-12">
+                        <p className="mb-4">No active orders found for the selected filter.</p>
+                        <p className="text-sm">Try a different filter.</p>
                     </div>
                 ) : (
                     <div className="grid gap-4">
                         <AnimatePresence>
-                            {orders.map((order) => {
+                            {filteredOrders.map((order) => {
                                 const status = getStatusDetails(order);
                                 const timeEstimate = getTimeEstimate(order);
                                 return (
@@ -121,15 +145,15 @@ const MyOrders = () => {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -20 }}
-                                        className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-xl border-2 border-transparent hover:border-purple-500/30 transition cursor-pointer group shadow-md p-6"
+                                        className="bg-gradient-to-br from-[#F0EAD6] to-[#E2F2E6] backdrop-blur-xl rounded-xl border-2 border-transparent hover:border-[#2D4B33]/30 transition cursor-pointer group shadow-md p-6"
                                         onClick={() => setSelectedOrderId(order.id || order.Id)}
                                     >
                                         <div className="flex items-center justify-between mb-2">
                                             <div>
-                                                <h3 className="text-lg font-semibold text-white">
+                                                <h3 className="text-lg font-semibold text-[#2D4B33]">
                                                     Order #{(order.id || order.Id)?.slice(-6)}
                                                 </h3>
-                                                <p className="text-sm text-gray-400">
+                                                <p className="text-sm text-gray-600">
                                                     {new Date(order.orderTime || order.OrderTime).toLocaleDateString()}
                                                 </p>
                                             </div>
@@ -145,10 +169,10 @@ const MyOrders = () => {
                                                 </span>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-lg font-bold text-white">
+                                                <p className="text-lg font-bold text-[#2D4B33]">
                                                     ${(order.totalAmount || order.TotalAmount)?.toFixed(2)}
                                                 </p>
-                                                <p className="text-xs text-gray-400">
+                                                <p className="text-xs text-gray-600">
                                                     {formatTime(order.shipTime || order.ShipTime)}
                                                 </p>
                                             </div>

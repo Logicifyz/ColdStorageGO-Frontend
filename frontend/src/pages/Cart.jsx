@@ -12,7 +12,7 @@ const statusSteps = [
 ];
 
 const mapStatusToProgress = (order) => {
-    if (!order?.orderTime) 
+    if (!order?.orderTime)
         return { currentStep: 0, progress: 0, estimatedTimeRemaining: 0, stepLabel: "Loading" };
 
     const now = new Date();
@@ -60,9 +60,11 @@ const Cart = () => {
     const [shippingCost, setShippingCost] = useState(0);
     const [total, setTotal] = useState(0);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        fetchCartItems();
+        fetchCartItems().finally(() => setLoading(false));
     }, []);
 
     useEffect(() => {
@@ -108,6 +110,7 @@ const Cart = () => {
             calculateSubtotal(items);
         } catch (error) {
             console.error("Failed to fetch cart items", error);
+            setError("Failed to fetch cart items");
         }
     };
 
@@ -135,9 +138,7 @@ const Cart = () => {
 
     const removeCartItem = async (mealKitId) => {
         try {
-            // Assuming you have an endpoint for removal; using DELETE here.
             await api.delete(`/api/cart/${mealKitId}`);
-            // Refresh cart after removal.
             fetchCartItems();
         } catch (error) {
             console.error("Failed to remove item:", error);
@@ -147,20 +148,12 @@ const Cart = () => {
     // Redirect to gallery if cart is empty.
     useEffect(() => {
         if (!loading && cartItems.length === 0) {
-            // Delay redirection to allow the user to see a message.
             const timeout = setTimeout(() => {
                 navigate("/gallery");
             }, 3000);
             return () => clearTimeout(timeout);
         }
-    }, [cartItems, navigate]);
-
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-
-    useEffect(() => {
-        fetchCartItems().finally(() => setLoading(false));
-    }, []);
+    }, [cartItems, navigate, loading]);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
@@ -170,11 +163,11 @@ const Cart = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] flex items-center justify-center">
+            <div className="min-h-screen bg-[#F0EAD6] flex items-center justify-center">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
+                    className="w-16 h-16 border-4 border-[#355E3B]/30 border-t-[#355E3B] rounded-full"
                 />
             </div>
         );
@@ -182,12 +175,12 @@ const Cart = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] flex flex-col items-center justify-center text-red-500 p-8">
+            <div className="min-h-screen bg-[#F0EAD6] flex flex-col items-center justify-center text-red-500 p-8">
                 <p>{error}</p>
                 <motion.button
                     onClick={() => navigate("/gallery")}
                     whileHover={{ scale: 1.05 }}
-                    className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg"
+                    className="mt-4 px-6 py-3 bg-[#2D4B33] hover:bg-[#355E3B] rounded-lg text-white"
                 >
                     Back to Gallery
                 </motion.button>
@@ -197,12 +190,12 @@ const Cart = () => {
 
     if (cartItems.length === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] flex flex-col items-center justify-center text-white p-8">
+            <div className="min-h-screen bg-[#F0EAD6] flex flex-col items-center justify-center text-[#2D4B33] p-8">
                 <p className="text-2xl mb-4">Your cart is empty.</p>
                 <motion.button
                     onClick={() => navigate("/gallery")}
                     whileHover={{ scale: 1.05 }}
-                    className="px-6 py-3 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] hover:from-[#ff8e53] hover:to-[#ff6b6b] rounded-lg shadow-lg font-bold text-xl"
+                    className="px-6 py-3 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] rounded-lg shadow-lg font-bold text-xl text-white"
                 >
                     Go to Gallery
                 </motion.button>
@@ -211,27 +204,27 @@ const Cart = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] relative overflow-hidden p-8 font-inter text-gray-100">
+        <div className="min-h-screen bg-[#F0EAD6] relative overflow-hidden p-8 font-inter text-[#2D4B33]">
             {/* Abstract Liquid Gradient Background Blobs */}
             <motion.div
-                className="absolute top-0 left-0 w-[40%] h-[60%] bg-[#ff6b6b10] rounded-full blur-3xl"
+                className="absolute top-0 left-0 w-[40%] h-[60%] bg-[#355E3B10] rounded-full blur-3xl"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
-                className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-[#ff8e5310] rounded-full blur-3xl"
+                className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-[#2D4B3310] rounded-full blur-3xl"
                 animate={{ rotate: -360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             />
 
             <div className="relative z-10 max-w-6xl mx-auto">
-                <h1 className="text-5xl font-bold mb-8 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+                <h1 className="text-5xl font-bold mb-8 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                     Shopping Cart
                 </h1>
 
                 {/* Cart Items List */}
-                <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl mb-8">
-                    <div className="divide-y divide-gray-700">
+                <div className="bg-white rounded-3xl p-8 shadow-2xl mb-8">
+                    <div className="divide-y divide-[#E2F2E6]">
                         {cartItems.map((item, index) => (
                             <motion.div
                                 key={index}
@@ -244,33 +237,29 @@ const Cart = () => {
                                     className="w-24 h-24 rounded-lg object-cover mr-6"
                                 />
                                 <div className="flex-1">
-                                    <h2 className="text-2xl font-semibold mb-2">
-                                        {item.MealKit.name}
-                                    </h2>
-                                    <p className="text-gray-400 text-sm">
+                                    <h2 className="text-2xl font-semibold mb-2">{item.MealKit.name}</h2>
+                                    <p className="text-gray-500 text-sm">
                                         Expires: {new Date(item.MealKit.expiryDate).toLocaleDateString()}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-6">
-                                    <div className="flex items-center gap-3 bg-gray-700 rounded-lg p-2">
+                                    <div className="flex items-center gap-3 bg-[#E2F2E6] rounded-lg p-2">
                                         <button
                                             onClick={() => updateQuantity(item.mealKitId, item.quantity - 1)}
-                                            className="px-3 py-1 rounded hover:bg-gray-600 transition"
+                                            className="px-3 py-1 rounded hover:bg-[#D1E8D4] transition"
                                         >
                                             -
                                         </button>
                                         <span className="px-2">{item.quantity}</span>
                                         <button
                                             onClick={() => updateQuantity(item.mealKitId, item.quantity + 1)}
-                                            className="px-3 py-1 rounded hover:bg-gray-600 transition"
+                                            className="px-3 py-1 rounded hover:bg-[#D1E8D4] transition"
                                         >
                                             +
                                         </button>
                                     </div>
                                     <div className="text-right w-24">
-                                        <p className="text-lg font-semibold">
-                                            ${(item.MealKit.price * item.quantity).toFixed(2)}
-                                        </p>
+                                        <p className="text-lg font-semibold">${(item.MealKit.price * item.quantity).toFixed(2)}</p>
                                     </div>
                                     <button
                                         onClick={() => removeCartItem(item.mealKitId)}
@@ -286,28 +275,28 @@ const Cart = () => {
                 </div>
 
                 {/* Order Totals Summary */}
-                <div className="bg-gray-800/60 rounded-3xl p-8 shadow-2xl">
+                <div className="bg-white rounded-3xl p-8 shadow-2xl">
                     <div className="space-y-4 mb-6">
                         <div className="flex justify-between text-xl">
-                            <span className="text-gray-400">Subtotal:</span>
+                            <span className="text-gray-500">Subtotal:</span>
                             <span>${subtotal.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-xl">
-                            <span className="text-gray-400">Delivery (5%):</span>
+                            <span className="text-gray-500">Delivery (5%):</span>
                             <span>${shippingCost.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-xl">
-                            <span className="text-gray-400">Tax (9%):</span>
+                            <span className="text-gray-500">Tax (9%):</span>
                             <span>${taxes.toFixed(2)}</span>
                         </div>
                     </div>
-                    <div className="flex justify-between text-3xl font-bold pt-4 border-t border-gray-700">
+                    <div className="flex justify-between text-3xl font-bold pt-4 border-t border-[#E2F2E6]">
                         <span>Total:</span>
                         <span>${total.toFixed(2)}</span>
                     </div>
                     <Link
                         to="/checkout"
-                        className="mt-6 w-full py-4 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] hover:from-[#ff8e53] hover:to-[#ff6b6b] transition rounded-2xl font-bold text-xl flex justify-center items-center shadow-lg"
+                        className="mt-6 w-full py-4 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] hover:from-[#355E3B] hover:to-[#2D4B33] transition rounded-2xl font-bold text-xl flex justify-center items-center shadow-lg text-white"
                     >
                         Proceed to Checkout
                     </Link>

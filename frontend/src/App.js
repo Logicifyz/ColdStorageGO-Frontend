@@ -2,10 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { EmailProvider } from "./context/EmailContext";
+
 // Layouts
 import PublicLayout from "./components/PublicLayout";
 import ProtectedLayout from "./components/ProtectedLayout";
 import StaffLayout from "./components/StaffLayout";
+
 // Public Pages
 import Gallery from "./pages/Gallery";
 import SubscriptionForm from "./pages/Subscriptions";
@@ -28,7 +30,7 @@ import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
 import Home from "./pages/Home";
-import PleaseLogin from "./pages/PleaseLogin"
+import PleaseLogin from "./pages/PleaseLogin";
 
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
@@ -73,107 +75,140 @@ import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
 import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
 import MyForumActivity from "./pages/AccountFlow/AccountFlowComponents/MyForumActivity";
 
-
 const App = () => {
     return (
-        <Router>
-            <Routes>
+ 
+        < div className = "h-screen w-screen m-0 p-0 box-border bg-gray-100 overflow-auto" >
+            <Router>
+                <Routes>
+                    {/* Protected Routes */}
+                    <Route element={<ProtectedLayout />}>
+                        <Route path="/contact-us" element={<ContactUs />} />
+                        <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
 
-                <Route element={<ProtectedLayout />}>
-                <Route path="/contact-us" element={<ContactUs />} />
-                <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
-
-                    {/* Account Dashboard Individual Tab Routes */}
-                    <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
-                        <Route path="profile" element={<MyProfile />} />
-                        <Route path="change-password" element={<ChangePassword />} />
-                        <Route path="delete-account" element={<DeleteAccount />} />
-                        <Route path="my-orders" element={<MyOrders />} />
-                        <Route path="my-tickets" element={<MyTickets />} />
-                        <Route path="my-redemptions" element={<MyRedemptions />} />
-                        <Route path="subscription-management" element={<SubscriptionManagement />} />
-                        <Route path="subscription-history" element={<SubscriptionHistory />} />
-                        <Route path="notifications" element={<Notifications />} />
-                        <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
-                        <Route path="my-forum-activity" element={<MyForumActivity />} />
-
+                        {/* Account Dashboard Individual Tab Routes */}
+                        <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
+                            <Route path="profile" element={<MyProfile />} />
+                            <Route path="change-password" element={<ChangePassword />} />
+                            <Route path="delete-account" element={<DeleteAccount />} />
+                            <Route path="my-orders" element={<MyOrders />} />
+                            <Route path="my-tickets" element={<MyTickets />} />
+                            <Route path="my-redemptions" element={<MyRedemptions />} />
+                            <Route path="subscription-management" element={<SubscriptionManagement />} />
+                            <Route path="subscription-history" element={<SubscriptionHistory />} />
+                            <Route path="notifications" element={<Notifications />} />
+                            <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
+                            <Route path="my-forum-activity" element={<MyForumActivity />} />
+                        </Route>
                     </Route>
 
+                    {/* Public Routes using PublicLayout */}
+                    <Route element={<PublicLayout />}>
+                        <Route path="/please-login" element={<PleaseLogin />} />
+                        <Route path="/" element={<Home />} />
+                        <Route path="/gallery" element={<Gallery />} />
+                        <Route path="/rewards" element={<Rewards />} />
+                        <Route path="/redemptions" element={<Redemption />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/checkout" element={<OrderCheckout />} />
+                        <Route path="/ordersuccess" element={<OrderSuccess />} />
+                        <Route path="/forum" element={<Forum />} />
+                        <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
+                        <Route path="/create-recipe" element={<CreateRecipe />} />
+                        <Route path="/create-discussion" element={<CreateDiscussion />} />
+                        <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
+                        <Route path="/cheffie-ai" element={<CheffieAI />} />
+                        <Route path="/listing/:id" element={<Listing />} />
+                        <Route path="/profile/:username" element={<Profile />} />
+                        <Route path="/subscriptions" element={<SubscriptionForm />} />
+                        <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
+                        <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
+                        <Route path="/subscription-management" element={<SubscriptionManagement />} />
 
-                </Route>
+                        <Route path="/help-centre" element={<HelpCentre />} />
+                        <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
 
-                {/* Public Routes using PublicLayout */}
-                <Route element={<PublicLayout />}>
-                    <Route path="/please-login" element={<PleaseLogin />} />
-                    <Route path="/" element={<Home />} />
-                    <Route path="/gallery" element={<Gallery />} />
-                    <Route path="/rewards" element={<Rewards />} />
-                    <Route path="/redemptions" element={<Redemption />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<OrderCheckout/>} />
-                    <Route path="/ordersuccess" element={<OrderSuccess />} />
-                    <Route path="/forum" element={<Forum />} />
-                    <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
-                    <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
-                    <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
-                    <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
-                    <Route path="/cheffie-ai" element={<CheffieAI />} />
-                    <Route path="/listing/:id" element={<Listing />} />
-                    <Route path="/profile/:username" element={<Profile />} />
-                    <Route path="/subscriptions" element={<SubscriptionForm />} />
-                    <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
-                    <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
-                    <Route path="/subscription-management" element={<SubscriptionManagement />} />
+                        <Route
+                            path="/register"
+                            element={
+                                <EmailProvider>
+                                    <Register />
+                                </EmailProvider>
+                            }
+                        />
 
-                    <Route path="/help-centre" element={<HelpCentre />} />
-                    <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
+                        {/* Wrap only the Login page with GoogleOAuthProvider */}
+                        <Route
+                            path="/login"
+                            element={
+                                <GoogleOAuthProvider clientId="869557804479-pv18rpo94fbpd6hatmns6m4nes5adih8.apps.googleusercontent.com">
+                                    <Login />
+                                </GoogleOAuthProvider>
+                            }
+                        />
 
-                    <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                   
-                    {/* Wrap only the Login page with GoogleOAuthProvider */}
-                    <Route
-                        path="/login"
-                        element={
-                            <GoogleOAuthProvider clientId="869557804479-pv18rpo94fbpd6hatmns6m4nes5adih8.apps.googleusercontent.com">
-                                <Login />
-                            </GoogleOAuthProvider>
-                        }
-                    />
+                        <Route
+                            path="/sendpasswordresetemail"
+                            element={
+                                <EmailProvider>
+                                    <SendPasswordResetEmail />
+                                </EmailProvider>
+                            }
+                        />
+                        <Route
+                            path="/sentverificationemailsuccess"
+                            element={
+                                <EmailProvider>
+                                    <SuccessfullySentVerificationEmail />
+                                </EmailProvider>
+                            }
+                        />
+                        <Route path="/verify-account/:token" element={<VerifyAccount />} />
+                        <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
+                        <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
+                        <Route path="/resetpassword/:token" element={<ResetPassword />} />
+                        <Route
+                            path="/sentpasswordresetemailsuccess"
+                            element={
+                                <EmailProvider>
+                                    <SuccessfullySentPasswordResetEmail />
+                                </EmailProvider>
+                            }
+                        />
+                        <Route path="/successfullysetpassword" element={<SuccessfullySetPassword />} />
+                        <Route path="/setpassword/:token" element={<SetPassword />} />
+                        <Route
+                            path="/successfullysentsetpasswordemail"
+                            element={
+                                <EmailProvider>
+                                    <SuccessfullySentSetPasswordEmail />
+                                </EmailProvider>
+                            }
+                        />
+                    </Route>
 
-                    <Route path="/sendpasswordresetemail" element={<EmailProvider><SendPasswordResetEmail /></EmailProvider>} />
-                    <Route path="/sentverificationemailsuccess" element={<EmailProvider><SuccessfullySentVerificationEmail /></EmailProvider>} />
-                    <Route path="/verify-account/:token" element={<VerifyAccount />} />
-                    <Route path="/successfullyverifiedaccount" element={<SuccessfullyVerifiedAccount />} />
-                    <Route path="/successfullyresetpassword" element={<SuccessfullyResetPassword />} />
-                    <Route path="/resetpassword/:token" element={<ResetPassword />} />
-                    <Route path="/sentpasswordresetemailsuccess" element={<EmailProvider><SuccessfullySentPasswordResetEmail /></EmailProvider>} />
-                    <Route path="/successfullysetpassword" element={<SuccessfullySetPassword />} />
-                    <Route path="/setpassword/:token" element={<SetPassword />} />
-                    <Route path="/successfullysentsetpasswordemail" element={<SuccessfullySentSetPasswordEmail />} />
-                </Route>
+                    {/* Staff Routes using StaffLayout */}
+                    <Route path="/staff" element={<StaffLayout />}>
+                        <Route index element={<AnalyticsDashboard />} />
+                        <Route path="rewards" element={<RewardManagement />} />
+                        <Route path="orders" element={<OrdersManagement />} />
+                        <Route path="gallery" element={<GalleryManagement />} />
+                        <Route path="support" element={<SupportManagement />} />
+                        <Route path="support/:ticketId" element={<TicketManagement />} />
+                        <Route path="help-centre" element={<HelpCentreManagement />} />
+                        <Route path="help-centre/add-article" element={<AddArticle />} />
+                        <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
+                        <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
+                        <Route path="account-management" element={<AccountManagement />} />
+                        <Route path="account-management/:userID" element={<AccountDetails />} />
+                    </Route>
 
-                {/* Staff Routes using StaffLayout */}
-                <Route path="/staff" element={<StaffLayout />}>
-                    <Route index element={<AnalyticsDashboard />} />
-                    <Route path="rewards" element={<RewardManagement />} />
-                    <Route path="orders" element={<OrdersManagement />} />
-                    <Route path="gallery" element={<GalleryManagement />} />
-                    <Route path="support" element={<SupportManagement />} />
-                    <Route path="support/:ticketId" element={<TicketManagement />} />
-                    <Route path="help-centre" element={<HelpCentreManagement />} />
-                    <Route path="help-centre/add-article" element={<AddArticle />} />
-                    <Route path="help-centre/edit-article/:articleId" element={<EditArticle />} />
-                    <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
-                    <Route path="account-management" element={<AccountManagement />} />
-                    <Route path="account-management/:userID" element={<AccountDetails />} />
-
-                </Route>
-
-                {/* Standalone Staff Login */}
-                <Route path="/staff-login" element={<StaffLogin />} />
-            </Routes>
-        </Router>
-    );
+                    {/* Standalone Staff Login */}
+                    <Route path="/staff-login" element={<StaffLogin />} />
+                </Routes>
+            </Router>
+    </div >
+  );
 };
 
 export default App;
