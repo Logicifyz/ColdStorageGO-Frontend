@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; // For animations
+import { FiFilter, FiSearch, FiAlertCircle, FiCheckCircle, FiClock, FiUser } from "react-icons/fi"; // Icons for flair
 
 const SupportManagement = () => {
     const [tickets, setTickets] = useState([]);
@@ -14,7 +16,6 @@ const SupportManagement = () => {
         subject: "",
         ticketId: "",
     });
-    const sessionId = localStorage.getItem("sessionId");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,119 +49,191 @@ const SupportManagement = () => {
         navigate(`/staff/support/${ticketId}`); // Navigate to the ticket details page with the ticket ID in the URL
     };
 
-    if (loading) return <p className="text-gray-800">Loading...</p>;
-    if (error) return <p className="text-red-600">{error}</p>;
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-[#355E3B] text-2xl"
+                >
+                    Loading...
+                </motion.div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-red-800 font-bold text-2xl"
+                >
+                    {error}
+                </motion.div>
+            </div>
+        );
+    }
 
     return (
-        <div className="p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">Support Tickets</h1>
-            <div className="flex space-x-4 mb-6">
-                <div>
-                    <label className="block text-sm text-gray-700">Filter by Status:</label>
-                    <select
-                        name="status"
-                        onChange={handleFilterChange}
-                        className="bg-gray-100 border p-2 rounded text-gray-800"
-                    >
-                        <option value="">All</option>
-                        <option value="Open">Open</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Resolved">Resolved</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label className="block text-sm text-gray-700">Priority:</label>
-                    <select
-                        name="priority"
-                        onChange={handleFilterChange}
-                        className="bg-gray-100 border p-2 rounded text-gray-800"
-                    >
-                        <option value="">All</option>
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label className="block text-sm text-gray-700">Staff ID:</label>
-                    <input
-                        type="text"
-                        name="staffid"
-                        onChange={handleFilterChange}
-                        className="border p-2 rounded bg-gray-100 text-gray-800"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm text-gray-700">Category:</label>
-                    <select
-                        name="category"
-                        onChange={handleFilterChange}
-                        className="bg-gray-100 border p-2 rounded text-gray-800"
-                    >
-                        <option value="">All</option>
-                        <option value="Technical">Technical</option>
-                        <option value="Billing">Billing</option>
-                        <option value="General">General</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label className="block text-sm text-gray-700">Subject:</label>
-                    <input
-                        type="text"
-                        name="subject"
-                        onChange={handleFilterChange}
-                        className="border p-2 rounded bg-gray-100 text-gray-800"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm text-gray-700">Ticket ID:</label>
-                    <input
-                        type="text"
-                        name="ticketId"
-                        onChange={handleFilterChange}
-                        className="border p-2 rounded bg-gray-100 text-gray-800"
-                    />
-                </div>
+        <div className="p-6 bg-[#F0EAD6] min-h-screen relative overflow-hidden">
+            {/* Decorative Background Elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl opacity-50" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl opacity-50" />
             </div>
 
-            {tickets.length === 0 ? (
-                <p className="text-gray-800">No tickets found.</p>
-            ) : (
-                <ul className="space-y-4">
-                    {tickets.map((ticket) => (
-                        <li
-                            key={ticket.ticketId} // Use ticketId for the key here, which is consistent with the ticket object
-                            className="border p-4 rounded shadow-lg bg-gray-50 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => handleTicketClick(ticket.ticketId)} // Handle click to navigate
-                        >
-                            <div className="flex justify-between items-center">
-                                <strong className="text-xl text-gray-800">{ticket.subject}</strong> {/* Use ticket.subject */}
-                                <span
-                                    className={`font-semibold text-sm ${ticket.status === "Unassigned"
-                                        ? "text-red-500" // Red for Unassigned
-                                        : ticket.status === "In Progress"
-                                            ? "text-blue-500" // Blue for In Progress
-                                            : "text-green-500" // Green for Resolved
-                                        }`}
-                                >
-                                    {ticket.status}
-                                </span>
-                            </div>
-                            <div className="mt-2 text-sm text-gray-700">
-                                <p>Priority: {ticket.priority}</p>
-                                <p>Category: {ticket.category}</p>
-                                <p>Staff ID: {ticket.staffId ?? "Unassigned"}</p>
-                                <p>Ticket ID: {ticket.ticketId}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+            {/* Main Content */}
+            <div className="relative z-10 max-w-7xl mx-auto">
+                {/* Header with Animation */}
+                <motion.h1
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-5xl font-bold mb-6 text-[#355E3B] text-center"
+                >
+                    Support Tickets
+                </motion.h1>
+
+                {/* Filters Section */}
+                <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="bg-white p-6 rounded-xl shadow-lg mb-6"
+                >
+                    <h2 className="text-2xl font-semibold text-[#355E3B] mb-4 flex items-center gap-2">
+                        <FiFilter className="text-[#355E3B]" /> Filters
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <div>
+                            <label className="block text-sm text-gray-700">Status:</label>
+                            <select
+                                name="status"
+                                onChange={handleFilterChange}
+                                className="w-full border p-2 rounded bg-gray-100 text-gray-800"
+                            >
+                                <option value="">All</option>
+                                <option value="Unassigned">Unassigned</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-700">Priority:</label>
+                            <select
+                                name="priority"
+                                onChange={handleFilterChange}
+                                className="w-full border p-2 rounded bg-gray-100 text-gray-800"
+                            >
+                                <option value="">All</option>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-700">Staff ID:</label>
+                            <input
+                                type="text"
+                                name="staffId"
+                                onChange={handleFilterChange}
+                                className="w-full border p-2 rounded bg-gray-100 text-gray-800"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-700">Category:</label>
+                            <select
+                                name="category"
+                                onChange={handleFilterChange}
+                                className="w-full border p-2 rounded bg-gray-100 text-gray-800"
+                            >
+                                <option value="">All</option>
+                                <option value="Technical">Technical</option>
+                                <option value="Billing">Billing</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-700">Subject:</label>
+                            <input
+                                type="text"
+                                name="subject"
+                                onChange={handleFilterChange}
+                                className="w-full border p-2 rounded bg-gray-100 text-gray-800"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm text-gray-700">Ticket ID:</label>
+                            <input
+                                type="text"
+                                name="ticketId"
+                                onChange={handleFilterChange}
+                                className="w-full border p-2 rounded bg-gray-100 text-gray-800"
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Tickets List */}
+                {tickets.length === 0 ? (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-center text-[#355E3B] text-2xl"
+                    >
+                        No tickets found.
+                    </motion.div>
+                ) : (
+                    <motion.ul
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                        className="space-y-4"
+                    >
+                        {tickets.map((ticket) => (
+                            <motion.li
+                                key={ticket.ticketId}
+                                initial={{ opacity: 0, x: -50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                                onClick={() => handleTicketClick(ticket.ticketId)}
+                            >
+                                <div className="flex justify-between items-center">
+                                    <strong className="text-xl text-[#355E3B]">{ticket.subject}</strong>
+                                    <span
+                                        className={`font-semibold text-sm ${ticket.status === "Unassigned"
+                                            ? "text-red-500"
+                                            : ticket.status === "In Progress"
+                                                ? "text-blue-500"
+                                                : "text-green-500"
+                                            }`}
+                                    >
+                                        {ticket.status}
+                                    </span>
+                                </div>
+                                <div className="mt-2 text-sm text-gray-700">
+                                    <p>Priority: {ticket.priority}</p>
+                                    <p>Category: {ticket.category}</p>
+                                    <p>Staff ID: {ticket.staffId ?? "Unassigned"}</p>
+                                    <p>Ticket ID: {ticket.ticketId}</p>
+                                </div>
+                            </motion.li>
+                        ))}
+                    </motion.ul>
+                )}
+            </div>
         </div>
     );
 };

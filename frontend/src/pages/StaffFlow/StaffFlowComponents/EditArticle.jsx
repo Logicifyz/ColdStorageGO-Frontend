@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Editor } from "@tinymce/tinymce-react"; // Import TinyMCE
 import api from "../../../api";
 import { useNavigate, useParams } from "react-router-dom";
+import { motion } from "framer-motion"; // For animations
+import { FiSave, FiTrash2, FiEdit, FiBookOpen, FiStar, FiArrowLeft } from "react-icons/fi"; // Icons for flair
 
 const EditArticle = () => {
     const { articleId } = useParams(); // Get articleId from the URL
@@ -77,7 +79,6 @@ const EditArticle = () => {
         }
     };
 
-
     const handleDelete = async () => {
         setLoading(true);
         try {
@@ -93,87 +94,136 @@ const EditArticle = () => {
         }
     };
 
-
     return (
-        <div className="p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">Edit Article</h1>
+        <div className="p-6 bg-[#F0EAD6] min-h-screen relative overflow-hidden">
+            {/* Decorative Background Elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl opacity-50" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl opacity-50" />
+            </div>
 
-            {error && <p className="text-red-500 mb-4">{error}</p>}
+            {/* Main Content */}
+            <div className="relative z-10 max-w-7xl mx-auto">
+                {/* Header with Animation */}
+                <motion.h1
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-5xl font-bold mb-6 text-[#355E3B] text-center"
+                >
+                    Edit Article
+                </motion.h1>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm text-gray-700">Title:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="border p-2 rounded bg-gray-100 w-full text-gray-900"
-                        required
-                    />
-                </div>
+                {/* Back Button */}
+                <motion.button
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    onClick={() => navigate("/staff/help-centre")}
+                    className="absolute top-4 left-4 bg-[#355E3B] text-white p-3 rounded-lg hover:bg-[#2D4B33] transition flex items-center gap-2"
+                >
+                    <FiArrowLeft /> Back to Articles
+                </motion.button>
 
-                <div>
-                    <label className="block text-sm text-gray-700">Content:</label>
-                    <Editor
-                        apiKey="lgphqzixngekfoy75fvkupwl5350so0jovf1j1fnxedk8c1f" // Get a free API key from TinyMCE
-                        value={content}
-                        onEditorChange={(newContent) => setContent(newContent)}
-                        init={{
-                            height: 500,
-                            menubar: true,
-                            plugins: "link image table code",
-                            toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | table | link image | code",
-                        }}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm text-gray-700">Category:</label>
-                    <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="border p-2 rounded bg-gray-100 w-full text-gray-900"
-                        required
+                {/* Error Message */}
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-red-500 mb-4 text-center"
                     >
-                        <option value="">Select Category</option>
-                        {categories.map((cat, index) => (
-                            <option key={index} value={cat}>
-                                {cat}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                        {error}
+                    </motion.div>
+                )}
 
-                <div>
-                    <label className="flex items-center text-sm text-gray-700">
+                {/* Form */}
+                <motion.form
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    onSubmit={handleSubmit}
+                    className="bg-white p-6 rounded-xl shadow-lg space-y-6"
+                >
+                    {/* Title */}
+                    <div>
+                        <label className="block text-sm text-[#355E3B] font-medium">Title:</label>
                         <input
-                            type="checkbox"
-                            checked={highlighted}
-                            onChange={() => setHighlighted((prev) => !prev)}
-                            className="mr-2"
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="border p-2 rounded bg-gray-100 w-full text-[#355E3B] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
+                            required
                         />
-                        Highlighted
-                    </label>
-                </div>
+                    </div>
 
-                <div className="flex space-x-4">
-                    <button
-                        type="submit"
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                        disabled={loading}
-                    >
-                        {loading ? "Saving..." : "Update Article"}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleDelete}
-                        className="bg-red-500 text-white px-4 py-2 rounded"
-                        disabled={loading}
-                    >
-                        {loading ? "Deleting..." : "Delete Article"}
-                    </button>
-                </div>
-            </form>
+                    {/* Content */}
+                    <div>
+                        <label className="block text-sm text-[#355E3B] font-medium">Content:</label>
+                        <Editor
+                            apiKey="lgphqzixngekfoy75fvkupwl5350so0jovf1j1fnxedk8c1f" // Get a free API key from TinyMCE
+                            value={content}
+                            onEditorChange={(newContent) => setContent(newContent)}
+                            init={{
+                                height: 500,
+                                menubar: true,
+                                plugins: "link image table code",
+                                toolbar: "undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | table | link image | code",
+                            }}
+                        />
+                    </div>
+
+                    {/* Category */}
+                    <div>
+                        <label className="block text-sm text-[#355E3B] font-medium">Category:</label>
+                        <select
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            className="border p-2 rounded bg-gray-100 w-full text-[#355E3B] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
+                            required
+                        >
+                            <option value="">Select Category</option>
+                            {categories.map((cat, index) => (
+                                <option key={index} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Highlighted */}
+                    <div>
+                        <label className="flex items-center text-sm text-[#355E3B] font-medium">
+                            <input
+                                type="checkbox"
+                                checked={highlighted}
+                                onChange={() => setHighlighted((prev) => !prev)}
+                                className="mr-2"
+                            />
+                            Highlighted
+                        </label>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="flex justify-end space-x-4">
+                        <button
+                            type="submit"
+                            className="bg-[#355E3B] text-white px-4 py-2 rounded-lg hover:bg-[#2D4B33] transition flex items-center gap-2"
+                            disabled={loading}
+                        >
+                            <FiSave /> {loading ? "Saving..." : "Update Article"}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition flex items-center gap-2"
+                            disabled={loading}
+                        >
+                            <FiTrash2 /> {loading ? "Deleting..." : "Delete Article"}
+                        </button>
+                    </div>
+                </motion.form>
+            </div>
         </div>
     );
 };

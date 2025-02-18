@@ -113,7 +113,7 @@ const SessionProtectedRoute = ({ children, isPublic = false }) => {
                 const formattedTime = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`; // Format as MM:SS
 
                 setShowExpiryWarningModal(true);
-                setTimeLeft(formattedTime); // Update countdown
+                setTimeLeft(formattedTime); // Update formatted time
             } else {
                 setShowExpiryWarningModal(false); // Hide warning modal
             }
@@ -196,7 +196,7 @@ const SessionProtectedRoute = ({ children, isPublic = false }) => {
             >
                 <h2 className="text-xl font-bold mb-4">Session Expiring Soon</h2>
                 <p className="text-gray-600 mb-4">
-                    Your session will expire in {Math.floor(timeLeft / 1000)} seconds.
+                    Your session will expire in {timeLeft} seconds.
                 </p>
                 <p className="text-gray-600 mb-4">
                     Click or move your mouse to continue.

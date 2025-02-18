@@ -30,72 +30,93 @@ const AccountManagement = () => {
     useEffect(() => {
         fetchUsers();
     }, [name, email, isActive]);
+    const getValueOrNA = (value) => value || "N/A";
 
     return (
-        <div className="p-6 bg-white min-h-screen">
-            <h1 className="text-3xl font-bold mb-6 text-gray-800">Account Management</h1>
-
-            {/* Filters */}
-            <div className="mb-6 flex flex-wrap gap-4">
-                <input
-                    type="text"
-                    placeholder="Search by name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                    type="text"
-                    placeholder="Search by email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <select
-                    value={isActive}
-                    onChange={(e) => setIsActive(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    <option value="">All Statuses</option>
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                </select>
+        <div className="p-6 bg-[#F0EAD6] min-h-screen relative overflow-hidden">
+            {/* Decorative Background Elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl opacity-50" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl opacity-50" />
             </div>
 
-            {/* User List */}
-            <div className="overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-300 rounded-lg">
-                    <thead>
-                        <tr className="bg-gray-100">
-                            <th className="border-b px-6 py-3 text-left text-gray-700">Full Name</th>
-                            <th className="border-b px-6 py-3 text-left text-gray-700">Email</th>
-                            <th className="border-b px-6 py-3 text-left text-gray-700">Username</th>
-                            <th className="border-b px-6 py-3 text-left text-gray-700">Phone Number</th>
-                            <th className="border-b px-6 py-3 text-left text-gray-700">Active</th>
-                            <th className="border-b px-6 py-3 text-left text-gray-700">Verified</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.map((user) => (
-                            <tr
-                                key={user.UserId}
-                                className="hover:bg-gray-100 cursor-pointer"
-                                onClick={() => navigate(`/staff/account-management/${user.userId}`)}
-                            >
-                                <td className="border-b px-6 py-4 text-gray-800">{user.fullName}</td>
-                                <td className="border-b px-6 py-4 text-gray-800">{user.email}</td>
-                                <td className="border-b px-6 py-4 text-gray-800">{user.username}</td>
-                                <td className="border-b px-6 py-4 text-gray-800">{user.phoneNumber}</td>
-                                <td className="border-b px-6 py-4 text-gray-800">
-                                    {user.isActive ? "Active" : "Inactive"}
-                                </td>
-                                <td className="border-b px-6 py-4 text-gray-800">
-                                    {user.verified ? "Yes" : "No"}
-                                </td>
+            {/* Main Content */}
+            <div className="relative z-10 max-w-7xl mx-auto">
+                {/* Header */}
+                <h1 className="text-5xl font-bold mb-6 text-[#355E3B] text-center">
+                    Account Management
+                </h1>
+
+                {/* Filters */}
+                <div className="mb-8 flex flex-wrap gap-4 justify-center">
+                    <input
+                        type="text"
+                        placeholder="Search by name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="border border-gray-300 rounded-xl px-6 py-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition bg-white shadow-sm hover:shadow-md"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Search by email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="border border-gray-300 rounded-xl px-6 py-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition bg-white shadow-sm hover:shadow-md"
+                    />
+                    <select
+                        value={isActive}
+                        onChange={(e) => setIsActive(e.target.value)}
+                        className="border border-gray-300 rounded-xl px-6 py-4 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition bg-white shadow-sm hover:shadow-md"
+                    >
+                        <option value="">All Statuses</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                </div>
+
+                {/* User List */}
+                <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
+                    <table className="min-w-full">
+                        <thead>
+                            <tr className="bg-[#E2F2E6]">
+                                <th className="px-6 py-4 text-left text-[#355E3B] font-semibold">Full Name</th>
+                                <th className="px-6 py-4 text-left text-[#355E3B] font-semibold">Email</th>
+                                <th className="px-6 py-4 text-left text-[#355E3B] font-semibold">Username</th>
+                                <th className="px-6 py-4 text-left text-[#355E3B] font-semibold">Phone Number</th>
+                                <th className="px-6 py-4 text-left text-[#355E3B] font-semibold">Active</th>
+                                <th className="px-6 py-4 text-left text-[#355E3B] font-semibold">Verified</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr
+                                    key={user.UserId}
+                                    className="hover:bg-[#F0EAD6] cursor-pointer transition-colors"
+                                    onClick={() => navigate(`/staff/account-management/${user.userId}`)}
+                                >
+                                    <td className="px-6 py-4 text-gray-800 border-b border-gray-200">{getValueOrNA(user.fullName)}</td>
+                                    <td className="px-6 py-4 text-gray-800 border-b border-gray-200">{getValueOrNA(user.email)}</td>
+                                    <td className="px-6 py-4 text-gray-800 border-b border-gray-200">{getValueOrNA(user.username)}</td>
+                                    <td className="px-6 py-4 text-gray-800 border-b border-gray-200">{getValueOrNA(user.phoneNumber)}</td>
+                                    <td className="px-6 py-4 text-gray-800 border-b border-gray-200">
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-sm font-semibold ${user.isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                                        >
+                                            {user.isActive ? "Active" : "Inactive"}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-800 border-b border-gray-200">
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-sm font-semibold ${user.verified ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                                        >
+                                            {user.verified ? "Yes" : "No"}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

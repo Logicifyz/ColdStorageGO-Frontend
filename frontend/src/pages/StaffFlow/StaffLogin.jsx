@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from '../../api';
 import { useNavigate } from "react-router-dom";
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
+import Message from '../../components/Message'; // Ensure you have this component for displaying messages
 
 const StaffLogin = () => {
     const [email, setEmail] = useState("");
@@ -28,44 +29,59 @@ const StaffLogin = () => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="flex items-center bg-[#383838] p-8 rounded-lg">
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+            <div className="flex items-center bg-[#F0EAD6] p-8 rounded-lg">
                 <div className="w-[497px] pr-8 mt-0" style={{ marginTop: '-100px', marginRight: '150px' }}>
                     <div className="mb-6">
-                        <h2 className="text-white text-4xl font-bold">Staff Login</h2>
+                        <h2 className="text-[#355E3B] text-4xl font-bold">Staff Login</h2>
                     </div>
+
+                    <div className="mb-6">
+                        <p className="text-black text-sm" style={{ fontSize: '20px' }}>
+                            Don't have an account?{' '}
+                            <span
+                                onClick={() => navigate('/register')}
+                                className="cursor-pointer text-[#355E3B]"
+                            >
+                                Register here
+                            </span>
+                        </p>
+                    </div>
+
+                    {/* Use the Message component for error and success messages */}
+                    <Message text={error} type="error" />
 
                     <form onSubmit={handleLogin} className="text-left">
                         <div className="mb-4">
-                            <label htmlFor="email" className="text-white text-lg font-medium">Email</label>
-                            <div className="flex items-center border border-gray-300 rounded-[10px] bg-white">
+                            <label htmlFor="email" className="text-[#355E3B] text-lg font-medium">Email</label>
+                            <div className="flex items-center border border-gray-300 rounded-xl bg-white">
                                 <FiMail className="text-gray-400 ml-2" />
                                 <input
                                     type="email"
                                     id="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
+                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
                                     placeholder="Enter your email"
                                     required
-                                    style={{ fontSize: '20px' }}
+                                    style={{ fontSize: '16px' }}
                                 />
                             </div>
                         </div>
 
                         <div className="mb-4">
-                            <label htmlFor="password" className="text-white text-lg font-medium">Password</label>
-                            <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
+                            <label htmlFor="password" className="text-[#355E3B] text-lg font-medium">Password</label>
+                            <div className="relative flex items-center border border-gray-300 rounded-xl bg-white">
                                 <FiLock className="text-gray-400 ml-2" />
                                 <input
                                     type={passwordVisible ? "text" : "password"}
                                     id="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
+                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
                                     placeholder="Enter your password"
                                     required
-                                    style={{ fontSize: '20px' }}
+                                    style={{ fontSize: '16px' }}
                                 />
                                 <button
                                     type="button"
@@ -77,14 +93,18 @@ const StaffLogin = () => {
                             </div>
                         </div>
 
-                      
+                        <div className="mb-4 text-right">
+                            <span
+                                onClick={() => navigate('/sendpasswordresetemail')}
+                                className="cursor-pointer text-[#355E3B] text-lg"
+                            >
+                                Forgot Password?
+                            </span>
+                        </div>
 
                         <button
                             type="submit"
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block mt-4"
-                            style={{
-                                backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
-                            }}
+                            className="w-full h-[66px] p-2 rounded-xl text-white font-bold bg-[#355E3B] hover:bg-[#2D4B33] mt-4"
                         >
                             Login
                         </button>
@@ -98,6 +118,7 @@ const StaffLogin = () => {
                 />
             </div>
         </div>
+
     );
 };
 

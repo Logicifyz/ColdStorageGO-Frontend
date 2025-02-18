@@ -131,7 +131,6 @@ const Navigation = () => {
                         </Link>
                     </div>
                 </div>
-            </div>
         </nav>
 
             {location.pathname.startsWith("/forum") && (
