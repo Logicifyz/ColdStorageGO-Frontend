@@ -52,18 +52,18 @@ const Navigation = () => {
     };
 
     return (
-        <nav className="bg-[#383838] text-white sticky top-0 z-50">
+        <nav className="bg-white text-black sticky top-0 z-50">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 <div className="flex items-center space-x-2">
                     <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
                 </div>
 
                 <div className="flex space-x-6">
-                    <Link to="/" className="hover:text-gray-300">Home</Link>
-                    <Link to="/gallery" className="hover:text-gray-300">Gallery</Link>
-                    <Link to="/subscriptions" className="hover:text-gray-300">Subscribe</Link>
-                    <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
-                    <Link to="/help-centre" className="hover:text-gray-300">Help Centre</Link>
+                    <Link to="/" className="hover:text-gray-700">Home</Link>
+                    <Link to="/gallery" className="hover:text-gray-700">Gallery</Link>
+                    <Link to="/subscriptions" className="hover:text-gray-700">Subscribe</Link>
+                    <Link to="/rewards" className="hover:text-gray-700">Rewards</Link>
+                    <Link to="/help-centre" className="hover:text-gray-700">Help Centre</Link>
 
                     {/* Forum Dropdown */}
                     <div
@@ -74,10 +74,10 @@ const Navigation = () => {
                             setCreatePostDropdown(false);
                         }}
                     >
-                        <button className="hover:text-gray-300">Forum</button>
+                        <button className="hover:text-gray-700">Forum</button>
                         {forumDropdown && (
-                            <div className="absolute bg-[#383838] text-white rounded shadow-lg mt-2 w-40">
-                                <Link to="/forum" className="block px-4 py-2 hover:bg-gray-600">
+                            <div className="absolute bg-white text-black rounded shadow-lg mt-2 w-40">
+                                <Link to="/forum" className="block px-4 py-2 hover:bg-gray-200">
                                     Home
                                 </Link>
                                 <div
@@ -85,15 +85,15 @@ const Navigation = () => {
                                     onMouseEnter={() => setCreatePostDropdown(true)}
                                     onMouseLeave={() => setCreatePostDropdown(false)}
                                 >
-                                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-600">
+                                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-200">
                                         Create New Post
                                     </button>
                                     {createPostDropdown && (
-                                        <div className="absolute left-full top-0 bg-[#383838] text-white rounded shadow-lg mt-0 w-48">
-                                            <Link to="/create-recipe" className="block px-4 py-2 hover:bg-gray-600">
+                                        <div className="absolute left-full top-0 bg-white text-black rounded shadow-lg mt-0 w-48">
+                                            <Link to="/create-recipe" className="block px-4 py-2 hover:bg-gray-200">
                                                 Create Recipe
                                             </Link>
-                                            <Link to="/create-discussion" className="block px-4 py-2 hover:bg-gray-600">
+                                            <Link to="/create-discussion" className="block px-4 py-2 hover:bg-gray-200">
                                                 Create Discussion
                                             </Link>
                                         </div>
@@ -103,7 +103,7 @@ const Navigation = () => {
                         )}
                     </div>
 
-                    <Link to="/cheffie-ai" className="hover:text-gray-300">Cheffie AI</Link>
+                    <Link to="/cheffie-ai" className="hover:text-gray-700">Cheffie AI</Link>
                 </div>
 
                 <div className="flex items-center space-x-4">
@@ -113,26 +113,26 @@ const Navigation = () => {
                                 <img
                                     src={profilePic} // Use the formatted Base64 string
                                     alt="Profile"
-                                    className="w-8 h-8 rounded-full border-2 border-white"
+                                    className="w-8 h-8 rounded-full border-2 border-black"
                                 />
                             ) : (
-                                    <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center">
-                                        <span className="text-gray-800">{getInitials(username)}</span> {/* Show initials if no profile picture */}
-                                    </div>
+                                <div className="w-8 h-8 rounded-full border-2 border-black bg-gray-200 flex items-center justify-center">
+                                    <span className="text-gray-800">{getInitials(username)}</span> {/* Show initials if no profile picture */}
+                                </div>
 
                             )}
                         </div>
                     ) : (
                         <button
                             onClick={handleLoginClick}
-                            className="border border-white px-4 py-2 rounded hover:bg-white hover:text-[#383838]"
+                            className="border border-black px-4 py-2 rounded hover:bg-black hover:text-white"
                         >
                             Login
                         </button>
                     )}
 
                     <div className="relative">
-                        <AiOutlineShoppingCart className="w-6 h-6" />
+                        <AiOutlineShoppingCart className="w-6 h-6 text-black" />
                         <Link to="/cart" className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">!</Link>
                     </div>
                 </div>
