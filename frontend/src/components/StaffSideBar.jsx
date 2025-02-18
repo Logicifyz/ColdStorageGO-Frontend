@@ -60,8 +60,11 @@ const StaffSidebar = () => {
 const NavItem = ({ to, icon, label }) => (
     <NavLink
         to={to}
+        end={to === "/staff"}  // Only apply exact matching for Home
         className={({ isActive }) =>
-            `flex items-center space-x-3 p-3 rounded-lg transition hover:bg-[#E2F2E6] ${isActive ? "bg-[#355E3B] text-white" : "text-[#2D4B33]"
+            `flex items-center space-x-3 p-3 rounded-lg transition ${isActive
+                ? "bg-[#355E3B] text-white"
+                : "text-[#2D4B33] hover:bg-[#E2F2E6] hover:text-[#2D4B33]"
             }`
         }
     >

@@ -4,6 +4,7 @@ import { FaArrowUp, FaArrowDown, FaCommentAlt, FaBookmark } from "react-icons/fa
 import VoteButton from "../components/VoteButton"; 
 import SearchDropdown from "../components/SearchDropdown";
 
+
 const Forum = () => {
     const [recipes, setRecipes] = useState([]);
     const [discussions, setDiscussions] = useState([]);

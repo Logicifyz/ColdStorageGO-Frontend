@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-
 const CheffieAI = () => {
     const [advancedControlsVisible, setAdvancedControlsVisible] = useState(false);
     const [formData, setFormData] = useState({
@@ -17,7 +16,6 @@ const CheffieAI = () => {
     const [loading, setLoading] = useState(false); // State for loading
     const [followUpPrompt, setFollowUpPrompt] = useState(null);
     const [redirectMessage, setRedirectMessage] = useState(null); // State for Redirect response
-
 
     const handleToggleAdvancedControls = () => {
         setAdvancedControlsVisible(!advancedControlsVisible);
@@ -56,7 +54,6 @@ const CheffieAI = () => {
                 servings: formData.servings ? parseInt(formData.servings) : null,
             };
 
-
             // ? Submit request to backend
             const aiResponse = await fetch("http://localhost:5135/api/AIRecommendations/Recommend", {
                 method: "POST",
@@ -78,8 +75,6 @@ const CheffieAI = () => {
                 setRedirectMessage("Unexpected response. Please try again.");
                 return;
             }
-
-
 
             if (aiResult.responseType === "Recipe") {
                 console.log("Fetching latest stored recipe...");
@@ -120,31 +115,28 @@ const CheffieAI = () => {
         }
     };
 
-
-
-
     return (
-        <div className="min-h-screen p-8 bg-gray-900 text-gray-200">
+        <div className="min-h-screen p-8 bg-[#f0f0e0] text-[#355E3B]">
             <h1 className="text-3xl font-semibold text-center mb-8">Generate a New Recipe</h1>
             <form
                 onSubmit={handleSubmit}
-                className="max-w-3xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg text-gray-300"
+                className="max-w-3xl mx-auto bg-[#e0e0d0] p-8 rounded-lg shadow-lg text-[#355E3B] border border-[#355E3B]"
             >
                 <div className="mb-6">
-                    <label className="block mb-2 text-gray-400">Idea or Ingredients</label>
+                    <label className="block mb-2">Idea or Ingredients</label>
                     <input
                         type="text"
                         placeholder="Enter a brief idea or leftover ingredients..."
                         value={formData.freeText}
                         onChange={(e) => handleInputChange("freeText", e.target.value)}
-                        className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                        className="w-full p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                     />
                 </div>
 
                 <button
                     type="button"
                     onClick={handleToggleAdvancedControls}
-                    className="text-sm text-purple-400 hover:underline mb-6"
+                    className="text-sm text-[#355E3B] hover:text-[#204037] hover:underline mb-6"
                 >
                     {advancedControlsVisible ? "Hide Advanced Controls" : "Show Advanced Controls"}
                 </button>
@@ -152,31 +144,31 @@ const CheffieAI = () => {
                 {advancedControlsVisible && (
                     <div className="space-y-6">
                         <div>
-                            <label className="block mb-2 text-gray-400">Custom Ingredients (optional)</label>
+                            <label className="block mb-2">Custom Ingredients (optional)</label>
                             <div className="flex gap-4">
                                 <input
                                     type="text"
                                     placeholder="Ingredients to Include (comma-separated)"
                                     value={formData.ingredientsInclude}
                                     onChange={(e) => handleInputChange("ingredientsInclude", e.target.value)}
-                                    className="w-1/2 p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                                    className="w-1/2 p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                 />
                                 <input
                                     type="text"
                                     placeholder="Ingredients to Exclude (comma-separated)"
                                     value={formData.ingredientsExclude}
                                     onChange={(e) => handleInputChange("ingredientsExclude", e.target.value)}
-                                    className="w-1/2 p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                                    className="w-1/2 p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-gray-400">Max Ingredients</label>
+                            <label className="block mb-2">Max Ingredients</label>
                             <select
                                 value={formData.maxIngredients}
                                 onChange={(e) => handleInputChange("maxIngredients", e.target.value)}
-                                className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                                className="w-full p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                             >
                                 <option value="Any">Any</option>
                                 {[...Array(10).keys()].map((i) => (
@@ -188,7 +180,7 @@ const CheffieAI = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-gray-400">Dietary Preferences</label>
+                            <label className="block mb-2">Dietary Preferences</label>
                             <div className="flex flex-wrap gap-4">
                                 {["Vegan", "Vegetarian", "Gluten-Free", "Keto", "Dairy-Free", "Nut-Free"].map(
                                     (preference) => (
@@ -197,7 +189,7 @@ const CheffieAI = () => {
                                                 type="checkbox"
                                                 checked={formData.dietaryPreferences.includes(preference)}
                                                 onChange={() => handleCheckboxChange(preference)}
-                                                className="h-4 w-4 text-purple-500 border-gray-700 rounded"
+                                                className="h-4 w-4 text-[#355E3B] border-[#355E3B] rounded focus:ring-2 focus:ring-[#355E3B]"
                                             />
                                             <span>{preference}</span>
                                         </label>
@@ -207,72 +199,68 @@ const CheffieAI = () => {
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-gray-400">Preferred Cuisine</label>
+                            <label className="block mb-2">Preferred Cuisine</label>
                             <input
                                 type="text"
                                 placeholder="Preferred cuisine (e.g., Italian, Mexican)"
                                 value={formData.cuisine}
                                 onChange={(e) => handleInputChange("cuisine", e.target.value)}
-                                className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                                className="w-full p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                             />
                         </div>
 
                         <div>
-                            <label className="block mb-2 text-gray-400">Cooking Time (optional)</label>
+                            <label className="block mb-2">Cooking Time (optional)</label>
                             <input
                                 type="text"
                                 placeholder="Cooking time limit (e.g., 30 minutes)"
                                 value={formData.cookingTime}
                                 onChange={(e) => handleInputChange("cookingTime", e.target.value)}
-                                className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                                className="w-full p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                             />
                         </div>
-                        
 
-                        {/* Servings Field */}
                         <div>
-                            <label className="block mb-2 text-gray-400">Servings</label>
+                            <label className="block mb-2">Servings</label>
                             <input
                                 type="number"
                                 placeholder="Number of servings"
                                 value={formData.servings}
                                 onChange={(e) => handleInputChange("servings", e.target.value)}
-                                className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500"
+                                className="w-full p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                             />
                         </div>
-
                     </div>
                 )}
 
                 <button
                     type="submit"
-                    className="w-full bg-purple-600 text-white p-3 rounded-lg mt-6 hover:bg-purple-700 focus:outline-none focus:ring focus:ring-purple-500"
+                    className="w-full bg-[#355E3B] text-white p-3 rounded-lg mt-6 hover:bg-[#204037] focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-colors duration-200"
                     disabled={loading} // Disable button during loading
                 >
                     {loading ? "Generating..." : "Generate"}
                 </button>
             </form>
 
-            {loading && <p className="text-center mt-4 text-gray-400">Fetching your recipe... Please wait.</p>}
+            {loading && <p className="text-center mt-4 text-[#355E3B]">Fetching your recipe... Please wait.</p>}
 
-            
             {/* FOLLOWUP RESPONSE UI */}
             {followUpPrompt && (
                 <div className="flex justify-center items-center w-full mt-12">
-                    <div className="w-full max-w-4xl bg-yellow-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
-                        <h2 className="text-2xl font-bold text-yellow-400">Follow-Up Needed</h2>
-                        <p className="text-gray-300 mt-2">{followUpPrompt}</p>
+                    <div className="w-full max-w-4xl bg-[#e0e0d0] text-[#355E3B] p-8 rounded-lg shadow-lg text-center border border-[#355E3B]">
+                        <h2 className="text-2xl font-bold">Follow-Up Needed</h2>
+                        <p className="mt-2">{followUpPrompt}</p>
 
                         <input
                             type="text"
                             placeholder="Refine your request..."
                             value={formData.freeText}
                             onChange={(e) => handleInputChange("freeText", e.target.value)}
-                            className="w-full p-3 border border-gray-700 rounded bg-gray-700 focus:outline-none focus:ring focus:ring-purple-500 mt-4"
+                            className="w-full p-3 border border-[#355E3B] rounded bg-[#f0f0e0] focus:outline-none focus:ring-2 focus:ring-[#355E3B] mt-4"
                         />
                         <button
                             type="submit"
-                            className="w-full bg-purple-600 text-white p-3 rounded-lg mt-4 hover:bg-purple-700 focus:outline-none focus:ring focus:ring-purple-500"
+                            className="w-full bg-[#355E3B] text-white p-3 rounded-lg mt-4 hover:bg-[#204037] focus:outline-none focus:ring-2 focus:ring-[#355E3B] transition-colors duration-200"
                             onClick={handleSubmit}
                         >
                             Resubmit
@@ -281,30 +269,26 @@ const CheffieAI = () => {
                 </div>
             )}
 
-
             {/* REDIRECT RESPONSE UI */}
             {redirectMessage && (
                 <div className="flex justify-center items-center w-full mt-12">
-                    <div className="w-full max-w-4xl bg-red-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
-                        <h2 className="text-2xl font-bold text-red-400">Invalid Request</h2>
-                        <p className="text-gray-300 mt-2">{redirectMessage}</p>
+                    <div className="w-full max-w-4xl bg-[#e0e0d0] text-[#355E3B] p-8 rounded-lg shadow-lg text-center border border-[#355E3B]">
+                        <h2 className="text-2xl font-bold">Invalid Request</h2>
+                        <p className="mt-2">{redirectMessage}</p>
                     </div>
                 </div>
             )}
 
-
-
             {/* ? Display structured recipe */}
             {recipeResponse && (
-
                 <div className="flex justify-center items-center w-full mt-12">
-                    <div className="w-full max-w-4xl bg-gray-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
-                        <h2 className="text-3xl font-bold text-white">{recipeResponse.title || "Recipe Title Not Found"}</h2>
-                        <p className="text-gray-400 mt-2">{recipeResponse.description || "No description available"}</p>
+                    <div className="w-full max-w-4xl bg-[#e0e0d0] text-[#355E3B] p-8 rounded-lg shadow-lg text-center border border-[#355E3B]">
+                        <h2 className="text-3xl font-bold">{recipeResponse.title || "Recipe Title Not Found"}</h2>
+                        <p className="text-lg mt-2">{recipeResponse.description || "No description available"}</p>
                         {/* ? View Full Recipe Button */}
                         <div className="mt-6">
                             <a href={`/ai-recipe/${recipeResponse.dishId}`}
-                                className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                                className="bg-[#355E3B] text-white px-6 py-2 rounded-lg hover:bg-[#204037] transition-colors duration-200">
                                 View Full Recipe
                             </a>
                         </div>
@@ -313,24 +297,24 @@ const CheffieAI = () => {
                             <div className="flex flex-col items-center">
                                 <img src="/Icons/servings-icon.png" alt="Serving Size" className="w-8 h-8" />
                                 <span className="text-lg font-semibold mt-2">Serves</span>
-                                <p className="text-white text-xl">{recipeResponse.servings ?? "N/A"}</p>
+                                <p className="text-xl">{recipeResponse.servings ?? "N/A"}</p>
                             </div>
                             <div className="flex flex-col items-center">
                                 <img src="/Icons/cookingtime-icon.png" alt="Cooking Time" className="w-8 h-8" />
                                 <span className="text-lg font-semibold mt-2">Cooking Time</span>
-                                <p className="text-white text-xl">{recipeResponse.cookingTime ?? "N/A"}</p>
+                                <p className="text-xl">{recipeResponse.cookingTime ?? "N/A"}</p>
                             </div>
                             <div className="flex flex-col items-center">
                                 <img src="/Icons/spatula-icon.png" alt="Difficulty" className="w-8 h-8" />
                                 <span className="text-lg font-semibold mt-2">Difficulty</span>
-                                <p className="text-white text-xl">{recipeResponse.difficulty ?? "N/A"}</p>
+                                <p className="text-xl">{recipeResponse.difficulty ?? "N/A"}</p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 text-left">
                             <div>
-                                <h3 className="text-xl font-semibold text-white">Ingredients:</h3>
-                                <ul className="list-disc ml-6 text-gray-300">
+                                <h3 className="text-xl font-semibold">Ingredients:</h3>
+                                <ul className="list-disc pl-8 space-y-3">
                                     {recipeResponse.ingredients && Array.isArray(recipeResponse.ingredients) ? (
                                         recipeResponse.ingredients.map((item, index) => <li key={index}>{item}</li>)
                                     ) : (
@@ -340,8 +324,8 @@ const CheffieAI = () => {
                             </div>
 
                             <div>
-                                <h3 className="text-xl font-semibold text-white">Steps:</h3>
-                                <ol className="list-decimal ml-6 text-gray-300">
+                                <h3 className="text-xl font-semibold">Steps:</h3>
+                                <ol className="list-decimal pl-8 space-y-6">
                                     {recipeResponse.steps && Array.isArray(recipeResponse.steps) ? (
                                         recipeResponse.steps.map((step, index) => <li key={index}>{step}</li>)
                                     ) : (
@@ -351,21 +335,16 @@ const CheffieAI = () => {
                             </div>
                         </div>
 
-                        <h3 className="text-xl font-semibold text-white mt-8">Nutrition Facts:</h3>
-                        <div className="flex justify-between text-gray-300 text-lg">
-                            <p>Calories: <span className="text-white">{recipeResponse.nutrition?.calories ?? "N/A"} kcal</span></p>
-                            <p>Protein: <span className="text-white">{recipeResponse.nutrition?.protein ?? "N/A"} g</span></p>
-                            <p>Carbs: <span className="text-white">{recipeResponse.nutrition?.carbs ?? "N/A"} g</span></p>
-                            <p>Fats: <span className="text-white">{recipeResponse.nutrition?.fats ?? "N/A"} g</span></p>
+                        <h3 className="text-xl font-semibold mt-8">Nutrition Facts:</h3>
+                        <div className="flex justify-between text-lg">
+                            <p>Calories: <span>{recipeResponse.nutrition?.calories ?? "N/A"} kcal</span></p>
+                            <p>Protein: <span>{recipeResponse.nutrition?.protein ?? "N/A"} g</span></p>
+                            <p>Carbs: <span>{recipeResponse.nutrition?.carbs ?? "N/A"} g</span></p>
+                            <p>Fats: <span>{recipeResponse.nutrition?.fats ?? "N/A"} g</span></p>
                         </div>
                     </div>
                 </div>
             )}
-
-
-
-
-
         </div>
     );
 };

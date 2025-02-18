@@ -48,14 +48,10 @@ const CreateRecipe = () => {
         fetchDishes();
     }, []);
 
-
     const handleMealKitChange = (selectedOption) => {
         console.log("🔹 Selected Dish:", selectedOption); // Log selected dish
         setRecipeForm({ ...recipeForm, dishId: selectedOption ? selectedOption.value : "" });
     };
-
-
-
 
     const [showImageUploader, setShowImageUploader] = useState(false);
     const [coverImages, setCoverImages] = useState([]);
@@ -119,7 +115,6 @@ const CreateRecipe = () => {
         delete updatedInstructionImages[index];
         setInstructionImages(updatedInstructionImages);
     };
-
 
     const handleInstructionChange = (index, field, value) => {
         const updatedInstructions = recipeForm.instructions.map((instruction, i) =>
@@ -191,21 +186,16 @@ const CreateRecipe = () => {
         }
     };
 
-
-
-
-
-
     return (
-        <div className="p-8 bg-[#2F2F2F] min-h-screen text-white">
+        <div className="p-8 bg-[#f0f0e0] min-h-screen text-[#355E3B]">
             <h1 className="text-3xl font-bold text-center mb-8">Create Recipe</h1>
-            <form onSubmit={handleSubmit} className="bg-[#383838] p-8 rounded-lg shadow-lg max-w-5xl mx-auto">
+            <form onSubmit={handleSubmit} className="bg-[#e0e0d0] p-8 rounded-lg shadow-lg max-w-5xl mx-auto">
                 {/* Image Uploader */}
                 <div className="mb-8">
                     <button
                         type="button"
                         onClick={() => setShowImageUploader(true)}
-                        className="w-full p-4 border-2 border-dashed text-gray-300 rounded-md hover:bg-[#444]"
+                        className="w-full p-4 border-2 border-dashed border-[#355E3B] text-[#355E3B] rounded-md hover:bg-[#d0d0c0]"
                     >
                         {coverImages.length > 0 ? "Edit Uploaded Images" : "Upload Cover Photo"}
                     </button>
@@ -236,21 +226,44 @@ const CreateRecipe = () => {
                         isSearchable
                         placeholder="Select a MealKit..."
                         onChange={handleMealKitChange}
-                        className="text-black"
+                        className="text-[#355E3B]"
+                        styles={{
+                            control: (base) => ({
+                                ...base,
+                                backgroundColor: "#e0e0d0", // ✅ Match form background
+                                borderColor: "#355E3B", // ✅ Match form border
+                                color: "#355E3B", // ✅ Match text color
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                backgroundColor: "#e0e0d0", // ✅ Match dropdown menu background
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: "#355E3B", // ✅ Match selected text color
+                            }),
+                            option: (base, { isSelected }) => ({
+                                ...base,
+                                backgroundColor: isSelected ? "#d0d0c0" : "#e0e0d0", // ✅ Slightly darker for selected
+                                color: "#355E3B",
+                                "&:hover": { backgroundColor: "#d0d0c0" }, // ✅ Match hover color
+                            }),
+                        }}
                     />
+
                     <input
                         type="text"
                         placeholder="Recipe Title"
                         value={recipeForm.name}
                         onChange={(e) => setRecipeForm({ ...recipeForm, name: e.target.value })}
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                        className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         required
                     />
                     <textarea
                         placeholder="Overview of Recipe"
                         value={recipeForm.description}
                         onChange={(e) => setRecipeForm({ ...recipeForm, description: e.target.value })}
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                        className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         rows="4"
                         required
                     ></textarea>
@@ -259,7 +272,7 @@ const CreateRecipe = () => {
                         placeholder="Time Taken (in minutes)"
                         value={recipeForm.timeTaken}
                         onChange={(e) => setRecipeForm({ ...recipeForm, timeTaken: e.target.value })}
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                        className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                     />
                 </div>
 
@@ -272,26 +285,26 @@ const CreateRecipe = () => {
                             placeholder="Quantity"
                             value={ingredient.quantity}
                             onChange={(e) => handleIngredientChange(index, "quantity", e.target.value)}
-                            className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                            className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         />
                         <input
                             type="text"
                             placeholder="Unit"
                             value={ingredient.unit}
                             onChange={(e) => handleIngredientChange(index, "unit", e.target.value)}
-                            className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                            className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         />
                         <input
                             type="text"
                             placeholder="Ingredient"
                             value={ingredient.name}
                             onChange={(e) => handleIngredientChange(index, "name", e.target.value)}
-                            className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                            className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         />
                         <button
                             type="button"
                             onClick={() => handleRemoveIngredient(index)}
-                            className="text-red-400 font-bold"
+                            className="text-red-500 font-bold"
                         >
                             X
                         </button>
@@ -300,7 +313,7 @@ const CreateRecipe = () => {
                 <button
                     type="button"
                     onClick={handleAddIngredient}
-                    className="text-blue-400 font-semibold mb-6"
+                    className="text-[#355E3B] font-semibold mb-6"
                 >
                     + Add Ingredient
                 </button>
@@ -313,19 +326,19 @@ const CreateRecipe = () => {
                             placeholder="Instruction Step"
                             value={instruction.step}
                             onChange={(e) => handleInstructionChange(index, "step", e.target.value)}
-                            className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                            className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                             rows="2"
                         ></textarea>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={(e) => handleInstructionImageUpload(index, e.target.files[0])}
-                            className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                            className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         />
                         <button
                             type="button"
                             onClick={() => handleRemoveInstruction(index)}
-                            className="text-red-400 font-bold"
+                            className="text-red-500 font-bold"
                         >
                             X
                         </button>
@@ -334,7 +347,7 @@ const CreateRecipe = () => {
                 <button
                     type="button"
                     onClick={handleAddInstruction}
-                    className="text-blue-400 font-semibold mb-6"
+                    className="text-[#355E3B] font-semibold mb-6"
                 >
                     + Add Instruction
                 </button>
@@ -346,7 +359,7 @@ const CreateRecipe = () => {
                         placeholder="Tags"
                         value={recipeForm.tags}
                         onChange={(e) => setRecipeForm({ ...recipeForm, tags: e.target.value })}
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                        className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                         required
                     />
                     <select
@@ -354,14 +367,14 @@ const CreateRecipe = () => {
                         onChange={(e) =>
                             setRecipeForm({ ...recipeForm, visibility: e.target.value })
                         }
-                        className="p-3 border border-gray-500 rounded bg-[#444] text-white"
+                        className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B]"
                     >
                         <option value="public">Public</option>
                         <option value="private">Private</option>
                     </select>
                     <button
                         type="submit"
-                        className="px-6 py-3 bg-blue-500 text-white font-bold rounded hover:bg-blue-700"
+                        className="px-6 py-3 bg-[#355E3B] text-white font-bold rounded hover:bg-[#204037]"
                     >
                         Post Recipe
                     </button>

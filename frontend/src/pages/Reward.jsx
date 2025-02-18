@@ -1,4 +1,5 @@
 ﻿import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api";
 
 const Reward = () => {
@@ -8,6 +9,7 @@ const Reward = () => {
     const [selectedReward, setSelectedReward] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchWallet = async () => {
@@ -15,7 +17,11 @@ const Reward = () => {
                 const response = await api.get("/api/Wallet");
                 setWallet(response.data);
             } catch (error) {
-                setErrorMessage("Failed to load wallet. Please try again later.");
+                if (error.response && error.response.status === 401) {
+                    setErrorMessage("Please log in to access rewards.");
+                } else {
+                    setErrorMessage("Failed to load wallet. Please try again later.");
+                }
             }
         };
 
@@ -52,6 +58,10 @@ const Reward = () => {
         }
     };
 
+    const handleLoginRedirect = () => {
+        navigate("/login");
+    };
+
     return (
         <div className="min-h-screen bg-[#F0EAD6] p-8 relative overflow-hidden">
             {/* Background Elements */}
@@ -71,40 +81,48 @@ const Reward = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {rewards.map((reward) => (
-                        <div key={reward.rewardId} className="group relative">
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#2D4B33] to-[#355E3B] rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity" />
-                            <div className="h-full flex flex-col justify-between bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-[#E2F2E6] hover:border-[#E2F2E6] transition-all">
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <h2 className="text-2xl font-bold text-[#2D4B33]">
-                                            {reward.name}
-                                        </h2>
-                                        <span className="bg-[#E2F2E6] px-4 py-1 rounded-full text-[#355E3B] font-bold flex items-center gap-2">
-                                            <span>{reward.coinsCost}</span>
-                                            <span className="text-lg">🪙</span>
-                                        </span>
-                                    </div>
-                                    <p className="text-gray-700 leading-relaxed">{reward.description}</p>
-                                    <div className="text-sm text-gray-500">
-                                        Expires: {new Date(reward.expiryDate).toLocaleDateString()}
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => handleRedeemClick(reward)}
-                                    className="mt-6 w-full py-3 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] rounded-xl font-bold text-white transition-colors"
-                                >
-                                    Redeem Now →
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {errorMessage && (
+                {errorMessage ? (
                     <div className="mt-8 p-4 bg-red-900/20 text-red-500 rounded-xl border border-red-500/30">
-                        {errorMessage}
+                        <p>{errorMessage}</p>
+                        {errorMessage === "Please log in to access rewards." && (
+                            <button
+                                onClick={handleLoginRedirect}
+                                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                            >
+                                Log In
+                            </button>
+                        )}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {rewards.map((reward) => (
+                            <div key={reward.rewardId} className="group relative">
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#2D4B33] to-[#355E3B] rounded-3xl opacity-0 group-hover:opacity-10 transition-opacity" />
+                                <div className="h-full flex flex-col justify-between bg-white/90 backdrop-blur-sm rounded-3xl p-6 border border-[#E2F2E6] hover:border-[#E2F2E6] transition-all">
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center">
+                                            <h2 className="text-2xl font-bold text-[#2D4B33]">
+                                                {reward.name}
+                                            </h2>
+                                            <span className="bg-[#E2F2E6] px-4 py-1 rounded-full text-[#355E3B] font-bold flex items-center gap-2">
+                                                <span>{reward.coinsCost}</span>
+                                                <span className="text-lg">🪙</span>
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-700 leading-relaxed">{reward.description}</p>
+                                        <div className="text-sm text-gray-500">
+                                            Expires: {new Date(reward.expiryDate).toLocaleDateString()}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => handleRedeemClick(reward)}
+                                        className="mt-6 w-full py-3 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] rounded-xl font-bold text-white transition-colors"
+                                    >
+                                        Redeem Now →
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
 
