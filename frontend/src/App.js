@@ -27,6 +27,8 @@ import DisplayForumRecipe from "./pages/DisplayForumRecipe";
 import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
+import EditDiscussion from "./pages/EditDiscussion";  
+import EditRecipe from "./pages/EditRecipe";
 import Home from "./pages/Home";
 import PleaseLogin from "./pages/PleaseLogin"
 
@@ -116,6 +118,8 @@ const App = () => {
                     <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
                     <Route path="/create-recipe" element={<CreateRecipe />} /> {/* Route for Create Recipe */}
                     <Route path="/create-discussion" element={<CreateDiscussion />} /> {/* Route for Create Discussion */}
+                    <Route path="/forum/discussion/edit/:discussionId" element={<EditDiscussion />} />
+                    <Route path="/forum/recipe/edit/:id" element={<EditRecipe />} /> 
                     <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
                     <Route path="/cheffie-ai" element={<CheffieAI />} />
                     <Route path="/listing/:id" element={<Listing />} />
@@ -129,7 +133,7 @@ const App = () => {
                     <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
 
                     <Route path="/register" element={<EmailProvider><Register /></EmailProvider>} />
-                   
+
                     {/* Wrap only the Login page with GoogleOAuthProvider */}
                     <Route
                         path="/login"
