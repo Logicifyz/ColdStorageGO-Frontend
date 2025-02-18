@@ -4,10 +4,10 @@ import api from "../../../api";
 import "tailwindcss/tailwind.css";
 
 const statusSteps = [
-    { title: "Preparing", icon: "🥘", color: "from-yellow-500 to-orange-500" },
-    { title: "Out For Delivery", icon: "🚚", color: "from-blue-500 to-purple-500" },
-    { title: "Delivered", icon: "📦", color: "from-green-500 to-teal-500" },
-    { title: "Completed", icon: "✅", color: "from-purple-500 to-pink-500" }
+    { title: "Preparing", icon: "🥘", color: "from-green-200 to-green-400" },
+    { title: "Out For Delivery", icon: "🚚", color: "from-green-300 to-green-500" },
+    { title: "Delivered", icon: "📦", color: "from-green-400 to-green-600" },
+    { title: "Completed", icon: "✅", color: "from-green-500 to-green-700" }
 ];
 
 const mapStatusToProgress = (order) => {
@@ -129,11 +129,11 @@ const MyOrderDetail = ({ orderId, onBack }) => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+            <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] flex items-center justify-center">
                 <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
+                    className="w-16 h-16 border-4 border-green-600/30 border-t-green-600 rounded-full"
                 />
             </div>
         );
@@ -141,12 +141,12 @@ const MyOrderDetail = ({ orderId, onBack }) => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center text-red-500 p-8">
+            <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] flex flex-col items-center justify-center text-red-500 p-8">
                 <p>{error}</p>
                 <motion.button
                     onClick={onBack}
                     whileHover={{ scale: 1.05 }}
-                    className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg"
+                    className="mt-4 px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg text-white"
                 >
                     Back to Orders
                 </motion.button>
@@ -156,12 +156,12 @@ const MyOrderDetail = ({ orderId, onBack }) => {
 
     if (!order) {
         return (
-            <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center text-white p-8">
+            <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] flex flex-col items-center justify-center text-[#2D4B33] p-8">
                 <p>Order not found.</p>
                 <motion.button
                     onClick={onBack}
                     whileHover={{ scale: 1.05 }}
-                    className="mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg"
+                    className="mt-4 px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg text-white"
                 >
                     Back to Orders
                 </motion.button>
@@ -170,14 +170,14 @@ const MyOrderDetail = ({ orderId, onBack }) => {
     }
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden p-8">
+        <div className="min-h-screen bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] relative overflow-hidden p-8">
             <motion.div
-                className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-r from-purple-700/10 to-blue-500/10 rounded-full blur-3xl"
+                className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-r from-[#2D4B33]/10 to-[#355E3B]/10 rounded-full blur-3xl"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
-                className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-r from-pink-700/10 to-cyan-500/10 rounded-full blur-3xl"
+                className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-r from-[#355E3B]/10 to-[#2D4B33]/10 rounded-full blur-3xl"
                 animate={{ rotate: -360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             />
@@ -186,16 +186,16 @@ const MyOrderDetail = ({ orderId, onBack }) => {
                 <motion.button
                     onClick={onBack}
                     whileHover={{ scale: 1.05 }}
-                    className="mb-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md"
+                    className="mb-6 px-6 py-3 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] hover:from-[#355E3B] hover:to-[#2D4B33] rounded-lg shadow-md text-white"
                 >
                     ← Back to Orders
                 </motion.button>
 
                 {/* Progress Tracker */}
-                <div className="mb-8 p-6 bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 rounded-2xl border border-[#ffffff10] shadow-lg">
-                    <div className="relative h-2 bg-gray-700 rounded-full mb-4">
+                <div className="mb-8 p-6 bg-white/90 rounded-2xl border border-[#E2F2E6] shadow-lg">
+                    <div className="relative h-2 bg-gray-300 rounded-full mb-4">
                         <motion.div
-                            className="absolute h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
+                            className="absolute h-full bg-gradient-to-r from-[#2D4B33] to-[#355E3B] rounded-full"
                             initial={{ width: 0 }}
                             animate={{ width: `${progressData.progress}%` }}
                             transition={{ duration: 0.8 }}
@@ -212,10 +212,10 @@ const MyOrderDetail = ({ orderId, onBack }) => {
                                 >
                                     {step.icon}
                                 </div>
-                                <p className="font-medium text-sm text-white">
+                                <p className="font-medium text-sm text-[#2D4B33]">
                                     {step.title}
                                     {index === progressData.currentStep && progressData.estimatedTimeRemaining > 0 && (
-                                        <span className="block mt-1 text-xs text-gray-300">
+                                        <span className="block mt-1 text-xs text-gray-600">
                                             {progressData.estimatedTimeRemaining} secs remaining
                                         </span>
                                     )}
@@ -225,34 +225,34 @@ const MyOrderDetail = ({ orderId, onBack }) => {
                     </div>
                 </div>
 
-                <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] bg-clip-text text-transparent">
                     Order #{(order.id || order.Id)?.slice(-6)}
                 </h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div className="p-6 bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 rounded-2xl border border-[#ffffff10] shadow-lg">
-                        <h2 className="text-xl font-semibold mb-4 text-white">Delivery Details</h2>
-                        <p className="text-gray-400">
+                    <div className="p-6 bg-white/90 rounded-2xl border border-[#E2F2E6] shadow-lg">
+                        <h2 className="text-xl font-semibold mb-4 text-[#2D4B33]">Delivery Details</h2>
+                        <p className="text-gray-700">
                             <span className="block mb-2">📦 {order.deliveryAddress || order.DeliveryAddress}</span>
                             <span className="block">⏰ Scheduled: {formatDate(order.shipTime || order.ShipTime)}</span>
                         </p>
                     </div>
-                    <div className="p-6 bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 rounded-2xl border border-[#ffffff10] shadow-lg">
-                        <h2 className="text-xl font-semibold mb-4 text-white">Payment Summary</h2>
+                    <div className="p-6 bg-white/90 rounded-2xl border border-[#E2F2E6] shadow-lg">
+                        <h2 className="text-xl font-semibold mb-4 text-[#2D4B33]">Payment Summary</h2>
                         <div className="space-y-2">
-                            <p className="flex justify-between text-white">
+                            <p className="flex justify-between text-[#2D4B33]">
                                 <span>Subtotal:</span>
                                 <span>${order.subtotal?.toFixed(2) || order.Subtotal?.toFixed(2)}</span>
                             </p>
-                            <p className="flex justify-between text-white">
+                            <p className="flex justify-between text-[#2D4B33]">
                                 <span>Shipping:</span>
                                 <span>${order.shippingCost?.toFixed(2) || order.ShippingCost?.toFixed(2)}</span>
                             </p>
-                            <p className="flex justify-between text-white">
+                            <p className="flex justify-between text-[#2D4B33]">
                                 <span>Tax:</span>
                                 <span>${order.tax?.toFixed(2) || order.Tax?.toFixed(2)}</span>
                             </p>
-                            <p className="flex justify-between font-bold text-lg text-white">
+                            <p className="flex justify-between font-bold text-lg text-[#2D4B33]">
                                 <span>Total:</span>
                                 <span>${order.totalAmount?.toFixed(2) || order.TotalAmount?.toFixed(2)}</span>
                             </p>
@@ -261,14 +261,14 @@ const MyOrderDetail = ({ orderId, onBack }) => {
                 </div>
 
                 <div className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-6 text-white">Order Items</h2>
+                    <h2 className="text-2xl font-semibold mb-6 text-[#2D4B33]">Order Items</h2>
                     <div className="space-y-4">
                         {orderItems.map((item, index) => (
                             <motion.div
                                 key={index}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="p-4 bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 rounded-xl border border-[#ffffff10] flex items-center shadow-md"
+                                className="p-4 bg-white/90 rounded-xl border border-[#E2F2E6] flex items-center shadow-md"
                             >
                                 <img
                                     src={item.mealKit.listingImage}
@@ -276,13 +276,13 @@ const MyOrderDetail = ({ orderId, onBack }) => {
                                     className="w-16 h-16 rounded-lg object-cover mr-4"
                                 />
                                 <div className="flex-1">
-                                    <h3 className="text-lg font-semibold text-white">
+                                    <h3 className="text-lg font-semibold text-[#2D4B33]">
                                         {item.mealKit.name || "Unknown Meal Kit"}
                                     </h3>
-                                    <p className="text-gray-400">Quantity: {item.quantity}</p>
+                                    <p className="text-gray-700">Quantity: {item.quantity}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-semibold text-white">
+                                    <p className="font-semibold text-[#2D4B33]">
                                         ${((item.unitPrice || item.UnitPrice) * item.quantity).toFixed(2)}
                                     </p>
                                 </div>

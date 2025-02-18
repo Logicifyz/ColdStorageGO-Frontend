@@ -1,3 +1,13 @@
+/* Update your src/index.css file */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add custom utilities AFTER Tailwind directives */
+@layer utilities {
+    .text-stroke-emerald {
+        -webkit-text-stroke: 1px theme('colors.emerald.500');
+    }
+}
+
+/* Remove duplicate @layer declarations if any */
