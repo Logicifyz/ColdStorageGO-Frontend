@@ -21,7 +21,6 @@ const MyProfile = () => {
         FullName: '',
         ProfilePicture: '',
     });
-    
     const [isEditing, setIsEditing] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -193,7 +192,7 @@ const MyProfile = () => {
             if (response.data.success) {
                 console.log("Password set token received:", response.data.Token);
                 alert("Check your email to set your password.");
-                navigate(`/successfullysentsetpasswordemail`);
+                navigate('/successfullysentsetpasswordemail');
             } else {
                 alert(response.data.Message);
             }
@@ -232,7 +231,7 @@ const MyProfile = () => {
         });
         setProfilePicturePreview(''); // Clear the preview
     };
-        
+
     const openFollowersModal = () => setIsFollowersListOpen(true);
     const closeFollowersModal = () => setIsFollowersListOpen(false);
 
@@ -240,15 +239,15 @@ const MyProfile = () => {
     const closeFollowingModal = () => setIsFollowingListOpen(false);
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden p-8">
+        <div className="min-h-screen bg-[#F0EAD6] relative overflow-hidden p-8">
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-purple-700/10 to-blue-500/10 rounded-full blur-3xl" />
-                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-pink-700/10 to-cyan-500/10 rounded-full blur-3xl" />
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl" />
             </div>
 
             <div className="relative z-10 max-w-4xl mx-auto">
                 <div className="flex items-center gap-4 mb-12">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-bold text-[#355E3B]">
                         Profile
                     </h1>
                 </div>
@@ -258,7 +257,7 @@ const MyProfile = () => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mb-4 p-4 bg-green-500/30 text-green-300 rounded-[10px]"
+                            className="mb-4 p-4 bg-green-500/80 text-white rounded-[10px]"
                         >
                             {successMessage}
                         </motion.div>
@@ -268,16 +267,17 @@ const MyProfile = () => {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="mb-4 p-4 bg-red-500/30 text-red-300 rounded-[10px]"
+                            className="mb-4 p-4 bg-red-500/80 text-white rounded-[10px]"
                         >
                             {errorMessage}
                         </motion.div>
                     )}
 
+
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-gradient-to-br from-[#1a1a2e]/50 to-[#16213e]/50 backdrop-blur-xl rounded-2xl border border-[#ffffff10] shadow-2xl overflow-hidden p-6"
+                        className="bg-white rounded-2xl border border-gray-300 shadow-sm overflow-hidden p-6"
                     >
                         <div className="flex items-center gap-4">
                             {profilePicturePreview ? (
@@ -287,11 +287,13 @@ const MyProfile = () => {
                                     className="w-24 h-24 rounded-full object-cover"
                                 />
                             ) : (
-                                <div className="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center text-3xl font-bold text-white">
+                                <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-700">
                                     {getInitials(formData.Username)} {/* Use Username for initials */}
                                 </div>
                             )}
                             <div>
+                                <h2 className="text-2xl font-bold text-[#355E3B]">{formData.Username}</h2>
+                                <p className="text-gray-700">{formData.Email}</p>
                                 <h2 className="text-2xl font-bold text-white">{formData.Username}</h2>
                                 <div className="flex items-center mt-2">
                                     {/* Followers Count */}
@@ -316,11 +318,11 @@ const MyProfile = () => {
 
                         {!isEditing ? (
                             <div className="mt-6">
-                                <p className="mb-4 text-lg text-white">Phone Number: {formData.PhoneNumber}</p>
-                                <p className="mb-4 text-lg text-white">Full Name: {formData.FullName}</p>
+                                <p className="mb-4 text-lg text-[#355E3B]">Phone Number: {formData.PhoneNumber}</p>
+                                <p className="mb-4 text-lg text-[#355E3B]">Full Name: {formData.FullName}</p>
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
+                                    className="w-full h-[66px] p-2 rounded-[30px] text-white font-bold mt-4 bg-[#355E3B] hover:bg-[#2D4B33] transition"
                                 >
                                     Edit Profile
                                 </button>
@@ -328,84 +330,84 @@ const MyProfile = () => {
                         ) : (
                             <form onSubmit={handleSubmit} className="mt-6">
                                 <div className="mb-4">
-                                    <label htmlFor="Username" className="text-white text-lg">Username</label>
+                                    <label htmlFor="Username" className="text-[#355E3B] text-lg">Username</label>
                                     <input
                                         type="text"
                                         id="Username"
                                         name="Username"
                                         value={formData.Username}
                                         onChange={handleInputChange}
-                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                        className="w-full h-[66px] p-2 text-gray-700 rounded-[10px] mt-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                         required
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="Email" className="text-white text-lg">Email</label>
+                                    <label htmlFor="Email" className="text-[#355E3B] text-lg">Email</label>
                                     <input
                                         type="Email"
                                         id="Email"
                                         name="Email"
                                         value={formData.Email}
                                         onChange={handleInputChange}
-                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                        className="w-full h-[66px] p-2 text-gray-700 rounded-[10px] mt-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                         required
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="PhoneNumber" className="text-white text-lg">Phone Number</label>
+                                    <label htmlFor="PhoneNumber" className="text-[#355E3B] text-lg">Phone Number</label>
                                     <input
                                         type="text"
                                         id="PhoneNumber"
                                         name="PhoneNumber"
                                         value={formData.PhoneNumber}
                                         onChange={handleInputChange}
-                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                        className="w-full h-[66px] p-2 text-gray-700 rounded-[10px] mt-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label htmlFor="FullName" className="text-white text-lg">Full Name</label>
+                                    <label htmlFor="FullName" className="text-[#355E3B] text-lg">Full Name</label>
                                     <input
                                         type="text"
                                         id="FullName"
                                         name="FullName"
                                         value={formData.FullName}
                                         onChange={handleInputChange}
-                                        className="w-full h-[66px] p-2 text-black rounded-[10px] mt-2"
+                                        className="w-full h-[66px] p-2 text-gray-700 rounded-[10px] mt-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                                     />
                                 </div>
-                                    <div className="mt-6 flex gap-4">
-                                        {formData.ProfilePicture ? (
-                                            <button
-                                                onClick={handleRemoveProfilePicture}
-                                                className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition"
-                                            >
-                                                Remove Picture
-                                            </button>
-                                        ) : (
-                                            <label
-                                                className="bg-blue-500 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-blue-600 transition"
-                                            >
-                                                Add Picture
-                                                <input
-                                                    type="file"
-                                                    name="ProfilePicture"
-                                                    accept="image/jpeg, image/png"
-                                                    className="hidden"
-                                                    onChange={handleInputChange}
-                                                />
-                                            </label>
-                                        )}
-                                    </div>
+                                <div className="mt-6 flex gap-4">
+                                    {formData.ProfilePicture ? (
+                                        <button
+                                            onClick={handleRemoveProfilePicture}
+                                            className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition"
+                                        >
+                                            Remove Picture
+                                        </button>
+                                    ) : (
+                                        <label
+                                            className="bg-[#355E3B] text-white py-2 px-4 rounded-md cursor-pointer hover:bg-[#2D4B33] transition"
+                                        >
+                                            Add Picture
+                                            <input
+                                                type="file"
+                                                name="ProfilePicture"
+                                                accept="image/jpeg, image/png"
+                                                className="hidden"
+                                                onChange={handleInputChange}
+                                            />
+                                        </label>
+                                    )}
+                                </div>
                                 <button
                                     type="submit"
-                                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
+                                    className="w-full h-[66px] p-2 rounded-[30px] text-white font-bold mt-4 bg-[#355E3B] hover:bg-[#2D4B33] transition"
                                 >
                                     Save Changes
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleCancel}
-                                    className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 bg-gray-600 hover:bg-gray-700"
+                                    className="w-full h-[66px] p-2 rounded-[30px] text-white font-bold mt-4 bg-gray-600 hover:bg-gray-700 transition"
                                 >
                                     Cancel
                                 </button>
@@ -440,7 +442,7 @@ const MyProfile = () => {
                     },
                 }}
             >
-                <h2 className="text-xl font-bold">Followers</h2>
+                <h2 className="text-xl font-bold text-[#355E3B]">Followers</h2>
                 <FollowList title="Followers" listData={followers} />
             </Modal>
 
@@ -469,7 +471,7 @@ const MyProfile = () => {
                     },
                 }}
             >
-                <h2 className="text-xl font-bold">Following</h2>
+                <h2 className="text-xl font-bold text-[#355E3B]">Following</h2>
                 <FollowList title="Following" listData={following} />
             </Modal>
         </div>

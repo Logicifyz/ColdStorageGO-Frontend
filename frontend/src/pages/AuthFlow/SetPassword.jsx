@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // For accessing dynamic route parameters and navigation
+import { useParams, useNavigate } from 'react-router-dom';
 import { FiLock, FiEye, FiEyeOff, FiArrowLeft } from 'react-icons/fi';
-import api from '../../api'
-import Message from '../../components/Message'
+import api from '../../api';
+import Message from '../../components/Message';
 
 const SetPassword = () => {
-    const { token } = useParams(); // Get the token from the URL
-    const navigate = useNavigate(); // For navigation after successful set
+    const { token } = useParams();
+    const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -17,37 +17,34 @@ const SetPassword = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Check if both password fields are filled
         if (!password || !confirmPassword) {
             setError('Please fill out both password fields.');
             return;
         }
 
-        // Check if the passwords match
         if (password !== confirmPassword) {
             setError('Passwords do not match.');
             return;
         }
 
-        // Check if password is at least 8 characters long
         if (password.length < 8) {
             setError('Password must be at least 8 characters long.');
             return;
         }
 
-        setError(''); // Clear previous error messages
+        setError('');
 
         try {
             const response = await api.post('/api/Auth/set-password', {
                 token,
-                NewPassword: password, // Send the new password in the request
+                NewPassword: password,
             });
 
             if (response.data.success) {
                 setSuccessMessage('Password set successfully!');
                 setPassword('');
                 setConfirmPassword('');
-                setTimeout(() => navigate('/successfullysetpassword')); // Redirect to success page
+                setTimeout(() => navigate('/successfullysetpassword'), 2000);
             } else {
                 setError(response.data.message || 'There was an error setting the password.');
             }
@@ -57,43 +54,44 @@ const SetPassword = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-[#383838]">
-            <div className="w-[497px] bg-[#383838] p-8 rounded-lg">
+        <div className="flex justify-center items-center min-h-screen bg-[#F0EAD6]">
+            <div className="w-[497px] bg-[#F0EAD6] p-8 rounded-lg">
                 <div className="text-center mb-6">
-                    <FiLock className="w-[213px] h-[213px] text-white mx-auto" />
+                    <FiLock className="w-[213px] h-[213px] text-[#355E3B] mx-auto" />
                 </div>
 
                 <div className="text-center mb-6">
-                    <h2 className="text-white text-4xl font-bold">Set a New Password</h2> {/* Updated header text */}
+                    <h2 className="text-[#355E3B] text-4xl font-bold">Set a New Password</h2>
                 </div>
 
                 <div className="text-center mb-6">
-                    <p className="text-white text-lg">
+                    <p className="text-gray-700 text-lg">
                         Enter your new password below
                     </p>
                 </div>
 
                 <Message text={error} type="error" />
                 <Message text={successMessage} type="success" />
+
                 <form onSubmit={handleSubmit} className="text-left">
                     <div className="mb-4">
-                        <label htmlFor="password" className="text-white text-lg">New Password</label>
-                        <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
-                            <FiLock className="text-gray-400 ml-2" />
+                        <label htmlFor="password" className="text-[#355E3B] text-lg">New Password</label>
+                        <div className="relative flex items-center border border-gray-300 rounded-xl bg-white shadow-sm">
+                            <FiLock className="text-gray-400 ml-4" />
                             <input
                                 type={passwordVisible ? 'text' : 'password'}
                                 id="password"
                                 name="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
+                                className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
                                 placeholder="Enter your new password"
                                 required
-                                style={{ fontSize: '20px' }}
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 type="button"
-                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-300"
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"
                                 onClick={() => setPasswordVisible(!passwordVisible)}
                             >
                                 {passwordVisible ? <FiEye className="w-6 h-6" /> : <FiEyeOff className="w-6 h-6" />}
@@ -102,23 +100,23 @@ const SetPassword = () => {
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="confirmPassword" className="text-white text-lg">Confirm Password</label>
-                        <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
-                            <FiLock className="text-gray-400 ml-2" />
+                        <label htmlFor="confirmPassword" className="text-[#355E3B] text-lg">Confirm Password</label>
+                        <div className="relative flex items-center border border-gray-300 rounded-xl bg-white shadow-sm">
+                            <FiLock className="text-gray-400 ml-4" />
                             <input
                                 type={confirmPasswordVisible ? 'text' : 'password'}
                                 id="confirmPassword"
                                 name="confirmPassword"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
+                                className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
                                 placeholder="Confirm your new password"
                                 required
-                                style={{ fontSize: '20px' }}
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 type="button"
-                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-300"
+                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"
                                 onClick={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
                             >
                                 {confirmPasswordVisible ? <FiEye className="w-6 h-6" /> : <FiEyeOff className="w-6 h-6" />}
@@ -128,20 +126,16 @@ const SetPassword = () => {
 
                     <button
                         type="submit"
-                        className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block mt-4"
-                        style={{
-                            backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
-                        }}
+                        className="w-full h-[66px] rounded-xl text-white font-bold bg-[#355E3B] hover:bg-[#2D4B33] transition-transform transform hover:-translate-y-1"
                     >
                         Set Password
                     </button>
                 </form>
 
-                {/* Centered Back to Login Section */}
                 <div className="flex justify-center items-center mt-6">
                     <button
                         onClick={() => navigate('/login')}
-                        className="text-white flex justify-center items-center text-lg"
+                        className="text-[#355E3B] flex justify-center items-center text-lg"
                     >
                         <FiArrowLeft className="mr-2" />
                         Back to Login

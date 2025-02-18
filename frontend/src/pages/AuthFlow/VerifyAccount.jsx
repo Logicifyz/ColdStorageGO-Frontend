@@ -1,62 +1,60 @@
 import React, { useState } from 'react';
-import { FiUser } from 'react-icons/fi'; // Person icon from react-icons
-import { useNavigate, useParams } from 'react-router-dom'; // For navigation and URL params
+import { FiUser } from 'react-icons/fi';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../api';
 import Message from '../../components/Message';
 
 const VerifyAccount = () => {
     const navigate = useNavigate();
-    const { token } = useParams(); // Get the token from the URL parameters
+    const { token } = useParams();
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
     // Handle the verification button click
     const handleVerifyClick = async () => {
-    try {
-        // Send a request to the backend to verify the account
-        const response = await api.post(
-            `/api/Auth/verify-email/${token}`,
-            {},
-            { withCredentials: true }
-        );
+        try {
+            // Send a request to the backend to verify the account
+            const response = await api.post(
+                `/api/Auth/verify-email/${token}`,
+                {},
+                { withCredentials: true }
+            );
 
-        // Handle success
-        setSuccessMessage(response.data.message); // Set success message
-        setError(''); // Clear any error message
-        navigate("/successfullyverifiedaccount");
-    } catch (error) {
-        // Handle error
-        console.error('Verification failed:', error);
+            // Handle success
+            setSuccessMessage(response.data.message);
+            setError('');
+            navigate("/successfullyverifiedaccount");
+        } catch (error) {
+            console.error('Verification failed:', error);
 
-        // Check if error has a response and use the error message from the response
-        if (error.response && error.response.data && error.response.data.message) {
-            setError(error.response.data.message); // Set the error message from the response
-        } else {
-            setError('Verification failed. Please try again.'); // Fallback error message
+            // Check if error has a response and use the error message from the response
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message);
+            } else {
+                setError('Verification failed. Please try again.');
+            }
+
+            setSuccessMessage('');
         }
-
-        setSuccessMessage(''); // Clear any success message
-    }
-};
-
+    };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="flex items-center bg-[#383838] p-8 rounded-lg">
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+            <div className="flex items-center bg-[#F0EAD6] p-8 rounded-lg">
                 <div className="w-[497px] ml-[50px]">
                     {/* Person Icon */}
                     <div className="text-center mb-6">
-                        <FiUser className="w-[100px] h-[100px] text-white mx-auto" />
+                        <FiUser className="w-[100px] h-[100px] text-[#355E3B] mx-auto" />
                     </div>
 
                     {/* Header */}
                     <div className="text-center mb-6">
-                        <h2 className="text-white text-4xl font-bold">Verify Account</h2>
+                        <h2 className="text-[#355E3B] text-4xl font-bold">Verify Account</h2>
                     </div>
 
                     {/* Instructions */}
                     <div className="text-center mb-6">
-                        <p className="text-white text-lg">
+                        <p className="text-gray-700 text-lg">
                             Click the button below to verify your account.
                         </p>
                     </div>
@@ -70,10 +68,8 @@ const VerifyAccount = () => {
                         <button
                             onClick={handleVerifyClick}
                             type="submit"
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block mt-4"
-                            style={{
-                                backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
-                            }}
+                            className="w-full h-[66px] rounded-xl text-white font-bold inline-block mt-4 transition 
+                                       bg-[#355E3B] hover:bg-[#2D4B33] focus:outline-none focus:ring-2 focus:ring-[#355E3B]"
                         >
                             Verify
                         </button>
@@ -83,9 +79,9 @@ const VerifyAccount = () => {
                     <div className="text-center">
                         <span
                             onClick={() => navigate('/login')}
-                            className="cursor-pointer text-white flex justify-center items-center"
+                            className="cursor-pointer text-[#355E3B] flex justify-center items-center"
                         >
-                            <span className="text-white mr-2">&#8592;</span> {/* Left Arrow Icon */}
+                            <span className="text-[#355E3B] mr-2">&#8592;</span>
                             Back to Login
                         </span>
                     </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api';
+import { ArrowLeft } from 'lucide-react';
 
 const CategoryPage = () => {
     const { category, articleId } = useParams(); // Get both category and ArticleId from URL params
@@ -46,49 +47,66 @@ const CategoryPage = () => {
     };
 
     return (
-        <div className="category-page min-h-screen bg-gradient-to-br from-[#F0F4F8] to-[#D9E2EC] p-8">
-            <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden flex">
-                {/* Sidebar - List of article titles */}
-                <div className="sidebar w-1/4 bg-gradient-to-b from-[#2C3E50] to-[#4A6FA5] p-6 text-white">
-                    <h2 className="text-2xl font-bold mb-6 text-[#FFD700]">Articles</h2>
-                    <ul className="space-y-3">
-                        {articles.map((article) => (
-                            <li
-                                key={article.articleId}
-                                className={`p-3 rounded-lg cursor-pointer transition-all duration-300 ${selectedArticle?.articleId === article.articleId
-                                    ? 'bg-[#FFD700] text-[#2C3E50] shadow-lg'
-                                    : 'hover:bg-[#4A6FA5] hover:text-white hover:shadow-md'
-                                    }`}
-                                onClick={() => handleArticleSelect(article)} // Change selected article
-                            >
-                                <span className="font-medium">{article.title}</span>
-                            </li>
-                        ))}
-                    </ul>
+        <div className="category-page min-h-screen bg-[#F0EAD6] p-8 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto bg-white overflow-hidden flex flex-col">
+                {/* Back Button */}
+                <div className="pt-8 flex items-center  bg-[#F0EAD6] space-x-2 text-[#355E3B] hover:text-[#2D4B33] transition duration-200">
+                    <span
+                        className="cursor-pointer flex items-center space-x-2"
+                        onClick={() => navigate(-1)} // Handle navigation on click
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                        <span className="text-lg font-semibold">Back to help centre</span>
+                    </span>
                 </div>
 
-                {/* Article Content - Title and Content */}
-                <div className="article-content w-3/4 p-8 bg-white">
-                    {selectedArticle ? (
-                        <div className="space-y-6">
-                            <h1 className="text-4xl font-bold text-[#2C3E50] mb-6">
-                                {selectedArticle.title}
-                            </h1>
-                            {/* Render TinyMCE content */}
-                            <div
-                                className="prose max-w-none text-black" // Added text-black for black text color
-                                dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
-                            />
+                <div className="flex">
+                    {/* Sidebar - List of article titles */}
+                    <div className="sidebar w-1/4 bg-[#F0EAD6] p-6">
+                        <h2 className="text-2xl font-bold mb-6 text-[#355E3B]">Articles</h2>
+                        {articles.length === 0 ? (
+                            <p className="text-lg text-gray-500">No articles available for this category.</p> // Message when no articles are available
+                        ) : (
+                            <ul className="space-y-3">
+                                {articles.map((article) => (
+                                    <li
+                                        key={article.articleId}
+                                        className={`p-3 rounded-lg cursor-pointer transition-all duration-300 ${selectedArticle?.articleId === article.articleId
+                                            ? 'bg-[#355E3B] text-white shadow-lg'
+                                            : 'text-black hover:bg-[#D9D9D9] hover:text-[#2C3E50] hover:shadow-md'
+                                            }`}
+                                        onClick={() => handleArticleSelect(article)} // Change selected article
+                                    >
+                                        <span className="font-medium">{article.title}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
 
-                        </div>
-                    ) : (
-                        <div className="flex items-center justify-center h-full">
-                            <p className="text-xl text-gray-500">Select an article to read.</p>
-                        </div>
-                    )}
+                    {/* Article Content - Title and Content */}
+                    <div className="article-content w-3/4 p-8 bg-white">
+                        {selectedArticle ? (
+                            <div className="space-y-6">
+                                <h1 className="text-4xl font-bold text-[#355E3B] mb-6">
+                                    {selectedArticle.title}
+                                </h1>
+                                {/* Render TinyMCE content */}
+                                <div
+                                    className="prose max-w-none text-black" // Added text-black for black text color
+                                    dangerouslySetInnerHTML={{ __html: selectedArticle.content }}
+                                />
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-center h-full">
+                                    <p className="text-xl text-gray-500">No articles available for this category.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
+
     );
 };
 

@@ -101,7 +101,7 @@ const Chat = ({ userId, staffId, ticketId, isStaff }) => {
 
     return (
         <div className="flex flex-col w-full max-w-lg mx-auto border rounded-lg shadow-lg h-[80vh]">
-            <div className="p-2 text-center text-sm text-gray-500">{connectionStatus}</div>
+            <div className="p-2 text-center text-sm bg-white text-gray-500">{connectionStatus}</div>
 
             {staffId ? (
                 <>
@@ -122,7 +122,7 @@ const Chat = ({ userId, staffId, ticketId, isStaff }) => {
                             type="text"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="text-black flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Type your message..."
                         />
                         <button

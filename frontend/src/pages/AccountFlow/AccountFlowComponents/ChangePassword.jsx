@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
 import api from '../../../api';
+import { useNavigate } from 'react-router-dom'; // Import for navigation
 
 const ChangePassword = () => {
+    const navigate = useNavigate(); // For navigating to the login page
+
     const [formData, setFormData] = useState({
         CurrentPassword: '',
         NewPassword: '',
@@ -89,34 +92,41 @@ const ChangePassword = () => {
 
         try {
             const response = await api.post('/api/Auth/request-password-set'); // Replace with your actual API endpoint for resending the email
+            navigate(`/successfullysentsetpasswordemail`)
             setSuccessMessage('Set Password email sent successfully!');
         } catch (error) {
             console.error('Error resending email:', error.response?.data || error.message);
-            setErrorMessage('Failed to resend set password email.');
+            setErrorMessage(error.response?.data?.message || 'Failed to resend set password email.');
         } finally {
             setIsSending(false);
         }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="w-[497px] relative">
-                {/* Resend Password Set Email Button */}
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6] relative overflow-hidden">
+            {/* Background Circles */}
+            <div className="absolute inset-0">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl" />
+            </div>
+
+            <div className="w-[497px] relative z-10 bg-white bg-opacity-80 p-6 rounded-lg shadow-md">
+                {/* Resend Button */}
+                
+
+                <h2 className="text-[#355E3B] text-4xl font-bold mb-6">Change Password</h2>
                 <div className="mb-6">
                     <button
                         type="button"
                         onClick={handleResendPasswordEmail}
-                        className="w-full bg-blue-500 text-white py-2 px-4 rounded-full"
+                        className="w-full bg-[#355E3B] text-white py-2 px-4 rounded-xl"
                         disabled={isSending}
                     >
                         {isSending ? 'Sending...' : 'Resend Set Password Email'}
                     </button>
                 </div>
-
-                <h2 className="text-white text-4xl font-bold mb-6">Change Password</h2>
-
                 {successMessage && (
-                    <div className="mb-4 p-4 bg-green-500 text-white rounded-[10px]">
+                    <div className="mb-4 p-4 bg-[#2D4B33] text-white rounded-[10px]">
                         {successMessage}
                     </div>
                 )}
@@ -129,8 +139,8 @@ const ChangePassword = () => {
 
                 <form onSubmit={handleSubmit} className="text-left">
                     <div className="mb-4">
-                        <label htmlFor="CurrentPassword" className="text-white text-lg">Current Password</label>
-                        <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
+                        <label htmlFor="CurrentPassword" className="text-[#355E3B] text-lg">Current Password</label>
+                        <div className="relative flex items-center border border-gray-300 bg-white rounded-xl">
                             <FiLock className="text-gray-400 ml-2" />
                             <input
                                 type={passwordVisible.current ? "text" : "password"}
@@ -138,10 +148,10 @@ const ChangePassword = () => {
                                 name="CurrentPassword"
                                 value={formData.CurrentPassword}
                                 onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
-                                placeholder="Enter your current password"
+                                className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
+                                placeholder="Enter current password"
                                 required
-                                style={{ fontSize: '20px' }}
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 type="button"
@@ -154,8 +164,8 @@ const ChangePassword = () => {
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="NewPassword" className="text-white text-lg">New Password</label>
-                        <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
+                        <label htmlFor="NewPassword" className="text-[#355E3B] text-lg">New Password</label>
+                        <div className="relative flex items-center border border-gray-300 bg-white rounded-xl">
                             <FiLock className="text-gray-400 ml-2" />
                             <input
                                 type={passwordVisible.new ? "text" : "password"}
@@ -163,10 +173,10 @@ const ChangePassword = () => {
                                 name="NewPassword"
                                 value={formData.NewPassword}
                                 onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
-                                placeholder="Enter your new password"
+                                className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
+                                placeholder="Enter new password"
                                 required
-                                style={{ fontSize: '20px' }}
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 type="button"
@@ -179,8 +189,8 @@ const ChangePassword = () => {
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="ConfirmPassword" className="text-white text-lg">Confirm New Password</label>
-                        <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
+                        <label htmlFor="ConfirmPassword" className="text-[#355E3B] text-lg">Confirm New Password</label>
+                        <div className="relative flex items-center border border-gray-300 bg-white rounded-xl">
                             <FiLock className="text-gray-400 ml-2" />
                             <input
                                 type={passwordVisible.confirmNew ? "text" : "password"}
@@ -188,10 +198,10 @@ const ChangePassword = () => {
                                 name="ConfirmPassword"
                                 value={formData.ConfirmPassword}
                                 onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
-                                placeholder="Confirm your new password"
+                                className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
+                                placeholder="Confirm new password"
                                 required
-                                style={{ fontSize: '20px' }}
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 type="button"
@@ -205,16 +215,15 @@ const ChangePassword = () => {
 
                     <button
                         type="submit"
-                        className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4"
-                        style={{
-                            backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
-                        }}
+                        className="w-full h-[66px] p-2 rounded-xl bg-[#355E3B] text-white font-bold mt-4"
                     >
                         Save Changes
                     </button>
                 </form>
             </div>
         </div>
+
+
     );
 };
 

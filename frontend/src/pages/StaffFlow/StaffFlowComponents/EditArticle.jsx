@@ -77,6 +77,23 @@ const EditArticle = () => {
         }
     };
 
+
+    const handleDelete = async () => {
+        setLoading(true);
+        try {
+            const response = await api.delete(`/api/StaffArticle/articles/${articleId}`);
+            if (response.status === 200) {
+                // Redirect to the article list or a confirmation page after successful delete
+                navigate(`/staff/help-centre`);
+            }
+        } catch (err) {
+            setError("Failed to delete article. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     return (
         <div className="p-6 bg-white shadow-lg rounded-lg">
             <h1 className="text-3xl font-bold text-gray-800 mb-6">Edit Article</h1>
@@ -139,13 +156,21 @@ const EditArticle = () => {
                     </label>
                 </div>
 
-                <div>
+                <div className="flex space-x-4">
                     <button
                         type="submit"
                         className="bg-blue-500 text-white px-4 py-2 rounded"
                         disabled={loading}
                     >
                         {loading ? "Saving..." : "Update Article"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleDelete}
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                        disabled={loading}
+                    >
+                        {loading ? "Deleting..." : "Delete Article"}
                     </button>
                 </div>
             </form>

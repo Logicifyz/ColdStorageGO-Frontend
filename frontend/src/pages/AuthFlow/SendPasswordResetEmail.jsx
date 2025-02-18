@@ -10,6 +10,7 @@ const SendPasswordResetEmail = () => {
     const [localEmail, setLocalEmail] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false); // Loading state
     const { setEmail } = useEmail();
 
     const handleInputChange = (e) => {
@@ -31,6 +32,7 @@ const SendPasswordResetEmail = () => {
         }
 
         setError(''); // Reset error message
+        setLoading(true); // Set loading state to true
 
         try {
             const response = await api.post('api/Auth/request-password-reset', { email: localEmail });
@@ -39,10 +41,12 @@ const SendPasswordResetEmail = () => {
             if (response.data.success) {
                 setSuccessMessage('Password reset email sent successfully!');
                 setEmail(localEmail);
+                setLoading(false); // Reset loading state
                 navigate("/sentpasswordresetemailsuccess");
             } else {
                 // If backend returns a specific error message
                 setError(response.data.message || 'Error sending password reset email.');
+                setLoading(false); // Reset loading state
             }
         } catch (error) {
             // Check if the error contains a response with message
@@ -51,23 +55,24 @@ const SendPasswordResetEmail = () => {
             } else {
                 setError('There was an error with the request.');
             }
+            setLoading(false); // Reset loading state
         }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="flex items-center bg-[#383838] p-8 rounded-lg">
-                <div className="w-[497px] ml-[50px]">
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+            <div className="flex items-center p-8 rounded-lg bg-[#F0EAD6]">
+                <div className="w-[497px] ml-[50px] bg-[#F0EAD6]">
                     <div className="text-center mb-6">
-                        <FiKey className="w-[213px] h-[213px] text-white mx-auto" style={{ transform: 'scaleX(-1)' }} /> {/* Mirrored Key Icon */}
+                        <FiKey className="w-[213px] h-[213px] text-[#355E3B] mx-auto" style={{ transform: 'scaleX(-1)' }} /> {/* Mirrored Key Icon */}
                     </div>
 
                     <div className="text-center mb-6">
-                        <h2 className="text-white text-4xl font-bold">Forgot Password?</h2>
+                        <h2 className="text-[#355E3B] text-4xl font-bold">Forgot Password?</h2>
                     </div>
 
                     <div className="text-center mb-6">
-                        <p className="text-white text-lg">
+                        <p className="text-[#355E3B] text-lg">
                             Enter your registered email for verification
                         </p>
                     </div>
@@ -77,8 +82,8 @@ const SendPasswordResetEmail = () => {
 
                     <form onSubmit={handleSubmit} className="text-left">
                         <div className="mb-4">
-                            <label htmlFor="localEmail" className="text-white text-lg">Email</label>
-                            <div className="flex items-center border border-gray-300 rounded-[10px] bg-white">
+                            <label htmlFor="localEmail" className="text-[#355E3B] text-lg">Email</label>
+                            <div className="flex items-center border border-gray-300 rounded-xl bg-white">
                                 <FiMail className="text-gray-400 ml-2" />
                                 <input
                                     type="email"
@@ -86,7 +91,7 @@ const SendPasswordResetEmail = () => {
                                     name="email"
                                     value={localEmail}
                                     onChange={handleInputChange}
-                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
+                                    className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
                                     placeholder="Enter your email"
                                     required
                                     style={{ fontSize: '20px' }}
@@ -96,21 +101,19 @@ const SendPasswordResetEmail = () => {
 
                         <button
                             type="submit"
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block mt-4"
-                            style={{
-                                backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
-                            }}
+                            className="w-full h-[66px] p-2 rounded-xl text-white font-bold mt-4 bg-[#355E3B] hover:bg-[#2D4B33] transition"
+                            disabled={loading} // Disable button when loading
                         >
-                            Send Reset Email
+                            {loading ? 'Sending...' : 'Send Reset Email'}
                         </button>
                     </form>
 
                     <div className="text-center mt-4">
                         <span
                             onClick={() => navigate('/login')}
-                            className="cursor-pointer text-white flex justify-center items-center"
+                            className="cursor-pointer text-[#355E3B] flex justify-center items-center"
                         >
-                            <span className="text-white mr-2">&#8592;</span> {/* Left Arrow Icon */}
+                            <span className="text-[#355E3B] mr-2">&#8592;</span> {/* Left Arrow Icon */}
                             Back to Login
                         </span>
                     </div>

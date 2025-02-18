@@ -3,8 +3,6 @@ import { FiLock, FiEye, FiEyeOff, FiTrash2 } from 'react-icons/fi';
 import api from '../../../api';
 import { useNavigate } from 'react-router-dom';
 
-
-
 const DeleteAccount = () => {
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -46,14 +44,17 @@ const DeleteAccount = () => {
         }
     };
 
-
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="w-[497px]">
-                <h2 className="text-white text-4xl font-bold mb-6">Delete Account</h2>
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6] relative overflow-hidden">
+            <div className="absolute inset-0">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl z-0" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl z-0" />
+            </div>
+            <div className="w-[497px] bg-white p-6 rounded-lg shadow-sm z-10">
+                <h2 className="text-[#355E3B] text-4xl font-bold mb-6">Delete Account</h2>
 
                 {successMessage && (
-                    <div className="mb-4 p-4 bg-green-500 text-white rounded-[10px]">
+                    <div className="mb-4 p-4 bg-[#355E3B] text-white rounded-[10px]">
                         {successMessage}
                     </div>
                 )}
@@ -66,8 +67,8 @@ const DeleteAccount = () => {
 
                 <form onSubmit={handleSubmit} className="text-left">
                     <div className="mb-4">
-                        <label htmlFor="Password" className="text-white text-lg">Password</label>
-                        <div className="relative flex items-center border border-gray-300 rounded-[10px] bg-white">
+                        <label htmlFor="Password" className="text-[#355E3B] text-lg">Password</label>
+                        <div className="relative flex items-center border border-gray-300 bg-white rounded-xl">
                             <FiLock className="text-gray-400 ml-2" />
                             <input
                                 type={passwordVisible ? "text" : "password"}
@@ -75,10 +76,10 @@ const DeleteAccount = () => {
                                 name="Password"
                                 value={password}
                                 onChange={handleInputChange}
-                                className="w-full h-[66px] p-2 pl-8 text-black rounded-[10px]"
+                                className="w-full h-[66px] p-2 pl-8 text-black rounded-xl"
                                 placeholder="Enter your password to confirm"
                                 required
-                                style={{ fontSize: '20px' }}
+                                style={{ fontSize: '16px' }}
                             />
                             <button
                                 type="button"
@@ -90,12 +91,10 @@ const DeleteAccount = () => {
                         </div>
                     </div>
 
+
                     <button
                         type="submit"
-                        className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold mt-4 flex items-center justify-center"
-                        style={{
-                            backgroundImage: 'linear-gradient(to right, #B94444, #7A2F2F)',
-                        }}
+                        className="w-full h-[66px] p-2 rounded-xl text-white font-bold mt-4 bg-[#355E3B] hover:bg-[#2D4B33] flex items-center justify-center"
                     >
                         <FiTrash2 className="mr-2" /> Delete Account
                     </button>

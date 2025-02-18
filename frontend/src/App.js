@@ -33,6 +33,7 @@ import DisplayFullAIRecipe from "./pages/DisplayFullAIRecipe";
 import EditDiscussion from "./pages/EditDiscussion";
 import EditRecipe from "./pages/EditRecipe";
 import Home from "./pages/Home";
+import NotFound from "./pages/Error";
 import PleaseLogin from "./pages/PleaseLogin"
 
 // Authentication Pages
@@ -114,8 +115,7 @@ const App = () => {
                         <Route path="/please-login" element={<PleaseLogin />} />
                         <Route path="/" element={<Home />} />
                         <Route path="/gallery" element={<Gallery />} />
-                        <Route path="/rewards" element={<Rewards />} />
-                        <Route path="/redemptions" element={<Redemption />} />
+                        <Route path="/rewards" element={<Rewards />} />                       
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/checkout" element={<OrderCheckout />} />
                         <Route path="/ordersuccess" element={<OrderSuccess />} />
@@ -134,9 +134,9 @@ const App = () => {
                         <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
                         <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
                         <Route path="/subscription-management" element={<SubscriptionManagement />} />
-
                         <Route path="/help-centre" element={<HelpCentre />} />
                         <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
+                        <Route path="*" element={<NotFound />} />
 
                         <Route
                             path="/register"
@@ -211,6 +211,7 @@ const App = () => {
                         <Route path="subscription-management" element={<StaffSubscriptionManagement />} />
                         <Route path="account-management" element={<AccountManagement />} />
                         <Route path="account-management/:userID" element={<AccountDetails />} />
+                        <Route path="*" element={<NotFound />} />
                     </Route>
 
                     {/* Standalone Staff Login */}
