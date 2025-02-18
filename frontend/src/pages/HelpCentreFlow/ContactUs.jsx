@@ -4,6 +4,8 @@ import { FaTruck, FaCreditCard, FaUndoAlt, FaUserCog, FaTools, FaComments, FaTro
 import api from '../../api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const categories = [
     { name: "Order and Delivery", icon: <FaTruck /> },
@@ -17,6 +19,7 @@ const categories = [
 ];
 
 const ContactUs = () => {
+    const navigate = useNavigate();
     const [subject, setSubject] = useState('');
     const [category, setCategory] = useState('');
     const [details, setDetails] = useState('');
@@ -93,35 +96,36 @@ const ContactUs = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] p-8">
+        <div className="min-h-screen bg-[#F0EAD6] p-8 overflow-x-hidden">
             {/* Background Elements */}
-            <div className="absolute top-0 left-0 w-[40%] h-[60%] bg-[#ff6b6b10] rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-[#ff8e5310] rounded-full blur-3xl" />
+            <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#355E3B40] rounded-full blur-3xl" />
+            <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#2D4B3340] rounded-full blur-3xl" />
 
             <div className="max-w-4xl mx-auto relative z-10">
                 {/* Header Section */}
                 <div className="mb-8">
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] bg-clip-text text-transparent">
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-[#355E3B] to-[#2D4B33] bg-clip-text text-transparent">
                         Contact Us
                     </h1>
-                    <p className="text-gray-400 text-lg mt-2">
+
+                    <p className="text-[#355E3B] text-xl mt-2">
                         Need help? Let us know your issue!
                     </p>
                 </div>
 
                 {/* Form Section */}
-                <form onSubmit={handleSubmit} className="bg-[#ffffff08] backdrop-blur-sm rounded-2xl p-8 border border-[#ffffff15]">
+                <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 border border-[#ffffff15] shadow-lg">
                     {/* Subject Field */}
                     <div className="mb-6">
-                        <label htmlFor="subject" className="text-gray-300 text-lg font-semibold mb-2 block">Subject</label>
-                        <div className="flex items-center bg-[#ffffff05] rounded-xl border border-[#ffffff15]">
-                            <FiFileText className="text-gray-400 ml-4" />
+                        <label htmlFor="subject" className="text-[#355E3B] text-lg font-semibold mb-2 block">Subject</label>
+                        <div className="flex items-center bg-white rounded-xl border border-[#355E3B]">
+                            <FiFileText className="text-[#355E3B] ml-4" />
                             <input
                                 type="text"
                                 id="subject"
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
-                                className="w-full h-14 px-4 bg-transparent text-gray-200 placeholder-gray-400 focus:outline-none"
+                                className="w-full h-14 px-4 bg-transparent text-[#355E3B] placeholder-gray-400 focus:outline-none"
                                 placeholder="Enter subject"
                                 required
                             />
@@ -130,26 +134,26 @@ const ContactUs = () => {
 
                     {/* Category Field */}
                     <div className="mb-6">
-                        <label htmlFor="category" className="text-gray-300 text-lg font-semibold mb-2 block">Category</label>
-                        <div className="relative flex items-center bg-[#ffffff05] rounded-xl border border-[#ffffff15]">
-                            <FiTag className="text-gray-400 ml-4" />
+                        <label htmlFor="category" className="text-[#355E3B] text-lg font-semibold mb-2 block">Category</label>
+                        <div className="relative flex items-center bg-white rounded-xl border border-[#355E3B]">
+                            <FiTag className="text-[#355E3B] ml-4" />
                             <select
                                 id="category"
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
-                                className="w-full h-14 px-4 bg-transparent text-gray-200 placeholder-gray-400 focus:outline-none appearance-none"
+                                className="w-full h-14 px-4 bg-transparent text-[#355E3B] placeholder-gray-400 focus:outline-none appearance-none"
                                 required
                             >
                                 <option value="">Select a category</option>
                                 {categories.map((cat, index) => (
-                                    <option key={index} value={cat.name} className="flex items-center gap-2 bg-[#1a1a1a]">
+                                    <option key={index} value={cat.name} className="flex items-center gap-2 text-[#355E3B]">
                                         {cat.icon} {cat.name}
                                     </option>
                                 ))}
                             </select>
                             <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
                                 <svg
-                                    className="w-5 h-5 text-gray-400"
+                                    className="w-5 h-5 text-[#355E3B]"
                                     fill="none"
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
@@ -167,15 +171,15 @@ const ContactUs = () => {
 
                     {/* Details Field */}
                     <div className="mb-6">
-                        <label htmlFor="details" className="text-gray-300 text-lg font-semibold mb-2 block">Details</label>
-                        <div className="flex items-center bg-[#ffffff05] rounded-xl border border-[#ffffff15]">
-                            <FiFileText className="text-gray-400 ml-4 self-start mt-4" />
+                        <label htmlFor="details" className="text-[#355E3B] text-lg font-semibold mb-2 block">Details</label>
+                        <div className="flex items-center bg-white rounded-xl border border-[#355E3B]">
+                            <FiFileText className="text-[#355E3B] ml-4 self-start mt-4" />
                             <textarea
                                 id="details"
                                 value={details}
                                 onChange={(e) => setDetails(e.target.value)}
                                 rows="4"
-                                className="w-full px-4 py-3 bg-transparent text-gray-200 placeholder-gray-400 focus:outline-none"
+                                className="w-full px-4 py-3 bg-transparent text-[#355E3B] placeholder-gray-400 focus:outline-none"
                                 placeholder="Enter your message"
                                 required
                             />
@@ -184,18 +188,18 @@ const ContactUs = () => {
 
                     {/* Attach Images Section */}
                     <div className="mb-6">
-                        <label htmlFor="images" className="text-gray-300 text-lg font-semibold mb-2 block">    Attach Images (max 5 files, optional)</label>
+                        <label htmlFor="images" className="text-[#355E3B] text-lg font-semibold mb-2 block">Attach Images (max 5 files, optional)</label>
                         <div className="flex flex-col gap-4">
                             {images.map((image, index) => (
                                 <div key={index} className="flex items-center gap-4">
                                     <label
                                         htmlFor={`file-${index}`}
-                                        className="w-full h-14 px-4 bg-[#ffffff05] rounded-xl border border-[#ffffff15] text-gray-200 flex items-center justify-between cursor-pointer hover:bg-[#ffffff10] transition-colors"
+                                        className="w-full h-14 px-4 bg-white rounded-xl border border-[#355E3B] text-[#355E3B] flex items-center justify-between cursor-pointer hover:bg-[#ffffff10] transition-colors"
                                     >
                                         <span className="truncate">
                                             {image ? image.name : "Choose file (JPEG, PNG only)"}
                                         </span>
-                                        <FiImage className="text-gray-400" />
+                                        <FiImage className="text-[#355E3B]" />
                                     </label>
 
                                     <input
@@ -219,38 +223,46 @@ const ContactUs = () => {
                                                 onClick={() => removeFile(index)}
                                                 className="text-red-500 hover:text-red-700"
                                             >
-                                                <FiX className="w-6 h-6" />
+                                                <FiX />
                                             </button>
                                         </div>
                                     )}
                                 </div>
                             ))}
-                            {images.length < maxFiles && (
+
+                            {/* Add New File Input */}
+                            <div className="flex items-center">
                                 <button
                                     type="button"
                                     onClick={addNewFileInput}
-                                    className="text-[#ff8e53] hover:text-[#ff6b6b] transition-colors"
+                                    className="text-[#355E3B] text-sm hover:underline"
+                                    disabled={images.length >= maxFiles}
                                 >
                                     + Add another file
                                 </button>
-                            )}
+                            </div>
                         </div>
                     </div>
 
                     {/* Submit Button */}
-                    <button
-                        type="submit"
-                        className="w-full h-14 bg-gradient-to-r from-[#ff6b6b] to-[#ff8e53] text-white font-semibold rounded-xl hover:from-[#ff8e53] hover:to-[#ff6b6b] transition-all"
-                        disabled={loading}
-                    >
-                        {loading ? 'Submitting...' : 'Submit Ticket'}
-                    </button>
+                    <div className="flex justify-center">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-gradient-to-r from-[#355E3B] to-[#2D4B33] text-white px-6 py-3 rounded-xl font-semibold hover:opacity-80 transition-opacity disabled:opacity-50"
+                        >
+                            {loading ? 'Submitting...' : 'Submit Ticket'}
+                        </button>
+                    </div>
+
                 </form>
             </div>
 
-            {/* Toast Container */}
-            <ToastContainer position="top-right" autoClose={5000} hideProgressBar closeButton />
+            {/* Toast Notifications */}
+            <ToastContainer />
         </div>
+
+
     );
 };
 

@@ -6,23 +6,23 @@ const SuccessfullySentSetPasswordEmail = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="flex items-center bg-[#383838] p-8 rounded-lg">
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+            <div className="flex items-center bg-[#F0EAD6] p-8 rounded-lg">
                 <div className="w-[497px] ml-[50px]">
                     {/* Full Circle with Green Tick */}
                     <div className="text-center mb-6">
-                        <div className="w-[213px] h-[213px] border-8 border-[#34A853] rounded-full flex justify-center items-center mx-auto">
-                            <FiCheck className="w-[100px] h-[100px] text-[#34A853]" />
+                        <div className="w-[213px] h-[213px] border-8 border-[#355E3B] rounded-full flex justify-center items-center mx-auto">
+                            <FiCheck className="w-[100px] h-[100px] text-[#355E3B]" />
                         </div>
                     </div>
 
                     {/* Success Message */}
                     <div className="text-center mb-6">
-                        <h2 className="text-white text-4xl font-bold">Check Your Email</h2>
+                        <h2 className="text-[#355E3B] text-5xl font-bold">Check Your Email</h2>
                     </div>
 
                     <div className="text-center mb-6">
-                        <p className="text-white text-lg">
+                        <p className="text-gray-700 text-lg">
                             We have sent an email to set your password. Please check your inbox.
                         </p>
                     </div>
@@ -32,10 +32,7 @@ const SuccessfullySentSetPasswordEmail = () => {
                         <button
                             onClick={() => navigate('/login')}
                             type="submit"
-                            className="w-full h-[66px] p-2 rounded-[30px] text-[#D1DFDF] font-bold inline-block mt-4"
-                            style={{
-                                backgroundImage: 'linear-gradient(to right, #4D5C60, #2B2E4A)',
-                            }}
+                            className="w-full h-[66px] p-2 rounded-full text-white font-bold bg-[#355E3B] hover:bg-[#2D4B33] transition"
                         >
                             Continue to Login
                         </button>
@@ -45,9 +42,9 @@ const SuccessfullySentSetPasswordEmail = () => {
                     <div className="text-center">
                         <span
                             onClick={() => navigate('/login')}
-                            className="cursor-pointer text-white flex justify-center items-center"
+                            className="cursor-pointer text-gray-500 flex justify-center items-center"
                         >
-                            <span className="text-white mr-2">&#8592;</span> {/* Left Arrow Icon */}
+                            <span className="mr-2">&#8592;</span> {/* Left Arrow Icon */}
                             Back to Login
                         </span>
                     </div>
@@ -58,3 +55,4 @@ const SuccessfullySentSetPasswordEmail = () => {
 };
 
 export default SuccessfullySentSetPasswordEmail;
+ 

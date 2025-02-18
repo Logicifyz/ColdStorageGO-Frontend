@@ -42,9 +42,8 @@ const MyTickets = () => {
         }
     };
 
-    // Handle the status filter change
-    const handleStatusChange = (event) => {
-        const status = event.target.value;
+    // Handle the status filter chip click
+    const handleChipClick = (status) => {
         setSelectedStatus(status);
 
         // Filter tickets based on the selected status
@@ -65,67 +64,90 @@ const MyTickets = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h2 className="text-2xl font-bold text-center">My Tickets</h2>
+        <div className="container mx-auto p-6 bg-[#F0EAD6] min-h-screen relative">
 
-            {/* Filter bar */}
-            <div className="mt-4 mb-6">
-                <label htmlFor="statusFilter" className="mr-2 text-white">Filter by Status:</label>
-                <select
-                    id="statusFilter"
-                    value={selectedStatus}
-                    onChange={handleStatusChange}
-                    className="px-4 py-2 border rounded-md text-black"
-                >
-                    <option value="All" className="text-black">All</option>
-                    <option value="Open" className="text-black">Open</option> {/* Unassigned */}
-                    <option value="In Progress" className="text-black">In Progress</option> {/* In Progress */}
-                    <option value="Resolved" className="text-black">Resolved</option> {/* Resolved */}
-                </select>
+            {/* Background Circles */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl z-0" />
+                <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-[#E2F2E6] rounded-full blur-3xl z-0" />
             </div>
 
+            <h2 className="text-5xl font-bold text-center text-[#355E3B] mb-8 z-10 relative">My Tickets</h2>
 
-            {loading && <div>Loading...</div>}
-            {error && <div className="text-red-500">{error}</div>}
-            {!loading && filteredTickets.length === 0 && <div>No tickets found.</div>}
+            {/* Filter bar with chips */}
+            <div className="flex justify-center gap-4 mb-8 z-10 relative">
+                {['All', 'Open', 'In Progress', 'Resolved'].map((status) => (
+                    <button
+                        key={status}
+                        onClick={() => handleChipClick(status)}
+                        className={`px-6 py-2 text-lg font-semibold rounded-full transition-all duration-200 
+                            ${selectedStatus === status
+                                ? 'bg-[#2D4B33] text-white border-2 border-[#2D4B33] hover:bg-[#233928]'  // Selected chip with high contrast
+                                : 'bg-white text-[#355E3B] border-2 border-[#355E3B] hover:bg-[#F0EAD6]' // Unselected chip with bold border
+                            }`}
+                    >
+                        {status}
+                    </button>
+                ))}
+            </div>
+
+            {/* Loading and Error States */}
+            {loading && (
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-[#355E3B] text-2xl">Loading...</div>
+                </div>
+            )}
+            {error && error !== "No tickets found for this user" && (
+                <div className="text-center text-red-500 text-xl">{error}</div>
+            )}
+            {!loading && filteredTickets.length === 0 && (
+                <div className="flex justify-center items-center h-64">
+                    <div className="text-[#355E3B] text-2xl">No tickets found</div>
+                </div>
+            )}
 
             {filteredTickets.length > 0 && (
-                <div className="space-y-4 mt-4">
-                    {filteredTickets.map((ticket) => (
-                        <div
-                            key={ticket.ticketId}
-                            className="bg-white p-4 rounded-lg shadow-md cursor-pointer"
-                            onClick={() => handleTicketClick(ticket.ticketId)} // Add click handler here
-                        >
-                            {/* Status Bar */}
-                            <div className="mt-2">
+                <div className="flex justify-center">
+                    <div className="w-full max-w-4xl">
+                        {filteredTickets.map((ticket) => (
+                            <div
+                                key={ticket.ticketId}
+                                className="bg-white p-6 rounded-lg shadow-lg cursor-pointer transition-transform transform hover:scale-105 relative mb-6 z-10"
+                                onClick={() => handleTicketClick(ticket.ticketId)}
+                            >
+                                {/* Status Badge */}
                                 <span
-                                    className={`px-3 py-1 text-sm font-semibold rounded-lg ${getTicketStatus(ticket.status) === 'Resolved'
-                                        ? 'bg-green-500 text-white'
-                                        : getTicketStatus(ticket.status) === 'In Progress'
-                                            ? 'bg-blue-500 text-white'
-                                            : 'bg-red-500 text-white'
+                                    className={`absolute top-4 right-4 px-3 py-1 text-sm font-semibold rounded-lg 
+                            ${getTicketStatus(ticket.status) === 'Resolved'
+                                            ? 'bg-green-500 text-white'
+                                            : getTicketStatus(ticket.status) === 'In Progress'
+                                                ? 'bg-blue-500 text-white'
+                                                : 'bg-red-500 text-white'
                                         }`}
                                 >
                                     {getTicketStatus(ticket.status)}
                                 </span>
-                            </div>
 
-                            <div className="mt-2 text-sm text-gray-500">
-                                <p><strong>Subject:</strong> {ticket.subject}</p>
-                                <p><strong>Details:</strong> {ticket.details}</p>
-                                <p><strong>Created At:</strong>
-                                    {ticket.createdAt ? new Date(ticket.createdAt.split('.')[0]).toLocaleString() : "N/A"}
+                                {/* Subject as a Header */}
+                                <h3 className="text-2xl font-bold text-[#355E3B] mb-4">
+                                    {ticket.subject}
+                                </h3>
+
+                                {/* Details */}
+                                <p className="text-gray-700 mb-4 line-clamp-3">
+                                    {ticket.details}
                                 </p>
 
-                                <p><strong>Resolved At:</strong>
-                                    {ticket.resolvedAt ? new Date(ticket.resolvedAt.split('.')[0]).toLocaleString() : "N/A"}
+                                {/* Created At */}
+                                <p className="text-sm text-gray-500">
+                                    Created: {ticket.createdAt ? new Date(ticket.createdAt.split('.')[0]).toLocaleString() : "N/A"}
                                 </p>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             )}
+
         </div>
     );
 };

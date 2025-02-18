@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import api from '../api';
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaBell } from "react-icons/fa";
 
 const Navigation = () => {
     const navigate = useNavigate();
@@ -12,6 +12,8 @@ const Navigation = () => {
     const [profilePic, setProfilePic] = useState(null); // State to store profile picture
     const [showCreatePostDropdown, setShowCreatePostDropdown] = useState(false);
     const [username, setUsername] = useState(''); // State to store username
+    const [unreadNotifications, setUnreadNotifications] = useState(0);  // State for unread notifications
+
 
     useEffect(() => {
         // Function to check session validity
@@ -32,9 +34,22 @@ const Navigation = () => {
                 setIsLoggedIn(false); // Set logged out state on error
             }
         };
+        const fetchUnreadNotifications = async () => {
+            try {
+                const response = await api.get("api/Notification/UnreadCount");
+                setUnreadNotifications(response.data.unreadCount); // Fetch unread notification count
+            } catch (error) {
+                console.error("Error fetching unread notifications:", error);
+            }
+        };
+
+        checkSession();
+        if (isLoggedIn) {
+            fetchUnreadNotifications(); // Fetch unread notifications only when the user is logged in
+        }
 
         checkSession(); // Call the function to check session validity when component mounts or location changes
-    }, [location]); // Dependency on location means it will re-run when the route changes
+    }, [location.pathname, isLoggedIn]);  // Now also depends on location.pathname
 
     const handleLoginClick = () => {
         navigate("/login");
@@ -47,7 +62,9 @@ const Navigation = () => {
     const toggleCreatePostDropdown = () => {
         setShowCreatePostDropdown(!showCreatePostDropdown);
     };
-
+    const handleNotificationsClick = () => {
+        navigate("/account-dashboard/notifications"); // Navigate to the notifications page
+    };
     const getInitials = (name) => {
         if (!name) return ''; // Return empty string if no name
         const nameParts = name.split(' ');
@@ -101,7 +118,16 @@ const Navigation = () => {
                     <div className="relative">
                         <AiOutlineShoppingCart className="w-6 h-6 text-black" />
                         <Link to="/cart" className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">!</Link>
-                    </div>
+                        </div>
+
+                        <div className="relative cursor-pointer" onClick={handleNotificationsClick}>
+                            <FaBell className="w-6 h-6 text-black" />
+                            {unreadNotifications > 0 && (
+                                <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    {unreadNotifications}
+                                </div>
+                            )}
+                        </div>
                 </div>
             </div>
         </nav>

@@ -2,13 +2,11 @@ import React from 'react';
 import { FiMail } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { useEmail } from '../../context/EmailContext';
-import api from '../../api'
-
-
+import api from '../../api';
 
 const SuccessfullySentVerificationEmail = () => {
     const navigate = useNavigate();
-    const { email } = useEmail();  // Retrieve the email from the context
+    const { email } = useEmail();  // Retrieve the email from context
 
     const handleResendEmail = async () => {
         try {
@@ -20,30 +18,31 @@ const SuccessfullySentVerificationEmail = () => {
             // Optionally, show an error message to the user
         }
     };
+
     return (
-        <div className="flex justify-center items-center h-screen bg-[#383838]">
-            <div className="flex items-center bg-[#383838] p-8 rounded-lg">
+        <div className="flex justify-center items-center h-screen bg-[#F0EAD6]">
+            <div className="flex items-center bg-[#F0EAD6] p-8 rounded-lg">
                 <div className="w-[497px] ml-[50px]">
                     <div className="text-center mb-6">
-                        <FiMail className="w-[213px] h-[213px] text-white mx-auto" />
+                        <FiMail className="w-[213px] h-[213px] text-[#355E3B] mx-auto" />
                     </div>
 
                     <div className="text-center mb-6">
-                        <h2 className="text-white text-4xl font-bold">Check your email</h2>
+                        <h2 className="text-[#355E3B] text-5xl font-bold">Check your email</h2>
                     </div>
 
                     <div className="text-center mb-6">
-                        <p className="text-white text-lg">
+                        <p className="text-gray-700 text-lg">
                             We have sent you a verification link to verify your account.
                         </p>
                     </div>
 
                     <div className="text-center mb-6">
-                        <p className="text-white text-lg">
+                        <p className="text-gray-700 text-lg">
                             Didn't receive the email?{' '}
                             <button
                                 onClick={handleResendEmail}
-                                className="text-[#B4C14A] hover:underline"
+                                className="text-[#355E3B] hover:text-[#2D4B33] hover:underline"
                             >
                                 Click here
                             </button>
@@ -53,9 +52,9 @@ const SuccessfullySentVerificationEmail = () => {
                     <div className="text-center">
                         <span
                             onClick={() => navigate('/login')}
-                            className="cursor-pointer text-white flex justify-center items-center"
+                            className="cursor-pointer text-[#355E3B] flex justify-center items-center"
                         >
-                            <span className="text-white mr-2">&#8592;</span> {/* Left Arrow Icon */}
+                            <span className="mr-2">&#8592;</span> {/* Left Arrow Icon */}
                             Back to Login
                         </span>
                     </div>
