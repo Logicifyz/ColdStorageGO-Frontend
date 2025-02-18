@@ -56,16 +56,12 @@ const CheffieAI = () => {
                 servings: formData.servings ? parseInt(formData.servings) : null,
             };
 
-            // ? Include userId if available
-            const userId = "d5d0bdcb-13e3-4399-91ef-bf1a0d92c90a"; // Replace with actual user retrieval logic
-            if (userId) {
-                requestBody.userId = userId;
-            }
 
             // ? Submit request to backend
             const aiResponse = await fetch("http://localhost:5135/api/AIRecommendations/Recommend", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include", // ? Ensures session authentication
                 body: JSON.stringify(requestBody),
             });
 
@@ -83,26 +79,15 @@ const CheffieAI = () => {
                 return;
             }
 
-            if (aiResult.responseType === "Recipe") {
-                console.log("Fetching latest stored recipe...");
-
-                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe");
-
-                if (!recipeResponse.ok) {
-                    throw new Error("Failed to fetch latest recipe.");
-                }
-
-                const finalDish = await recipeResponse.json();
-                console.log("Fetched FinalDish from API:", finalDish);
-
-                setRecipeResponse(finalDish.recipe);  // ? Ensure correct access of 'recipe' field
-            }
 
 
             if (aiResult.responseType === "Recipe") {
                 console.log("Fetching latest stored recipe...");
 
-                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe");
+                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe", {
+                    method: "GET",
+                    credentials: "include", // ? Ensures session authentication
+                });
 
                 if (!recipeResponse.ok) {
                     throw new Error("Failed to fetch latest recipe.");
