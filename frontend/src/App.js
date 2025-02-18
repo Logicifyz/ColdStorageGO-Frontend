@@ -91,7 +91,15 @@ const App = () => {
                     <Route element={<ProtectedLayout />}>
                         <Route path="/contact-us" element={<ContactUs />} />
                         <Route path="/account-dashboard/:ticketId" element={<TicketDetails />} />
-
+                        <Route path="/subscriptions" element={<SubscriptionForm />} />
+                        <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
+                        <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
+                        <Route path="/subscription-management" element={<SubscriptionManagement />} />
+                        <Route path="/rewards" element={<Rewards />} />
+                        <Route path="/redemptions" element={<Redemption />} />
+                        <Route path="/ordersuccess" element={<OrderSuccess />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/checkout" element={<OrderCheckout />} />
                         {/* Account Dashboard Individual Tab Routes */}
                         <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
                             <Route path="profile" element={<MyProfile />} />
@@ -115,10 +123,6 @@ const App = () => {
                         <Route path="/please-login" element={<PleaseLogin />} />
                         <Route path="/" element={<Home />} />
                         <Route path="/gallery" element={<Gallery />} />
-                        <Route path="/rewards" element={<Rewards />} />                       
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/checkout" element={<OrderCheckout />} />
-                        <Route path="/ordersuccess" element={<OrderSuccess />} />
                         <Route path="/forum" element={<Forum />} />
                         <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
                         <Route path="/create-recipe" element={<CreateRecipe />} /> 
@@ -130,10 +134,6 @@ const App = () => {
                         <Route path="/ai-recipe/:id" element={<DisplayFullAIRecipe />} />
                         <Route path="/listing/:id" element={<Listing />} />
                         <Route path="/profile/:username" element={<Profile />} />
-                        <Route path="/subscriptions" element={<SubscriptionForm />} />
-                        <Route path="/subscription-choices" element={<SubscriptionChoicePage />} />
-                        <Route path="/subscription-success" element={<SubscriptionSuccessPage />} />
-                        <Route path="/subscription-management" element={<SubscriptionManagement />} />
                         <Route path="/help-centre" element={<HelpCentre />} />
                         <Route path="/help-centre/:category/:articleId?" element={<CategoryPage />} />
                         <Route path="*" element={<NotFound />} />

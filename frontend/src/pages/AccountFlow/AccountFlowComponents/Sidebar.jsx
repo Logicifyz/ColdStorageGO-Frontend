@@ -56,6 +56,12 @@ const Sidebar = () => {
                                 Change Password
                             </NavLink>
                             <NavLink
+                                to="/account-dashboard/address"
+                                className="block px-4 py-2 hover:bg-gray-200"
+                            >
+                                Address
+                            </NavLink>
+                            <NavLink
                                 to="/account-dashboard/delete-account"
                                 className="block px-4 py-2 hover:bg-gray-200"
                             >
