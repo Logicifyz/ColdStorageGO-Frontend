@@ -9,6 +9,7 @@ const SubscriptionRecommendation = ({ userId }) => {
         const fetchRecommendation = async () => {
             try {
                 const response = await api.get(`/api/subscriptions/recommendation/${userId}`);
+                console.log('Recommendation Response:', response.data); // Keep this for debugging
                 setRecommendation(response.data);
             } catch (error) {
                 console.error('Error fetching recommendation:', error);
@@ -21,16 +22,19 @@ const SubscriptionRecommendation = ({ userId }) => {
         fetchRecommendation();
     }, [userId]);
 
-    if (loading) return <p className="text-gray-400 text-center">Loading recommendations...</p>;
-    if (!recommendation || !recommendation.recommendedPlan) return null;
+    if (loading) return <p className="text-gray-600 text-center animate-pulse">Loading recommendations...</p>;
+    if (!recommendation || !recommendation.recommendedChoice) return null;
 
     return (
-        <div className="bg-gray-700 p-6 rounded-lg shadow-md mt-4">
-            <h3 className="text-lg font-semibold mb-2">Smart Recommendation</h3>
-            <p className="text-gray-300">
-                <strong>Recommended Plans:</strong> {recommendation.recommendedPlan}
-            </p>
-            <p className="text-gray-400">{recommendation.reason}</p>
+        <div className="bg-white p-6 rounded-xl shadow-md border border-green-300 mt-6">
+            <h3 className="text-xl font-semibold text-green-700 mb-4">Smart Recommendation</h3>
+            <div className="space-y-2">
+                <p className="text-gray-700">
+                    <strong>Recommended Plan:</strong>{" "}
+                    <span className="text-green-600 font-medium">{recommendation.recommendedChoice}</span>
+                </p>
+                <p className="text-gray-600 italic">"{recommendation.reason}"</p>
+            </div>
         </div>
     );
 };

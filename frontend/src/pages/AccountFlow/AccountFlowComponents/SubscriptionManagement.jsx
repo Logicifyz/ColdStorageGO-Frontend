@@ -1,15 +1,8 @@
 ﻿import React, { useState, useEffect } from 'react';
 import api from '../../../api';
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import { CheckCircleIcon, ExclamationCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import { motion, AnimatePresence } from 'framer-motion';
 import SubscriptionRecommendation from './SubscriptionRecommendation';
-
-const BackgroundBlobs = () => (
-    <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-[#302b63] to-[#24243e] opacity-20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-[#4b379c] to-[#1a1a2e] opacity-20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-    </div>
-);
 
 const formatDate = (dateString) => {
     if (!dateString) return "Date not available";
@@ -30,29 +23,25 @@ const SubscriptionManagement = () => {
     const [freezeDates, setFreezeDates] = useState({ startDate: "", endDate: "" });
     const [scheduledFreezes, setScheduledFreezes] = useState([]);
     const [userId, setUserId] = useState(null);
-    const [freezeMessage, setFreezeMessage] = useState({ type: "", text: "" }); // type: "error" or "success", text: message
+    const [freezeMessage, setFreezeMessage] = useState({ type: "", text: "" });
     const [canceledFreezes, setCanceledFreezes] = useState(new Set());
 
     useEffect(() => {
         const fetchSubscription = async () => {
             try {
                 const sessionResponse = await api.get('/api/account/profile', { withCredentials: true });
-                const userId = sessionResponse.data.userId;
-                setUserId(userId);
-                const response = await api.get(`/api/subscriptions/user?userId=${userId}`);
+                setUserId(sessionResponse.data.userId);
+
+                const response = await api.get(`/api/subscriptions/user?userId=${sessionResponse.data.userId}`);
                 if (!response.data || response.data.isCanceled) {
                     setSubscription(null);
                     return;
                 }
-                const activeSubscription = response.data.status === "Active" ? response.data : null;
 
-                if (!activeSubscription) {
-                    setSubscription(null);
-                    return;
-                }
                 setSubscription(response.data);
                 const freezeResponse = await api.get(`/api/subscriptions/scheduled-freezes/${response.data.subscriptionId}`, { withCredentials: true });
-                setScheduledFreezes(freezeResponse.data);  // ✅ Ensure FreezeId is received and stored
+                setScheduledFreezes(freezeResponse.data);
+
                 const storedCanceledFreezes = JSON.parse(localStorage.getItem('canceledFreezes')) || [];
                 setCanceledFreezes(new Set(storedCanceledFreezes));
             } catch (error) {
@@ -82,7 +71,7 @@ const SubscriptionManagement = () => {
             return false;
         }
 
-        setFreezeMessage({ type: "", text: "" }); // Clear any previous messages
+        setFreezeMessage({ type: "", text: "" });
         return true;
     };
 
@@ -129,9 +118,8 @@ const SubscriptionManagement = () => {
                     { withCredentials: true }
                 );
 
-                // Fetch the updated list of scheduled freezes
                 const freezeResponse = await api.get(`/api/subscriptions/scheduled-freezes/${subscription.subscriptionId}`, { withCredentials: true });
-                setScheduledFreezes(freezeResponse.data)
+                setScheduledFreezes(freezeResponse.data);
                 setFreezeDates({ startDate: "", endDate: "" });
                 setFreezeMessage({ type: "success", text: `Freeze scheduled from ${freezeDates.startDate} to ${freezeDates.endDate}` });
             } else if (modal.action === 'cancelScheduledFreeze') {
@@ -145,10 +133,9 @@ const SubscriptionManagement = () => {
                     { withCredentials: true }
                 );
 
-                // Update the UI by removing the canceled freeze
                 setScheduledFreezes(prev => prev.filter(f => f.id !== modal.freezeId));
                 const updatedCanceledFreezes = new Set([...canceledFreezes, modal.freezeId]);
-                setCanceledFreezes(prev => new Set([...prev, modal.freezeId])); 
+                setCanceledFreezes(prev => new Set([...prev, modal.freezeId]));
                 localStorage.setItem('canceledFreezes', JSON.stringify([...updatedCanceledFreezes]));
                 setFreezeMessage({ type: "success", text: "Scheduled freeze canceled successfully." });
             }
@@ -163,129 +150,65 @@ const SubscriptionManagement = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0b0b1a] text-gray-100 relative overflow-hidden p-8">
-            <BackgroundBlobs />
-            <div className="relative z-10 max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#F5F5DC] text-[#2D4B33] relative flex justify-center items-center p-6">
+            <div className="w-full max-w-4xl p-8 rounded-3xl shadow-lg bg-white/90 backdrop-blur-lg border border-green-200">
                 {isLoading ? (
-                    <p className="text-lg animate-pulse">Loading...</p>
+                    <p className="text-lg text-center animate-pulse">Loading...</p>
                 ) : subscription ? (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-[#1a1a2e]/50 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-[#ffffff10]"
+                        className="space-y-6"
                     >
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-6">
-                            My Subscription
-                        </h1>
+                        {/* Subscription Header */}
+                        <div className="text-center">
+                            <h1 className="text-4xl font-bold text-green-700">My Subscription</h1>
+                            <p className="text-md text-gray-500 mt-1">Manage your active subscription below.</p>
+                        </div>
 
-                        {/* Subscription Details */}
-                        <div className="space-y-6">
+                        {/* Subscription Info Card */}
+                        <div className="bg-green-100 p-6 rounded-xl shadow-md border border-green-300">
                             <div className="flex justify-between items-center">
-                                <h2 className="text-2xl font-semibold">{subscription.subscriptionChoice} Subscription</h2>
-                                <p className="text-purple-400 text-2xl font-bold">${subscription.price}/month</p>
+                                <h2 className="text-2xl font-semibold">{subscription.subscriptionChoice} Plan</h2>
+                                <p className="text-green-800 text-xl font-bold">${subscription.price}/month</p>
                             </div>
 
-                            {/* Status Section */}
-                            <div className="flex justify-between items-center">
-                                <p className="text-lg flex items-center">
-                                    <strong>Status:</strong>
-                                    <span
-                                        className={`ml-2 px-3 py-1 rounded-full text-white text-sm ${subscription.isFrozen ? 'bg-blue-500' : 'bg-green-500'
-                                            }`}
-                                    >
-                                        {subscription.isFrozen ? 'Frozen' : 'Active'}
-                                    </span>
-                                </p>
+                            <p className="text-gray-600 mt-1">Subscription ID: {subscription.subscriptionId}</p>
+
+                            {/* Status */}
+                            <div className="flex items-center mt-3">
+                                <strong className="mr-2">Status:</strong>
                                 {subscription.isFrozen ? (
-                                    <ExclamationCircleIcon className="h-8 w-8 text-blue-400" />
+                                    <span className="bg-blue-500 text-white px-3 py-1 rounded-lg flex items-center">
+                                        <ExclamationCircleIcon className="w-5 h-5 mr-1" /> Frozen
+                                    </span>
                                 ) : (
-                                    <CheckCircleIcon className="h-8 w-8 text-green-400" />
+                                    <span className="bg-green-500 text-white px-3 py-1 rounded-lg flex items-center">
+                                        <CheckCircleIcon className="w-5 h-5 mr-1" /> Active
+                                    </span>
                                 )}
                             </div>
 
                             {/* Dates */}
-                            <p className="text-lg">
-                                <strong>Ending Date:</strong> {formatDate(subscription.endDate)}
-                            </p>
-                            {subscription.isFrozen && (
-                                <p className="text-lg">
-                                    <strong>Freeze Started:</strong> {formatDate(subscription.freezeStarted)}
-                                </p>
-                            )}
+                            <p className="mt-2"><strong>End Date:</strong> {formatDate(subscription.endDate)}</p>
+                        </div>
 
-                            {/* Auto-Renewal Switch */}
-                            <div className="flex items-center justify-between">
-                                <p className="text-lg font-semibold">Auto-Renewal</p>
-                                <label
-                                    style={{
-                                        fontSize: '17px',
-                                        position: 'relative',
-                                        display: 'inline-block',
-                                        width: '3.5em',
-                                        height: '2em',
-                                    }}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={subscription.autoRenewal}
-                                        onChange={() => openModal('autoRenew')}
-                                        style={{
-                                            opacity: 0,
-                                            width: 0,
-                                            height: 0,
-                                        }}
-                                    />
-                                    <span
-                                        style={{
-                                            position: 'absolute',
-                                            cursor: 'pointer',
-                                            top: 0,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0,
-                                            backgroundColor: subscription.autoRenewal ? '#007bff' : '#fff',
-                                            border: `1px solid ${subscription.autoRenewal ? '#007bff' : '#adb5bd'}`,
-                                            transition: '.4s',
-                                            borderRadius: '30px',
-                                        }}
-                                    >
-                                        <span
-                                            style={{
-                                                position: 'absolute',
-                                                content: '""',
-                                                height: '1.4em',
-                                                width: '1.4em',
-                                                borderRadius: '20px',
-                                                left: '0.27em',
-                                                bottom: '0.25em',
-                                                backgroundColor: subscription.autoRenewal ? '#fff' : '#adb5bd',
-                                                transition: '.4s',
-                                                transform: subscription.autoRenewal ? 'translateX(1.4em)' : 'translateX(0)',
-                                            }}
-                                        />
-                                    </span>
-                                </label>
-                            </div>
-
-                            {/* Freeze Scheduling Section */}
-                            <div className="space-y-4">
-                                <h3 className="text-xl font-semibold">Schedule a Freeze</h3>
-                                <div className="space-y-2">
-                                    <input
-                                        type="date"
-                                        className="w-full p-2 rounded-lg bg-[#1a1a2e] text-white border border-[#ffffff10] focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                        value={freezeDates.startDate}
-                                        onChange={(e) => setFreezeDates(prev => ({ ...prev, startDate: e.target.value }))}
-                                        min={new Date().toISOString().split('T')[0]}
-                                    />
-                                    <input
-                                        type="date"
-                                        className="w-full p-2 rounded-lg bg-[#1a1a2e] text-white border border-[#ffffff10] focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                        value={freezeDates.endDate}
-                                        onChange={(e) => setFreezeDates(prev => ({ ...prev, endDate: e.target.value }))}
-                                        min={freezeDates.startDate || new Date().toISOString().split('T')[0]}
-                                    />
-                                </div>
+                        {/* Freeze Scheduling */}
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-green-300">
+                            <h3 className="text-xl font-semibold text-green-700">Schedule a Freeze</h3>
+                            <div className="flex flex-col mt-3 space-y-2">
+                                <input
+                                    type="date"
+                                    className="p-2 rounded-lg border border-gray-300"
+                                    value={freezeDates.startDate}
+                                    onChange={(e) => setFreezeDates(prev => ({ ...prev, startDate: e.target.value }))}
+                                />
+                                <input
+                                    type="date"
+                                    className="p-2 rounded-lg border border-gray-300"
+                                    value={freezeDates.endDate}
+                                    onChange={(e) => setFreezeDates(prev => ({ ...prev, endDate: e.target.value }))}
+                                />
                                 {freezeMessage.text && (
                                     <p className={`text-sm ${freezeMessage.type === "error" ? "text-red-500" : "text-green-500"}`}>
                                         {freezeMessage.text}
@@ -293,12 +216,12 @@ const SubscriptionManagement = () => {
                                 )}
                                 <button
                                     onClick={handleScheduleFreeze}
-                                    className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                                    className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold"
                                 >
                                     Schedule Freeze
                                 </button>
                             </div>
-
+                        </div>
                             {/* Scheduled Freezes List */}
                             {scheduledFreezes.length > 0 && (
                                 <div className="space-y-4">
@@ -312,7 +235,7 @@ const SubscriptionManagement = () => {
                                             return (
                                                 <div
                                                     key={freeze.freezeId}
-                                                    className="flex justify-between items-center text-gray-300 border-b border-[#ffffff10] pb-2"
+                                                    className="flex justify-between items-center text-[#2D4B33] border-b border-[#2D4B33] pb-2"
                                                 >
                                                     <p>
                                                         <strong>{formatDate(freeze.startDate)}</strong> to <strong>{formatDate(freeze.endDate)}</strong>
@@ -321,31 +244,31 @@ const SubscriptionManagement = () => {
                                                         <button
                                                             onClick={() => openModal('cancelScheduledFreeze', freeze.freezeId)}
                                                             className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 transform hover:scale-110"
-                                                    >
+                                                        >
                                                             Cancel
                                                         </button>
                                                     )}
-                                                </div>  
+                                                </div>
                                             );
                                         })}
                                     </div>
                                 </div>
                             )}
+                        {/* Cancel Subscription */}
+                        <button
+                            onClick={() => openModal('cancel')}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold"
+                        >
+                            Cancel Subscription
+                        </button>
 
-                            {/* Cancel Subscription Button */}
-                            <button
-                                onClick={() => openModal('cancel')}
-                                className="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
-                            >
-                                Cancel Subscription
-                            </button>
-                        </div>
-
-                        {/* Subscription Recommendation */}
-                        {userId && <SubscriptionRecommendation userId={userId} />}
-                    </motion.div>
+                        {/* Recommendations */}
+                            {userId && (
+                                console.log('UserId:', userId), // Add this line
+                                <SubscriptionRecommendation userId={userId} />
+                            )}                    </motion.div>
                 ) : (
-                    <p className="text-lg text-gray-400">You do not have an active subscription.</p>
+                    <p className="text-lg text-center text-gray-600">You do not have an active subscription.</p>
                 )}
             </div>
 
@@ -358,21 +281,21 @@ const SubscriptionManagement = () => {
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
                     >
-                        <div className="bg-[#1a1a2e]/50 backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-[#ffffff10] text-center w-80">
-                            <h2 className="text-2xl font-bold mb-4">Confirm Action</h2>
-                            <p className="mb-6 text-gray-300">
+                        <div className="bg-white/90 backdrop-blur-lg p-6 rounded-xl shadow-lg border border-green-300 text-center w-80">
+                            <h2 className="text-2xl font-bold text-green-700 mb-4">Confirm Action</h2>
+                            <p className="mb-6 text-gray-600">
                                 Are you sure you want to {modal.action.replace(/([A-Z])/g, ' $1').toLowerCase()}?
                             </p>
                             <div className="flex justify-center space-x-4">
                                 <button
                                     onClick={closeModal}
-                                    className="bg-gray-500 hover:bg-gray-600 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
+                                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold"
                                 >
                                     No
                                 </button>
                                 <button
                                     onClick={executeAction}
-                                    className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-white transition-all duration-300 transform hover:scale-105"
+                                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold"
                                 >
                                     Yes
                                 </button>
