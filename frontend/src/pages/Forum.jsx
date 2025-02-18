@@ -93,25 +93,45 @@ const Forum = () => {
 
     
     return (
-    <div className="p-6 bg-gradient-to-br from-[#1a1a1a] to-[#1e1e2f] text-white min-h-screen">
-        <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-[#6bffa0] to-[#a86bff] bg-clip-text text-transparent">
-            Forum
-        </h1>
+        <div className="p-6 bg-[#f0f0e0] text-[#123524] min-h-screen">
+            {/* Hero Section */}
+            <div className="relative w-full bg-[#e0e0d0] overflow-hidden mb-12">
+                {/* Background Image with Fade-In Animation */}
+                <div className="w-full h-[400px] md:h-[500px] flex items-center justify-center">
+                    <img
+                        src="/forumpic.jpg"
+                        alt="Featured Recipe"
+                        className="w-full h-full object-cover opacity-0 animate-fade-in"
+                    />
+                </div>
 
-        {/* Search Bar */}
-        <div className="mb-8 max-w-2xl mx-auto">
-            <input
-                type="text"
-                placeholder="Search for recipes or discussions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full p-3 rounded-lg bg-[#2a2a2a] text-white border border-[#444] focus:outline-none focus:ring-2 focus:ring-[#6bffa0] focus:border-transparent"
-            />
-        </div>
+                {/* Overlay Content with Pop-In Animation */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center bg-black bg-opacity-40 p-6">
+                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 opacity-0 animate-pop-in animate-delay-500">
+                        Join the Conversation!
+                    </h1>
+                    <p className="text-lg md:text-xl text-white mb-6 opacity-0 animate-pop-in animate-delay-700">
+                        Explore trending discussions, share your thoughts, and connect with fellow food lovers.
+                    </p>
+                </div>
+            </div>
+
+
+            {/* Search Bar */}
+            <div className="mb-8 max-w-2xl mx-auto">
+                <input
+                    type="text"
+                    placeholder="Search for recipes or discussions..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full p-3 rounded-lg bg-[#e0e0d0] text-[#123524] border border-[#204037] focus:outline-none focus:ring-2 focus:ring-[#2a5246] focus:border-transparent"
+                />
+            </div>
+
             {/* Recipes Section */}
             <div className="mb-12">
-                <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#6bffa0] to-[#a86bff] bg-clip-text text-transparent">
-                    Trending Recipes
+                <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#204037] to-[#2a5246] bg-clip-text text-transparent">
+                    Recipes
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {recipes.length > 0 ? (
@@ -119,7 +139,7 @@ const Forum = () => {
                             return (
                                 <div
                                     key={recipe.recipeId}
-                                    className="bg-[#2a2a2a] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                                    className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
                                     onClick={(e) => {
                                         if (!e.target.closest(".no-navigation")) {
                                             navigate(`/forum/recipe/${recipe.RecipeId || recipe.recipeId}`);
@@ -149,15 +169,15 @@ const Forum = () => {
                                             />
                                         ) : (
                                             <div
-                                                className="w-10 h-10 rounded-full bg-gray-500 cursor-pointer"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        recipe.user?.username && navigate(`/profile/${recipe.user.username}`);
-                                                    }}
+                                                className="w-10 h-10 rounded-full bg-[#204037] cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    recipe.user?.username && navigate(`/profile/${recipe.user.username}`);
+                                                }}
                                             ></div>
                                         )}
                                         <span
-                                            className="text-white font-semibold cursor-pointer hover:underline"
+                                            className="text-[#123524] font-semibold cursor-pointer hover:underline"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 recipe.user?.username && navigate(`/profile/${recipe.user.username}`);
@@ -167,18 +187,19 @@ const Forum = () => {
                                         </span>
                                     </div>
 
-
                                     {/* Recipe Details */}
                                     <div className="p-4">
-                                        <p className="text-xl font-bold mb-2 text-white">{recipe.name}</p>
-                                        <p className="text-sm text-gray-400 mb-4">
-                                            {new Date(recipe.date || Date.now()).toLocaleDateString()}
-                                        </p>
-                                        <p className="text-sm text-gray-300 line-clamp-2">{recipe.description}</p>
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-xl font-bold text-[#123524]">{recipe.name}</p>
+                                            <p className="text-sm text-[#2a5246]">
+                                                {new Date(recipe.date || Date.now()).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                        <p className="text-sm text-[#204037] mt-2 line-clamp-2">{recipe.description}</p>
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="p-4 border-t border-[#444] flex items-center justify-between">
+                                    <div className="p-4 border-t border-[#204037] flex items-center justify-between">
                                         <VoteButton
                                             id={recipe.recipeId}
                                             upvotes={recipe.upvotes}
@@ -188,11 +209,11 @@ const Forum = () => {
                                             onVoteUpdate={(data) => handleVoteUpdate(data, recipe.recipeId)}
                                             className="no-navigation"
                                         />
-                                        <div className="flex space-x-4 text-gray-400">
-                                            <button className="hover:text-[#6bffa0]">
+                                        <div className="flex space-x-4 text-[#204037]">
+                                            <button className="hover:text-[#2a5246]">
                                                 <FaCommentAlt />
                                             </button>
-                                            <button className="hover:text-[#a86bff]">
+                                            <button className="hover:text-[#2a5246]">
                                                 <FaBookmark />
                                             </button>
                                         </div>
@@ -201,26 +222,26 @@ const Forum = () => {
                             );
                         })
                     ) : (
-                        <p className="text-gray-400">No recipes found.</p>
+                        <p className="text-[#204037]">No recipes found.</p>
                     )}
                 </div>
             </div>
 
 
             {/* Discussions Section */}
-            <div>
-                <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#6bffa0] to-[#a86bff] bg-clip-text text-transparent">
-                    Latest Discussions
+            <div className="mb-12">
+                <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-[#204037] to-[#2a5246] bg-clip-text text-transparent">
+                    Discussions
                 </h2>
-                <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filterResults(discussions).map((discussion) => {
                         return (
                             <div
                                 key={discussion.discussionId}
-                                className="bg-[#2a2a2a] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
+                                className="bg-[#e0e0d0] overflow-hidden shadow-lg hover:shadow-xl transition-shadow cursor-pointer"
                                 onClick={() => navigate(`/forum/discussion/${discussion.discussionId}`)}
                             >
-                                {/* Discussion Image */}
+                                {/* Discussion Image (if available) */}
                                 {discussion.coverImages && discussion.coverImages.length > 0 && (
                                     <div className="w-full h-48 overflow-hidden">
                                         <img
@@ -232,7 +253,7 @@ const Forum = () => {
                                 )}
 
                                 {/* Profile Picture & Username */}
-                                <div className="flex items-center space-x-3">
+                                <div className="flex items-center space-x-3 p-4">
                                     {discussion.user?.profilePicture ? (
                                         <img
                                             src={`data:image/jpeg;base64,${discussion.user.profilePicture}`}
@@ -245,15 +266,15 @@ const Forum = () => {
                                         />
                                     ) : (
                                         <div
-                                            className="w-10 h-10 rounded-full bg-gray-500 cursor-pointer"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
-                                                }}
+                                            className="w-10 h-10 rounded-full bg-[#204037] cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
+                                            }}
                                         ></div>
                                     )}
                                     <span
-                                        className="text-white font-semibold cursor-pointer hover:underline"
+                                        className="text-[#123524] font-semibold cursor-pointer hover:underline"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             discussion.user?.username && navigate(`/profile/${discussion.user.username}`);
@@ -263,19 +284,22 @@ const Forum = () => {
                                     </span>
                                 </div>
 
-                                {/* Discussion Content */}
-                                <div className="p-6">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <p className="text-xl font-bold text-white">{discussion.title}</p>
-                                        <p className="text-sm text-gray-400">
+                                <div className="p-4">
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-xl font-bold text-[#123524]">{discussion.title}</p>
+                                        <p className="text-sm text-[#2a5246]">
                                             {new Date(discussion.date || Date.now()).toLocaleDateString()}
                                         </p>
                                     </div>
-                                    <p className="text-sm text-gray-300 line-clamp-3">{discussion.content}</p>
+                                    {/* Render Quill content properly */}
+                                    <div className="text-sm text-[#204037] mt-2 line-clamp-2"
+                                        dangerouslySetInnerHTML={{ __html: discussion.content }}
+                                    />
                                 </div>
 
+
                                 {/* Action Buttons */}
-                                <div className="p-4 border-t border-[#444] flex items-center justify-between">
+                                <div className="p-4 border-t border-[#204037] flex items-center justify-between">
                                     <VoteButton
                                         id={discussion.discussionId}
                                         upvotes={discussion.upvotes}
@@ -284,11 +308,11 @@ const Forum = () => {
                                         type="discussion"
                                         onVoteUpdate={(data) => handleVoteUpdate(data, discussion.discussionId)}
                                     />
-                                    <div className="flex space-x-4 text-gray-400">
-                                        <button className="hover:text-[#6bffa0]">
+                                    <div className="flex space-x-4 text-[#204037]">
+                                        <button className="hover:text-[#2a5246]">
                                             <FaCommentAlt />
                                         </button>
-                                        <button className="hover:text-[#a86bff]">
+                                        <button className="hover:text-[#2a5246]">
                                             <FaBookmark />
                                         </button>
                                     </div>
@@ -298,7 +322,7 @@ const Forum = () => {
                     })}
                 </div>
             </div>
-       </div>
+        </div>
     );
 };
 

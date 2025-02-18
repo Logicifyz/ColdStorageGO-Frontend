@@ -3,11 +3,15 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import api from '../api';
+import { FaPlus } from "react-icons/fa";
 
 const Navigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [profilePic, setProfilePic] = useState(null); // State to store profile picture
+    const [showCreatePostDropdown, setShowCreatePostDropdown] = useState(false);
+    const [username, setUsername] = useState(''); // State to store username
     const [profilePic, setProfilePic] = useState(null);
     const [forumDropdown, setForumDropdown] = useState(false);
     const [createPostDropdown, setCreatePostDropdown] = useState(false);
@@ -40,6 +44,10 @@ const Navigation = () => {
 
     const handleProfileClick = () => {
         navigate("/account-dashboard");
+    };
+
+    const toggleCreatePostDropdown = () => {
+        setShowCreatePostDropdown(!showCreatePostDropdown);
     };
 
     const getInitials = (name) => {
@@ -137,6 +145,49 @@ const Navigation = () => {
                 </div>
             </div>
         </nav>
+
+            {location.pathname.startsWith("/forum") && (
+                <div className="bg-[#f0f0e0] text-[#123524] py-4 px-6 flex justify-between items-center sticky top-[85px] w-full z-40">
+                    <div className="flex items-center space-x-2">
+                        <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-10 w-auto" />
+                        <h1 className="text-2xl font-semibold">Community</h1>
+                    </div>
+                    <div className="relative flex items-center space-x-4">
+                        {isLoggedIn ? (
+                            <div className="cursor-pointer" onClick={handleProfileClick}>
+                                {profilePic ? (
+                                    <img
+                                        src={profilePic}
+                                        alt="Profile"
+                                        className="w-8 h-8 rounded-full border-2 border-[#123524]"
+                                    />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full border-2 border-[#123524] bg-[#e0e0d0] flex items-center justify-center">
+                                        <span className="text-[#123524]">{getInitials(username)}</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : null}
+                        <div className="relative">
+                            <button
+                                className="bg-[#204037] px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-[#2a5246] text-[#f0f0e0]"
+                                onClick={toggleCreatePostDropdown}
+                            >
+                                <span>Share a recipe or ask something to everyone!</span>
+                                <FaPlus />
+                            </button>
+                            {showCreatePostDropdown && (
+                                <div className="absolute right-0 top-full mt-2 bg-[#204037] text-[#f0f0e0] rounded shadow-lg w-48">
+                                    <Link to="/create-recipe" className="block px-4 py-2 hover:bg-[#2a5246]">Create Recipe</Link>
+                                    <Link to="/create-discussion" className="block px-4 py-2 hover:bg-[#2a5246]">Create Discussion</Link>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+        </>
     );
 };
 

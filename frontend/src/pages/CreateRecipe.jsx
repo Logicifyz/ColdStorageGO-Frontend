@@ -358,7 +358,6 @@ const CreateRecipe = () => {
                     >
                         <option value="public">Public</option>
                         <option value="private">Private</option>
-                        <option value="friends-only">Friends Only</option>
                     </select>
                     <button
                         type="submit"

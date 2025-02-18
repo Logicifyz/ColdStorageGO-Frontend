@@ -10,9 +10,10 @@ const Notifications = () => {
     const [error, setError] = useState('');
     const [selectedType, setSelectedType] = useState('All');
     const [notificationTypes, setNotificationTypes] = useState([]);
+    const [pushNotificationStatus, setPushNotificationStatus] = useState(null);
 
+    // Fetch notifications and push notification status when the component mounts
     useEffect(() => {
-        // Fetch notifications when the component mounts
         const fetchNotifications = async () => {
             try {
                 const response = await api.get('/api/Notification', {
@@ -32,8 +33,39 @@ const Notifications = () => {
             }
         };
 
+        const fetchPushNotificationStatus = async () => {
+            try {
+                const response = await api.get('/api/Notification/PushNotificationStatus', {
+                    withCredentials: true,
+                });
+
+                setPushNotificationStatus(response.data.PushNotifications);
+            } catch (err) {
+                console.error('Error fetching push notification status:', err);
+            }
+        };
+
         fetchNotifications();
+        fetchPushNotificationStatus();
     }, []);
+    // Handle toggling push notifications
+    const togglePushNotifications = async () => {
+        try {
+            if (pushNotificationStatus) {
+                await api.put('/api/Notification/DisablePushNotifications', {}, {
+                    withCredentials: true,
+                });
+                setPushNotificationStatus(false);
+            } else {
+                await api.put('/api/Notification/EnablePushNotifications', {}, {
+                    withCredentials: true,
+                });
+                setPushNotificationStatus(true);
+            }
+        } catch (err) {
+            console.error('Error toggling push notifications:', err);
+        }
+    };
 
     // Handle the type filter change
     const handleTypeChange = (type) => {
@@ -49,7 +81,6 @@ const Notifications = () => {
 
     // Handle notification click to navigate to the related page
     const handleNotificationClick = (notification) => {
-        // Navigate to the NotificationDetails page and pass the notification ID as a URL param
         navigate(`/account-dashboard/notification-details/${notification.notificationId}`);
     };
 
@@ -86,7 +117,6 @@ const Notifications = () => {
                 withCredentials: true,
             });
 
-            // Remove read notifications from state
             const updatedNotifications = notifications.filter(n => !n.isRead);
             setNotifications(updatedNotifications);
             setFilteredNotifications(updatedNotifications);
@@ -98,6 +128,25 @@ const Notifications = () => {
     return (
         <div className="container mx-auto p-6">
             <h2 className="text-2xl font-bold text-center">Notifications</h2>
+
+            {/* Push Notification Status */}
+            {/* Push Notification Status */}
+            <div className="mt-4 text-center">
+                <span className="text-lg font-semibold">
+                    {pushNotificationStatus === null
+                        ? "Loading Push Notification Status..."
+                        : pushNotificationStatus
+                            ? "Push Notifications Enabled"
+                            : "Push Notifications Disabled"}
+                </span>
+                <button
+                    className={`ml-4 px-4 py-2 rounded-md text-white ${pushNotificationStatus ? 'bg-red-600' : 'bg-green-600'}`}
+                    onClick={togglePushNotifications}
+                >
+                    {pushNotificationStatus ? 'Disable' : 'Enable'}
+                </button>
+            </div>
+
 
             {/* Type Bar */}
             <div className="mt-4 mb-6 flex justify-center space-x-4">

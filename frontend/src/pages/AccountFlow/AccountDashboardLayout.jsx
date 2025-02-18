@@ -4,8 +4,10 @@ import Sidebar from "./AccountFlowComponents/Sidebar"; // Adjust the Sidebar imp
 
 const AccountDashboardLayout = () => {
     return (
-        <div className="flex min-h-screen font-inter bg-gray-100">
-            <Sidebar /> {/* This can be your sidebar component, adjust if needed */}
+        <div className="min-h-screen font-inter bg-gray-100 flex flex-col">
+            <header className="w-full">
+                <Sidebar /> {/* This will now be at the top */}
+            </header>
             <main className="flex-1 p-8 overflow-auto">
                 <Outlet />
             </main>

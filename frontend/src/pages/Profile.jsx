@@ -39,7 +39,7 @@ const Profile = () => {
                 // ✅ If viewing own profile, redirect to /account-dashboard
                 if (loggedInUsername === username) {
                     console.log("🔄 [DEBUG] Redirecting to: /account-dashboard");
-                    navigate("/account-dashboard");
+                    navigate("/account-dashboard/profile");
                 }
             } catch (err) {
                 console.error("❌ Error fetching profile:", err);

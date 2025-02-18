@@ -78,7 +78,7 @@ const Login = () => {
                 setSuccessMessage('Login successful!');
                 setError('');
                 setTimeout(() => {
-                    navigate('/account-dashboard');
+                    navigate('/');
                 }, 2000);
             } else {
                 setError(googleResponse.data.message || 'Google login failed');
@@ -190,7 +190,6 @@ const Login = () => {
                             clientid={clientid}
                             onSuccess={handleGoogleLogin}
                             onError={(error) => setError('Google login failed. Please try again.')}
-                            useOneTap
                         />
                     </div>
                 </div>

@@ -56,16 +56,12 @@ const CheffieAI = () => {
                 servings: formData.servings ? parseInt(formData.servings) : null,
             };
 
-            // ? Include userId if available
-            const userId = "d5d0bdcb-13e3-4399-91ef-bf1a0d92c90a"; // Replace with actual user retrieval logic
-            if (userId) {
-                requestBody.userId = userId;
-            }
 
             // ? Submit request to backend
             const aiResponse = await fetch("http://localhost:5135/api/AIRecommendations/Recommend", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include", // ? Ensures session authentication
                 body: JSON.stringify(requestBody),
             });
 
@@ -83,10 +79,15 @@ const CheffieAI = () => {
                 return;
             }
 
+
+
             if (aiResult.responseType === "Recipe") {
                 console.log("Fetching latest stored recipe...");
 
-                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe");
+                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe", {
+                    method: "GET",
+                    credentials: "include", // ? Ensures session authentication
+                });
 
                 if (!recipeResponse.ok) {
                     throw new Error("Failed to fetch latest recipe.");
@@ -95,23 +96,11 @@ const CheffieAI = () => {
                 const finalDish = await recipeResponse.json();
                 console.log("Fetched FinalDish from API:", finalDish);
 
-                setRecipeResponse(finalDish.recipe);  // ? Ensure correct access of 'recipe' field
-            }
-
-
-            if (aiResult.responseType === "Recipe") {
-                console.log("Fetching latest stored recipe...");
-
-                const recipeResponse = await fetch("http://localhost:5135/api/AIRecommendations/GetLatestRecipe");
-
-                if (!recipeResponse.ok) {
-                    throw new Error("Failed to fetch latest recipe.");
-                }
-
-                const finalDish = await recipeResponse.json();
-                console.log("Fetched FinalDish from API:", finalDish);
-
-                setRecipeResponse(finalDish);
+                setRecipeResponse({
+                    ...finalDish,
+                    dishId: finalDish.dishId, // ? Ensure ID is stored
+                    userPrompt: formData.freeText // ? Store User's Original Prompt
+                });
             }
             else if (aiResult.responseType === "FollowUp") {
                 setFollowUpPrompt(aiResult.message || "Can you refine your request?");
@@ -307,11 +296,18 @@ const CheffieAI = () => {
 
             {/* ? Display structured recipe */}
             {recipeResponse && (
+
                 <div className="flex justify-center items-center w-full mt-12">
                     <div className="w-full max-w-4xl bg-gray-800 text-gray-200 p-8 rounded-lg shadow-lg text-center">
                         <h2 className="text-3xl font-bold text-white">{recipeResponse.title || "Recipe Title Not Found"}</h2>
                         <p className="text-gray-400 mt-2">{recipeResponse.description || "No description available"}</p>
-
+                        {/* ? View Full Recipe Button */}
+                        <div className="mt-6">
+                            <a href={`/ai-recipe/${recipeResponse.dishId}`}
+                                className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                                View Full Recipe
+                            </a>
+                        </div>
                         {/* ? Use Your PNG Icons */}
                         <div className="flex justify-center gap-12 mt-6">
                             <div className="flex flex-col items-center">
