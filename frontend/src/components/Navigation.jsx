@@ -9,13 +9,9 @@ const Navigation = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [profilePic, setProfilePic] = useState(null); // State to store profile picture
+    const [profilePic, setProfilePic] = useState(null); 
     const [showCreatePostDropdown, setShowCreatePostDropdown] = useState(false);
-    const [username, setUsername] = useState(''); // State to store username
-    const [profilePic, setProfilePic] = useState(null);
-    const [forumDropdown, setForumDropdown] = useState(false);
-    const [createPostDropdown, setCreatePostDropdown] = useState(false);
-    const [username, setUsername] = useState('');
+    const [username, setUsername] = useState(''); 
 
     useEffect(() => {
         const checkSession = async () => {
@@ -58,6 +54,7 @@ const Navigation = () => {
     };
 
     return (
+        <>
         <nav className="bg-[#F0EAD6] text-[#2D4B33] sticky top-0 z-50 shadow-md">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
                 <div className="flex items-center space-x-2">
@@ -70,45 +67,7 @@ const Navigation = () => {
                     <Link to="/subscriptions" className="hover:text-[#355E3B]">Subscribe</Link>
                     <Link to="/rewards" className="hover:text-[#355E3B]">Rewards</Link>
                     <Link to="/help-centre" className="hover:text-[#355E3B]">Help Centre</Link>
-
-                    {/* Forum Dropdown */}
-                    <div
-                        className="relative"
-                        onMouseEnter={() => setForumDropdown(true)}
-                        onMouseLeave={() => {
-                            setForumDropdown(false);
-                            setCreatePostDropdown(false);
-                        }}
-                    >
-                        <button className="hover:text-[#355E3B]">Forum</button>
-                        {forumDropdown && (
-                            <div className="absolute bg-[#F0EAD6] text-[#2D4B33] rounded shadow-lg mt-2 w-40 border border-[#E2F2E6]">
-                                <Link to="/forum" className="block px-4 py-2 hover:bg-[#E2F2E6]">
-                                    Home
-                                </Link>
-                                <div
-                                    className="relative"
-                                    onMouseEnter={() => setCreatePostDropdown(true)}
-                                    onMouseLeave={() => setCreatePostDropdown(false)}
-                                >
-                                    <button className="block w-full text-left px-4 py-2 hover:bg-[#E2F2E6]">
-                                        Create New Post
-                                    </button>
-                                    {createPostDropdown && (
-                                        <div className="absolute left-full top-0 bg-[#F0EAD6] text-[#2D4B33] rounded shadow-lg mt-0 w-48 border border-[#E2F2E6]">
-                                            <Link to="/create-recipe" className="block px-4 py-2 hover:bg-[#E2F2E6]">
-                                                Create Recipe
-                                            </Link>
-                                            <Link to="/create-discussion" className="block px-4 py-2 hover:bg-[#E2F2E6]">
-                                                Create Discussion
-                                            </Link>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
+                    <Link to="/forum" className="hover:text-[#355E3B]">Forum</Link>
                     <Link to="/cheffie-ai" className="hover:text-[#355E3B]">Cheffie AI</Link>
                 </div>
 

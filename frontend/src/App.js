@@ -29,8 +29,11 @@ import DisplayForumRecipe from "./pages/DisplayForumRecipe";
 import CreateDiscussion from "./pages/CreateDiscussion";
 import DisplayForumDiscussion from "./pages/DisplayForumDiscussion";
 import CheffieAI from "./pages/CheffieAI";
+import DisplayFullAIRecipe from "./pages/DisplayFullAIRecipe";
+import EditDiscussion from "./pages/EditDiscussion";
+import EditRecipe from "./pages/EditRecipe";
 import Home from "./pages/Home";
-import PleaseLogin from "./pages/PleaseLogin";
+import PleaseLogin from "./pages/PleaseLogin"
 
 // Authentication Pages
 import Register from "./pages/AuthFlow/Register";
@@ -72,8 +75,10 @@ import SubscriptionHistory from "./pages/AccountFlow/AccountFlowComponents/Subsc
 import Notifications from "./pages/AccountFlow/AccountFlowComponents/Notifications";
 import AccountDashboardLayout from "./pages/AccountFlow/AccountDashboardLayout";
 import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
+import MyAddress from "./pages/AccountFlow/AccountFlowComponents/MyAddress";
 import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
 import MyForumActivity from "./pages/AccountFlow/AccountFlowComponents/MyForumActivity";
+import MySavedItems from "./pages/AccountFlow/AccountFlowComponents/MySavedItems";
 
 const App = () => {
     return (
@@ -89,6 +94,7 @@ const App = () => {
                         {/* Account Dashboard Individual Tab Routes */}
                         <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
                             <Route path="profile" element={<MyProfile />} />
+                            <Route path="address" element={<MyAddress />} />
                             <Route path="change-password" element={<ChangePassword />} />
                             <Route path="delete-account" element={<DeleteAccount />} />
                             <Route path="my-orders" element={<MyOrders />} />
@@ -99,6 +105,7 @@ const App = () => {
                             <Route path="notifications" element={<Notifications />} />
                             <Route path="notification-details/:notificationId" element={<NotificationDetails />} />
                             <Route path="my-forum-activity" element={<MyForumActivity />} />
+                            <Route path="my-saved-items" element={<MySavedItems />} />
                         </Route>
                     </Route>
 
@@ -114,10 +121,13 @@ const App = () => {
                         <Route path="/ordersuccess" element={<OrderSuccess />} />
                         <Route path="/forum" element={<Forum />} />
                         <Route path="/forum/recipe/:recipeId" element={<DisplayForumRecipe />} />
-                        <Route path="/create-recipe" element={<CreateRecipe />} />
-                        <Route path="/create-discussion" element={<CreateDiscussion />} />
+                        <Route path="/create-recipe" element={<CreateRecipe />} /> 
+                        <Route path="/create-discussion" element={<CreateDiscussion />} /> 
+                        <Route path="/forum/discussion/edit/:discussionId" element={<EditDiscussion />} />
+                        <Route path="/forum/recipe/edit/:id" element={<EditRecipe />} />
                         <Route path="/forum/discussion/:discussionId" element={<DisplayForumDiscussion />} />
                         <Route path="/cheffie-ai" element={<CheffieAI />} />
+                        <Route path="/ai-recipe/:id" element={<DisplayFullAIRecipe />} />
                         <Route path="/listing/:id" element={<Listing />} />
                         <Route path="/profile/:username" element={<Profile />} />
                         <Route path="/subscriptions" element={<SubscriptionForm />} />
