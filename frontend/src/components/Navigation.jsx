@@ -80,26 +80,26 @@ const Navigation = () => {
                                 <img
                                     src={profilePic} // Use the formatted Base64 string
                                     alt="Profile"
-                                    className="w-8 h-8 rounded-full border-2 border-white"
+                                    className="w-8 h-8 rounded-full border-2 border-black"
                                 />
                             ) : (
-                                    <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center">
-                                        <span className="text-gray-800">{getInitials(username)}</span> {/* Show initials if no profile picture */}
-                                    </div>
+                                <div className="w-8 h-8 rounded-full border-2 border-black bg-gray-200 flex items-center justify-center">
+                                    <span className="text-gray-800">{getInitials(username)}</span> {/* Show initials if no profile picture */}
+                                </div>
 
                             )}
                         </div>
                     ) : (
                         <button
                             onClick={handleLoginClick}
-                            className="border border-white px-4 py-2 rounded hover:bg-white hover:text-[#383838]"
+                            className="border border-black px-4 py-2 rounded hover:bg-black hover:text-white"
                         >
                             Login
                         </button>
                     )}
 
                     <div className="relative">
-                        <AiOutlineShoppingCart className="w-6 h-6" />
+                        <AiOutlineShoppingCart className="w-6 h-6 text-black" />
                         <Link to="/cart" className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">!</Link>
                     </div>
                 </div>

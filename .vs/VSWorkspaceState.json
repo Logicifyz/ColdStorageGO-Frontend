@@ -7,8 +7,8 @@
     "\\frontend\\src\\pages",
     "\\frontend\\src\\pages\\AccountFlow",
     "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents",
-    "\\frontend\\src\\pages\\StaffFlow\\StaffFlowComponents"
+    "\\frontend\\src\\pages\\AuthFlow"
   ],
-  "SelectedNode": "\\frontend\\src\\pages\\AccountFlow\\AccountFlowComponents\\NotificationDetails.jsx",
+  "SelectedNode": "\\frontend",
   "PreviewInSolutionExplorer": false
 }
