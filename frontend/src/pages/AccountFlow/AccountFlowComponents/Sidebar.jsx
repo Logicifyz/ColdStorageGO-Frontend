@@ -124,6 +124,18 @@
                                 >
                                     Notifications
                                 </NavLink>
+                                <NavLink
+                                    to="/account-dashboard/my-forum-activity"
+                                    className="block px-4 py-2 hover:bg-gray-200"
+                                >
+                                    My Forum Activity
+                                </NavLink>
+                                <NavLink
+                                    to="/account-dashboard/my-saved-items"
+                                    className="block px-4 py-2 hover:bg-gray-200"
+                                >
+                                    Saved AI Recipes
+                                </NavLink>
                             </div>
                         )}
                     </div>

@@ -29,7 +29,6 @@ const DisplayFullAIRecipe = () => {
                     setImagePreview(`data:image/png;base64,${data.images[0]}`); // Use first image
                 }
 
-                
             } catch (error) {
                 console.error("Error fetching AI recipe:", error);
             } finally {
@@ -110,34 +109,38 @@ const DisplayFullAIRecipe = () => {
     };
 
     if (loading) {
-        return <p className="text-center mt-8 text-gray-400">Loading recipe details...</p>;
+        return <p className="text-center mt-8 text-[#355E3B]">Loading recipe details...</p>;
     }
 
     if (!recipe) {
-        return <p className="text-center mt-8 text-red-400">Recipe not found.</p>;
+        return <p className="text-center mt-8 text-red-500">Recipe not found.</p>;
     }
 
     return (
-        <div className="min-h-screen p-8 bg-gray-900 text-gray-200">
+        <div className="min-h-screen p-8 bg-[#f0f0e0] text-[#355E3B]">
             {/* ? Recipe Title & Description */}
-            <h1 className="text-3xl font-bold text-center mb-4">{recipe.title}</h1>
-            <p className="text-gray-300 text-center mb-6">{recipe.description}</p>
+            <h1 className="text-4xl font-bold text-center mb-4">{recipe.title}</h1>
+            <p className="text-lg text-center mb-6">{recipe.description}</p>
 
             {/* ? Recipe Info Section */}
-            <div className="max-w-4xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div className="max-w-4xl mx-auto bg-[#e0e0d0] p-6 rounded-lg shadow-lg border border-[#355E3B]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* ? Left Side: Recipe Image or Upload */}
                     <div className="flex flex-col items-center">
                         {imagePreview ? (
-                            <img src={imagePreview} alt="Uploaded Recipe" className="w-full h-64 object-cover rounded-lg" />
+                            <img
+                                src={imagePreview}
+                                alt="Uploaded Recipe"
+                                className="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 hover:scale-105"
+                            />
                         ) : (
-                            <div className="w-full h-64 bg-gray-700 flex items-center justify-center rounded-lg">
-                                <span className="text-gray-400">No Image Uploaded</span>
+                            <div className="w-full h-64 bg-[#f0f0e0] flex items-center justify-center rounded-lg border border-[#355E3B]">
+                                <span className="text-[#355E3B]">No Image Uploaded</span>
                             </div>
                         )}
 
                         {/* ? Image Upload Button */}
-                        <label className="mt-4 bg-gray-600 px-4 py-2 rounded-lg text-white hover:bg-gray-700 cursor-pointer">
+                        <label className="mt-4 bg-[#355E3B] px-4 py-2 rounded-lg text-white hover:bg-[#204037] cursor-pointer transition-colors duration-200">
                             {uploading ? "Uploading..." : "+ Add Photo"}
                             <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                         </label>
@@ -146,7 +149,7 @@ const DisplayFullAIRecipe = () => {
                         {image && (
                             <button
                                 onClick={handleUpload}
-                                className="mt-2 bg-blue-500 px-4 py-2 rounded-lg text-white hover:bg-blue-600"
+                                className="mt-2 bg-[#355E3B] px-4 py-2 rounded-lg text-white hover:bg-[#204037] transition-colors duration-200"
                                 disabled={uploading}
                             >
                                 {uploading ? "Uploading..." : "Upload Image"}
@@ -154,30 +157,38 @@ const DisplayFullAIRecipe = () => {
                         )}
                     </div>
 
-
                     {/* ? Right Side: Recipe Details */}
                     <div className="flex flex-col justify-center">
                         {/* ? User's Original Prompt */}
-                        <div className="bg-gray-900 p-4 rounded-lg mb-4 text-gray-300">
-                            <h3 className="text-lg font-semibold text-white">Prompt</h3>
+                        <div className="bg-[#f0f0e0] p-4 rounded-lg mb-4 border border-[#355E3B]">
+                            <h3 className="text-lg font-semibold">Prompt</h3>
                             <p className="mt-2 italic">"{recipe.userPrompt}"</p>
                         </div>
 
-                        {/* ? Recipe Meta Info */}
-                        <div className="flex justify-between items-center text-center">
-                            <div>
-                                <h4 className="text-white font-semibold text-lg">??? Serves</h4>
-                                <p className="text-gray-300">{recipe.servings || "N/A"}</p>
+                        {/* ? Recipe Meta Info with Icons */}
+                        <div className="flex justify-center gap-12 mt-6">
+                            {/* Servings */}
+                            <div className="flex flex-col items-center">
+                                <img src="/Icons/servings-icon.png" alt="Serving Size" className="w-8 h-8" />
+                                <span className="text-lg font-semibold mt-2">Serves</span>
+                                <p className="text-xl">{recipe.servings || "N/A"}</p>
                             </div>
-                            <div>
-                                <h4 className="text-white font-semibold text-lg">? Cooking Time</h4>
-                                <p className="text-gray-300">{recipe.cookingTime || "N/A"}</p>
+
+                            {/* Cooking Time */}
+                            <div className="flex flex-col items-center">
+                                <img src="/Icons/cookingtime-icon.png" alt="Cooking Time" className="w-8 h-8" />
+                                <span className="text-lg font-semibold mt-2">Cooking Time</span>
+                                <p className="text-xl">{recipe.cookingTime || "N/A"} mins</p>
                             </div>
-                            <div>
-                                <h4 className="text-white font-semibold text-lg">?? Difficulty</h4>
-                                <p className="text-gray-300">{recipe.difficulty || "N/A"}</p>
+
+                            {/* Difficulty */}
+                            <div className="flex flex-col items-center">
+                                <img src="/Icons/spatula-icon.png" alt="Difficulty" className="w-8 h-8" />
+                                <span className="text-lg font-semibold mt-2">Difficulty</span>
+                                <p className="text-xl">{recipe.difficulty || "N/A"}</p>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -185,10 +196,10 @@ const DisplayFullAIRecipe = () => {
                 <div className="text-center mt-6">
                     <button
                         onClick={handleSaveToggle}
-                        className={`px-6 py-2 rounded-lg text-white ${isSaved ? "bg-red-500 hover:bg-red-600" : "bg-blue-500 hover:bg-blue-600"
-                            }`}
+                        className={`px-6 py-2 rounded-lg text-white ${isSaved ? "bg-red-500 hover:bg-red-600" : "bg-[#355E3B] hover:bg-[#204037]"
+                            } transition-colors duration-200`}
                     >
-                        {isSaved ? "? Unsave Recipe" : "?? Save This Recipe"}
+                        {isSaved ? "Unsave Recipe" : "Save This Recipe"}
                     </button>
                 </div>
             </div>
@@ -197,8 +208,8 @@ const DisplayFullAIRecipe = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-8">
                 {/* ? Ingredients List */}
                 <div>
-                    <h2 className="text-xl font-semibold text-white mb-2">Ingredients:</h2>
-                    <ul className="list-disc ml-6 text-gray-300">
+                    <h2 className="text-2xl font-semibold mb-4">Ingredients:</h2>
+                    <ul className="list-disc ml-6 space-y-2">
                         {recipe.ingredients && recipe.ingredients.length > 0 ? (
                             recipe.ingredients.map((item, index) => <li key={index}>{item}</li>)
                         ) : (
@@ -209,10 +220,14 @@ const DisplayFullAIRecipe = () => {
 
                 {/* ? Steps List */}
                 <div>
-                    <h2 className="text-xl font-semibold text-white mb-2">Steps:</h2>
-                    <ol className="list-decimal ml-6 text-gray-300">
+                    <h2 className="text-2xl font-semibold mb-4">Steps:</h2>
+                    <ol className="list-decimal ml-6 space-y-4">
                         {recipe.steps && recipe.steps.length > 0 ? (
-                            recipe.steps.map((step, index) => <li key={index}>{step}</li>)
+                            recipe.steps.map((step, index) => (
+                                <li key={index} className="bg-[#e0e0d0] p-4 rounded-lg border border-[#355E3B]">
+                                    {step}
+                                </li>
+                            ))
                         ) : (
                             <li>No steps provided</li>
                         )}
@@ -221,19 +236,17 @@ const DisplayFullAIRecipe = () => {
             </div>
 
             {/* ? Nutrition Facts Section */}
-            <div className="max-w-3xl mx-auto bg-gray-800 p-6 rounded-lg shadow-lg text-center mt-10">
-                <h2 className="text-xl font-semibold text-white mb-4">Nutrition Facts:</h2>
-                <div className="flex justify-around text-gray-300 text-lg">
-                    <p>Calories: <span className="text-white">{recipe.nutrition?.calories ?? "N/A"} kcal</span></p>
-                    <p>Protein: <span className="text-white">{recipe.nutrition?.protein ?? "N/A"} g</span></p>
-                    <p>Carbs: <span className="text-white">{recipe.nutrition?.carbs ?? "N/A"} g</span></p>
-                    <p>Fats: <span className="text-white">{recipe.nutrition?.fats ?? "N/A"} g</span></p>
+            <div className="max-w-3xl mx-auto bg-[#e0e0d0] p-6 rounded-lg shadow-lg text-center mt-10 border border-[#355E3B]">
+                <h2 className="text-2xl font-semibold mb-4">Nutrition Facts:</h2>
+                <div className="flex justify-around text-lg">
+                    <p>Calories: <span>{recipe.nutrition?.calories ?? "N/A"} kcal</span></p>
+                    <p>Protein: <span>{recipe.nutrition?.protein ?? "N/A"} g</span></p>
+                    <p>Carbs: <span>{recipe.nutrition?.carbs ?? "N/A"} g</span></p>
+                    <p>Fats: <span>{recipe.nutrition?.fats ?? "N/A"} g</span></p>
                 </div>
             </div>
         </div>
     );
-
-
 };
 
 export default DisplayFullAIRecipe;

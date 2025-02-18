@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
-import ImageUploader from "../components/ImageUploader"; // ? Import ImageUploader
+import ImageUploader from "../components/ImageUploader";
 
 const CreateDiscussion = () => {
     const [discussionForm, setDiscussionForm] = useState({
@@ -13,16 +13,16 @@ const CreateDiscussion = () => {
 
     const [coverImages, setCoverImages] = useState([]);
     const [userId, setUserId] = useState(null);
-    const [showImageUploader, setShowImageUploader] = useState(false); // ? Controls ImageUploader modal
+    const [showImageUploader, setShowImageUploader] = useState(false);
     const quillRef = useRef(null);
 
-    // ? Fetch the logged-in user like `CreateRecipe.jsx`
+    // Fetch the logged-in user
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const response = await fetch("http://localhost:5135/api/Auth/check-session", {
                     method: "GET",
-                    credentials: "include", // ? Ensures session-based authentication
+                    credentials: "include",
                 });
 
                 const data = await response.json();
@@ -37,7 +37,7 @@ const CreateDiscussion = () => {
         fetchUser();
     }, []);
 
-    // ? Initialize Quill Editor
+    // Initialize Quill Editor
     useEffect(() => {
         if (!quillRef.current) {
             quillRef.current = new Quill("#editor", {
@@ -65,13 +65,13 @@ const CreateDiscussion = () => {
         }
     }, []);
 
-    // ? Handle Cover Image Selection
+    // Handle Cover Image Selection
     const handleSaveImages = (images) => {
         setCoverImages(images);
-        setShowImageUploader(false); // ? Close uploader after selecting images
+        setShowImageUploader(false);
     };
 
-    // ? Handle form submission
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -85,14 +85,14 @@ const CreateDiscussion = () => {
         formData.append("content", discussionForm.content);
         formData.append("category", discussionForm.category);
         formData.append("visibility", discussionForm.visibility);
-        formData.append("userId", userId); // ? Ensure userId is included
+        formData.append("userId", userId);
 
         coverImages.forEach((file) => formData.append("coverImages", file));
 
         try {
             const response = await fetch("http://localhost:5135/api/Discussions", {
                 method: "POST",
-                credentials: "include", // ? Same as `CreateRecipe.jsx`
+                credentials: "include",
                 body: formData,
             });
 
@@ -110,16 +110,16 @@ const CreateDiscussion = () => {
     };
 
     return (
-        <div className="p-8 bg-[#2F2F2F] min-h-screen text-white">
+        <div className="p-8 bg-[#f0f0e0] min-h-screen text-[#355E3B]">
             <h1 className="text-3xl font-bold text-center mb-8">Create Discussion</h1>
-            <form onSubmit={handleSubmit} className="bg-[#383838] p-8 rounded-lg shadow-lg max-w-5xl mx-auto">
+            <form onSubmit={handleSubmit} className="bg-[#e0e0d0] p-8 rounded-lg shadow-lg max-w-5xl mx-auto">
 
-                {/* ? Image Uploader (Same as Recipe, At the Top) */}
+                {/* Image Uploader */}
                 <div className="mb-8">
                     <button
                         type="button"
                         onClick={() => setShowImageUploader(true)}
-                        className="w-full p-4 border-2 border-dashed text-gray-300 rounded-md hover:bg-[#444]"
+                        className="w-full p-4 border-2 border-dashed border-[#355E3B] text-[#355E3B] rounded-md hover:bg-[#d0d0c0]"
                     >
                         {coverImages.length > 0 ? "Edit Uploaded Images" : "Upload Cover Photo"}
                     </button>
@@ -131,6 +131,13 @@ const CreateDiscussion = () => {
                                     alt={`Preview ${index}`}
                                     className="w-full h-24 object-cover rounded-md"
                                 />
+                                <button
+                                    type="button"
+                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                                    onClick={() => setCoverImages(coverImages.filter((_, i) => i !== index))}
+                                >
+                                    X
+                                </button>
                             </div>
                         ))}
                     </div>
@@ -142,12 +149,14 @@ const CreateDiscussion = () => {
                     placeholder="Discussion Title"
                     value={discussionForm.title}
                     onChange={(e) => setDiscussionForm({ ...discussionForm, title: e.target.value })}
-                    className="p-3 border border-gray-500 rounded bg-[#444] text-white w-full mb-6"
+                    className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B] w-full mb-6"
                     required
                 />
 
                 {/* Quill Editor */}
-                <div id="editor" className="bg-white text-black mb-6 p-3 rounded"></div>
+                <div className="mb-6">
+                    <div id="editor" className="bg-white text-black rounded"></div>
+                </div>
 
                 {/* Category */}
                 <input
@@ -155,7 +164,7 @@ const CreateDiscussion = () => {
                     placeholder="Category"
                     value={discussionForm.category}
                     onChange={(e) => setDiscussionForm({ ...discussionForm, category: e.target.value })}
-                    className="p-3 border border-gray-500 rounded bg-[#444] text-white w-full mb-6"
+                    className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B] w-full mb-6"
                     required
                 />
 
@@ -163,7 +172,7 @@ const CreateDiscussion = () => {
                 <select
                     value={discussionForm.visibility}
                     onChange={(e) => setDiscussionForm({ ...discussionForm, visibility: e.target.value })}
-                    className="p-3 border border-gray-500 rounded bg-[#444] text-white w-full mb-6"
+                    className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B] w-full mb-6"
                     required
                 >
                     <option value="public">Public</option>
@@ -173,13 +182,13 @@ const CreateDiscussion = () => {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="px-6 py-3 bg-blue-500 text-white font-bold rounded hover:bg-blue-700 w-full mt-6"
+                    className="px-6 py-3 bg-[#355E3B] text-white font-bold rounded hover:bg-[#204037] w-full mt-6"
                 >
                     Post Discussion
                 </button>
             </form>
 
-            {/* ? Image Uploader Modal (Only Opens When Needed) */}
+            {/* Image Uploader Modal */}
             {showImageUploader && (
                 <ImageUploader
                     maxImages={10}

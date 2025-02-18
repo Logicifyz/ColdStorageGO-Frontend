@@ -120,16 +120,16 @@ const EditDiscussion = () => {
     };
 
     return (
-        <div className="p-8 bg-[#2F2F2F] min-h-screen text-white">
+        <div className="p-8 bg-[#f0f0e0] min-h-screen text-[#355E3B]">
             <h1 className="text-3xl font-bold text-center mb-8">Edit Discussion</h1>
-            <form onSubmit={handleUpdate} className="bg-[#383838] p-8 rounded-lg shadow-lg max-w-5xl mx-auto">
+            <form onSubmit={handleUpdate} className="bg-[#e0e0d0] p-8 rounded-lg shadow-lg max-w-5xl mx-auto">
 
-                {/* ? Image Uploader */}
+                {/* Image Uploader */}
                 <div className="mb-8">
                     <button
                         type="button"
                         onClick={() => setShowImageUploader(true)}
-                        className="w-full p-4 border-2 border-dashed text-gray-300 rounded-md hover:bg-[#444]"
+                        className="w-full p-4 border-2 border-dashed border-[#355E3B] text-[#355E3B] rounded-md hover:bg-[#d0d0c0]"
                     >
                         {existingImages.length > 0 ? "Edit Uploaded Images" : "Upload Cover Photo"}
                     </button>
@@ -141,7 +141,7 @@ const EditDiscussion = () => {
                         ))}
                     </div>
 
-                    {/* ? Show ImageUploader when clicking the button */}
+                    {/* Image Uploader Modal */}
                     {showImageUploader && (
                         <ImageUploader
                             onSave={handleSaveImages}
@@ -150,25 +150,26 @@ const EditDiscussion = () => {
                     )}
                 </div>
 
-
                 {/* Title */}
                 <input
                     type="text"
                     value={discussionForm.title}
                     onChange={(e) => setDiscussionForm({ ...discussionForm, title: e.target.value })}
-                    className="p-3 border border-gray-500 rounded bg-[#444] text-white w-full mb-6"
+                    placeholder="Discussion Title"
+                    className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B] w-full mb-6"
                     required
                 />
 
                 {/* Quill Editor */}
-                <div id="editor" className="bg-white text-black mb-6 p-3 rounded"></div>
+                <div id="editor" className="bg-white text-black p-3 rounded-lg shadow-md mb-6"></div>
 
                 {/* Category */}
                 <input
                     type="text"
                     value={discussionForm.category}
                     onChange={(e) => setDiscussionForm({ ...discussionForm, category: e.target.value })}
-                    className="p-3 border border-gray-500 rounded bg-[#444] text-white w-full mb-6"
+                    placeholder="Category"
+                    className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B] w-full mb-6"
                     required
                 />
 
@@ -176,21 +177,21 @@ const EditDiscussion = () => {
                 <select
                     value={discussionForm.visibility}
                     onChange={(e) => setDiscussionForm({ ...discussionForm, visibility: e.target.value })}
-                    className="p-3 border border-gray-500 rounded bg-[#444] text-white w-full mb-6"
+                    className="p-3 border border-[#355E3B] rounded bg-[#e0e0d0] text-[#355E3B] w-full mb-6"
                     required
                 >
                     <option value="public">Public</option>
                     <option value="private">Private</option>
-                    <option value="friends-only">Friends Only</option>
                 </select>
 
                 {/* Submit Button */}
-                <button type="submit" className="px-6 py-3 bg-blue-500 text-white font-bold rounded hover:bg-blue-700 w-full mt-6">
+                <button type="submit" className="px-6 py-3 bg-[#355E3B] text-white font-bold rounded hover:bg-[#204037] w-full mt-6">
                     Update Discussion
                 </button>
             </form>
         </div>
     );
+
 };
 
 export default EditDiscussion;

@@ -41,36 +41,33 @@ const MySavedItems = () => {
 
         return (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {data.map((recipe) => {
-                    console.log(`??? Rendering Recipe Card: ${recipe.title}, Image Exists: ${recipe.image ? "Yes" : "No"}`);
-                    return (
-                        <div
-                            key={recipe.dishId} // ? Corrected key prop
-                            className="p-4 bg-[#1a1a1a] rounded-lg border border-[#444] cursor-pointer hover:shadow-lg transition"
-                            onClick={() => navigate(`/ai-recipe/${recipe.dishId}`)}
-                        >
-                            {/* ? Display Image if Available */}
-                            {recipe.image ? (
-                                <img
-                                    src={`data:image/png;base64,${recipe.image}`} // ? Corrected image reference
-                                    alt={recipe.title}
-                                    className="w-full h-40 object-cover rounded-md mb-3"
-                                />
-                            ) : (
-                                <div className="w-full h-40 bg-gray-700 flex items-center justify-center rounded-md mb-3">
-                                    <span className="text-gray-400">No Image</span>
-                                </div>
-                            )}
+                {data.map((recipe) => (
+                    <div
+                        key={recipe.dishId}
+                        className="p-4 bg-[#e0e0d0] rounded-lg border border-[#355E3B] cursor-pointer hover:shadow-lg hover:bg-[#d0d0c0] transition"
+                        onClick={() => navigate(`/ai-recipe/${recipe.dishId}`)}
+                    >
+                        {/* Display Image if Available */}
+                        {recipe.image ? (
+                            <img
+                                src={`data:image/png;base64,${recipe.image}`}
+                                alt={recipe.title}
+                                className="w-full h-40 object-cover rounded-md mb-3"
+                            />
+                        ) : (
+                            <div className="w-full h-40 bg-[#d0d0c0] flex items-center justify-center rounded-md mb-3">
+                                <span className="text-gray-500">No Image</span>
+                            </div>
+                        )}
 
-                            {/* ? Recipe Details */}
-                            <h2 className="text-lg font-semibold text-[#ffcc00] truncate">{recipe.title}</h2>
-                            <p className="text-gray-300 text-sm line-clamp-2">{recipe.description}</p>
-                            <p className="text-gray-400 text-xs mt-2">
-                                {recipe.createdAt ? new Date(recipe.createdAt).toLocaleDateString() : "Unknown Date"}
-                            </p>
-                        </div>
-                    );
-                })}
+                        {/* Recipe Details */}
+                        <h2 className="text-lg font-semibold text-[#204037] truncate">{recipe.title}</h2>
+                        <p className="text-gray-600 text-sm line-clamp-2">{recipe.description}</p>
+                        <p className="text-gray-500 text-xs mt-2">
+                            {recipe.createdAt ? new Date(recipe.createdAt).toLocaleDateString() : "Unknown Date"}
+                        </p>
+                    </div>
+                ))}
             </div>
         );
     };
@@ -78,25 +75,26 @@ const MySavedItems = () => {
 
 
     return (
-        <div className="min-h-screen bg-[#0a0a0a] p-8">
-            {/* ? Page Header */}
+        <div className="min-h-screen bg-[#f0f0e0] p-8 text-[#355E3B]">
+            {/* Page Header */}
             <div className="flex items-center gap-4 mb-8">
-                <Bookmark size={48} className="text-[#ffcc00]" />
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                <Bookmark size={48} className="text-[#355E3B]" />
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-[#204037] to-[#355E3B] bg-clip-text text-transparent">
                     Saved AI Recipes
                 </h1>
             </div>
 
-            {/* ? Content Section */}
+            {/* Content Section */}
             <div className="mt-6">
                 {loading ? (
-                    <p className="text-center text-gray-400">Loading saved AI recipes...</p>
+                    <p className="text-center text-gray-600">Loading saved AI recipes...</p>
                 ) : (
                     <SavedRecipes data={savedAIRecipes} navigate={navigate} />
                 )}
             </div>
         </div>
     );
+
 };
 
 
