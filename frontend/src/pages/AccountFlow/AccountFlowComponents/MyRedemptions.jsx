@@ -10,14 +10,56 @@ const MyRedemptions = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // Helper to map reward type to full name.
+    const getRewardName = (rewardType) => {
+        switch (rewardType) {
+            case 'Voucher5':
+                return '5$ Discount Voucher';
+            case 'Voucher10':
+                return '10$ Discount Voucher';
+            case 'Voucher15':
+                return '15$ Discount Voucher';
+            case 'Voucher20':
+                return '20$ Discount Voucher';
+            default:
+                return rewardType;
+        }
+    };
+
     useEffect(() => {
         const fetchRedemptions = async () => {
             try {
                 const response = await api.get('/api/Wallet/redemptions');
-                setRedemptions(response.data);
+                let fetchedRedemptions = response.data;
+
+                // Enrich each redemption with the reward name from the Rewards API.
+                const enrichedRedemptions = await Promise.all(
+                    fetchedRedemptions.map(async (redemption) => {
+                        try {
+                            const rewardResponse = await api.get(`/api/rewards/${redemption.rewardId}`);
+                            const reward = rewardResponse.data;
+                            return {
+                                ...redemption,
+                                rewardName: getRewardName(reward.rewardType)
+                            };
+                        } catch (err) {
+                            // If there is an error fetching reward, return the redemption without rewardName.
+                            return { ...redemption, rewardName: redemption.rewardId };
+                        }
+                    })
+                );
+
+                // Sort: active (usable and not expired) first, then used/expired.
+                enrichedRedemptions.sort((a, b) => {
+                    const aActive = a.rewardUsable && new Date(a.expiryDate) >= new Date();
+                    const bActive = b.rewardUsable && new Date(b.expiryDate) >= new Date();
+                    if (aActive === bActive) return 0;
+                    return aActive ? -1 : 1;
+                });
+
+                setRedemptions(enrichedRedemptions);
                 setLoading(false);
             } catch (err) {
-                // If a 404 is returned, set redemptions to an empty array instead of an error.
                 if (err.response && err.response.status === 404) {
                     setRedemptions([]);
                     setLoading(false);
@@ -45,21 +87,23 @@ const MyRedemptions = () => {
         return usable ? 'bg-emerald-900/30 text-emerald-300' : 'bg-amber-900/30 text-amber-300';
     };
 
-    if (loading) return (
-        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-            <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
-            />
-        </div>
-    );
+    if (loading)
+        return (
+            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                    className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full"
+                />
+            </div>
+        );
 
-    if (error) return (
-        <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-red-400">
-            {error}
-        </div>
-    );
+    if (error)
+        return (
+            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-red-400">
+                {error}
+            </div>
+        );
 
     return (
         <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden p-8">
@@ -78,9 +122,11 @@ const MyRedemptions = () => {
                 </div>
 
                 {redemptions.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center text-gray-400 py-20">                   
+                    <div className="flex flex-col items-center justify-center text-gray-400 py-20">
                         <p className="text-xl font-semibold mt-4">No rewards redeemed yet</p>
-                        <p className="mt-2 text-sm text-gray-500">Your redeemed rewards will appear here when available.</p>
+                        <p className="mt-2 text-sm text-gray-500">
+                            Your redeemed rewards will appear here when available.
+                        </p>
                     </div>
                 ) : (
                     <div className="grid gap-4">
@@ -97,13 +143,20 @@ const MyRedemptions = () => {
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-4">
                                                 <div className={`px-3 py-1 rounded-full ${getStatusStyle(redemption.rewardUsable, redemption.expiryDate)}`}>
-                                                    {new Date(redemption.expiryDate) < new Date() ? 'Expired' : redemption.rewardUsable ? 'Active' : 'Used'}
+                                                    {new Date(redemption.expiryDate) < new Date()
+                                                        ? 'Expired'
+                                                        : redemption.rewardUsable
+                                                            ? 'Active'
+                                                            : 'Used'}
                                                 </div>
                                                 <span className="text-gray-300">
-                                                    Redeemed: {new Date(redemption.redeemedAt).toLocaleDateString()}
+                                                    Reward: {redemption.rewardName}
                                                 </span>
                                             </div>
-                                            <ChevronDownIcon className={`w-6 h-6 transform transition-transform ${expandedRedemption === redemption.redemptionId ? 'rotate-180' : ''}`} />
+                                            <ChevronDownIcon
+                                                className={`w-6 h-6 transform transition-transform ${expandedRedemption === redemption.redemptionId ? 'rotate-180' : ''
+                                                    }`}
+                                            />
                                         </div>
                                     </div>
 
@@ -127,10 +180,10 @@ const MyRedemptions = () => {
                                                             <p className="text-sm text-gray-400 mb-2">Reward Code</p>
                                                             <div className="flex items-center justify-between">
                                                                 <span className="font-mono text-purple-300">
-                                                                    {redemption.rewardId.slice(0, 8).toUpperCase()}
+                                                                    {redemption.redemptionId.slice(0, 8).toUpperCase()}
                                                                 </span>
                                                                 <button
-                                                                    onClick={() => copyToClipboard(redemption.rewardId)}
+                                                                    onClick={() => copyToClipboard(redemption.redemptionId)}
                                                                     className="p-2 hover:bg-[#ffffff10] rounded-lg"
                                                                 >
                                                                     <ClipboardIcon className="w-5 h-5 text-gray-400" />
@@ -147,22 +200,7 @@ const MyRedemptions = () => {
                                                         </p>
                                                     </div>
 
-                                                    <div className="flex gap-4 mt-6">
-                                                        <motion.button
-                                                            whileHover={{ scale: 1.05 }}
-                                                            whileTap={{ scale: 0.95 }}
-                                                            className="px-6 py-2 bg-purple-600/30 backdrop-blur-sm rounded-lg border border-purple-500/30 hover:border-purple-400/50 transition-all"
-                                                        >
-                                                            View Details
-                                                        </motion.button>
-                                                        <motion.button
-                                                            whileHover={{ scale: 1.05 }}
-                                                            whileTap={{ scale: 0.95 }}
-                                                            className="px-6 py-2 bg-blue-600/30 backdrop-blur-sm rounded-lg border border-blue-500/30 hover:border-blue-400/50 transition-all"
-                                                        >
-                                                            Purchase History
-                                                        </motion.button>
-                                                    </div>
+                                                 
                                                 </div>
                                             </motion.div>
                                         )}

@@ -72,6 +72,7 @@ import SubscriptionHistory from "./pages/AccountFlow/AccountFlowComponents/Subsc
 import Notifications from "./pages/AccountFlow/AccountFlowComponents/Notifications";
 import AccountDashboardLayout from "./pages/AccountFlow/AccountDashboardLayout";
 import MyProfile from "./pages/AccountFlow/AccountFlowComponents/MyProfile";
+import MyAddress from "./pages/AccountFlow/AccountFlowComponents/MyAddress";
 import NotificationDetails from "./pages/AccountFlow/AccountFlowComponents/NotificationDetails";
 import MyForumActivity from "./pages/AccountFlow/AccountFlowComponents/MyForumActivity";
 
@@ -88,6 +89,7 @@ const App = () => {
                     {/* Account Dashboard Individual Tab Routes */}
                     <Route path="/account-dashboard" element={<AccountDashboardLayout />}>
                         <Route path="profile" element={<MyProfile />} />
+                        <Route path="address" element={<MyAddress />} />
                         <Route path="change-password" element={<ChangePassword />} />
                         <Route path="delete-account" element={<DeleteAccount />} />
                         <Route path="my-orders" element={<MyOrders />} />
