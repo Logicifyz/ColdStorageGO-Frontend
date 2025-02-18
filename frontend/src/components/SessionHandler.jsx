@@ -5,7 +5,7 @@ import api from "../api";
 
 // Session timing constants
 const SESSION_CHECK_INTERVAL = 1000; // Check every second
-const SESSION_EXPIRATION_WARNING = 1800000 - 300000; // 5 minutes before expiry (25 minutes)
+const SESSION_EXPIRATION_WARNING = 300000; // 5 minutes before expiry (25 minutes)
 const SESSION_EXPIRATION = 1800000; // Expire after 30 minutes (30 minutes = 1800000 ms)
 const DEBOUNCE_DELAY = 500; // 500ms debounce delay
 
@@ -95,7 +95,7 @@ const SessionProtectedRoute = ({ children, isPublic = false }) => {
             const now = Date.now();
             const timeLeft = expiryTimeRef.current - now;
 
-            console.log("Time left:", timeLeft / 1000, "seconds");
+            console.log("Time left:", timeLeft / 1000, "seconds", timeLeft / 60000, "mins");
 
             if (timeLeft <= 0) {
                 // Session expired

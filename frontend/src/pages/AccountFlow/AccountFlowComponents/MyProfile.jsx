@@ -294,11 +294,10 @@ const MyProfile = () => {
                             <div>
                                 <h2 className="text-2xl font-bold text-[#355E3B]">{formData.Username}</h2>
                                 <p className="text-gray-700">{formData.Email}</p>
-                                <h2 className="text-2xl font-bold text-white">{formData.Username}</h2>
                                 <div className="flex items-center mt-2">
                                     {/* Followers Count */}
                                     <button
-                                        className="text-white text-lg font-semibold cursor-pointer hover:underline mr-6"
+                                        className="text-[#355E3B] text-lg font-semibold cursor-pointer hover:underline mr-6"
                                         onClick={openFollowersModal}
                                     >
                                         {followers.length} Followers
@@ -306,13 +305,12 @@ const MyProfile = () => {
 
                                     {/* Following Count */}
                                     <button
-                                        className="text-white text-lg font-semibold cursor-pointer hover:underline"
+                                        className="text-[#355E3B] text-lg font-semibold cursor-pointer hover:underline"
                                         onClick={openFollowingModal}
                                     >
                                         {following.length} Following
                                     </button>
                                 </div>
-                                <p className="text-gray-400">{formData.Email}</p>
                             </div>
                         </div>
 
