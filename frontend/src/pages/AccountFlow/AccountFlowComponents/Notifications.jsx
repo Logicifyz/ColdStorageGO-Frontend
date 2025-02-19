@@ -44,7 +44,7 @@ const Notifications = () => {
                     withCredentials: true,
                 });
 
-                setPushNotificationStatus(response.data.PushNotifications);
+                setPushNotificationStatus(response.data.pushNotifications);
             } catch (err) {
                 console.error('Error fetching push notification status:', err);
             }
@@ -155,7 +155,7 @@ const Notifications = () => {
 
 
     return (
-        <div className="container mx-auto p-6 bg-[#F0EAD6] min-h-screen relative">
+        <div className="mx-auto p-6 bg-[#F0EAD6] w-full min-h-screen relative">
             {/* Background Circles */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-[#E2F2E6] rounded-full blur-3xl z-0" />

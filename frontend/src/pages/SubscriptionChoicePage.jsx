@@ -10,12 +10,38 @@ import 'react-toastify/dist/ReactToastify.css';
 // Initialize Stripe with your publishable key
 const stripePromise = loadStripe('pk_test_51QfdWdBwKaF4UCL2U5tt4GMubmDduDxy50PaDfVW0PKkb9bWlpYl7SIxDvxpjkIxUYrKPGdvBsCAvALCYshj8rOZ00HIxcZmFn');
 
-const BackgroundBlobs = () => (
-    <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-[800px] h-[800px] -top-48 -left-48 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] opacity-20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute w-[600px] h-[600px] -bottom-32 -right-48 bg-gradient-to-r from-[#2D4B33] to-[#355E3B] opacity-20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-    </div>
-);
+const BackgroundLeaves = () => {
+    const leaves = Array.from({ length: 10 }, (_, i) => ({
+        id: i,
+        delay: Math.random() * 3,
+        left: `${Math.random() * 100}vw`,
+        rotate: Math.random() * 360,
+        size: Math.random() * 1.2 + 0.8,
+    }));
+
+    return (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {leaves.map((leaf) => (
+                <motion.div
+                    key={leaf.id}
+                    initial={{ opacity: 0, y: -50, rotate: leaf.rotate }}
+                    animate={{ opacity: 1, y: "100vh", rotate: leaf.rotate + 180 }}
+                    transition={{
+                        duration: 10 + Math.random() * 5,
+                        delay: leaf.delay,
+                        repeat: Infinity,
+                        ease: "linear",
+                    }}
+                    className="absolute w-6 h-6 text-4xl"
+                    style={{ left: leaf.left, fontSize: `${leaf.size}rem` }}
+                >
+                    🍃
+                </motion.div>
+            ))}
+        </div>
+    );
+};
+
 
 const GlowingButton = ({ children, onClick, className = "", type = "button" }) => (
     <motion.button
@@ -34,7 +60,7 @@ const FloatingCard = ({ children }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-[#2D4B33]/50 to-[#355E3B]/50 backdrop-blur-xl rounded-3xl p-6 border border-[#ffffff10] shadow-2xl"
+        className="bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] backdrop-blur-xl rounded-3xl p-6 border border-[#2D4B33]/30 shadow-2xl"
     >
         {children}
     </motion.div>
@@ -242,7 +268,7 @@ const SubscriptionChoicePage = () => {
 
     return (
         <div className="min-h-screen bg-[#F5F5DC] p-8 relative overflow-hidden">
-            <BackgroundBlobs />
+            <BackgroundLeaves />
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
@@ -290,14 +316,15 @@ const SubscriptionChoicePage = () => {
                     {success && <div className="text-green-500 mt-2">{success}</div>}
                 </div>
 
-                <div className="flex items-center justify-center space-x-8 relative z-10">
+                <div className="flex items-center justify-center space-x-6 relative z-10">
                     <button
                         onClick={handlePrev}
-                        className="text-[#2D4B33] text-4xl hover:text-[#F5F5DC] transition-all duration-300"
+                        className="text-[#2D4B33] text-4xl hover:text-[#355E3B] transition-all duration-300"
                     >
                         &#10094;
                     </button>
-                    <div className="flex space-x-8">
+
+                    <div className="flex space-x-6">
                         {getVisibleCards().map((meal, index) => (
                             <motion.div
                                 key={meal.title}
@@ -305,17 +332,18 @@ const SubscriptionChoicePage = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 className={`relative p-8 rounded-2xl shadow-lg border-2 cursor-pointer flex flex-col justify-between transform transition-all duration-500 
-                  ${index === 1 ? 'scale-110 bg-gradient-to-br from-[#2D4B33] to-[#355E3B] border-[#2D4B33]' : 'scale-90 bg-[#2D4B33] border-[#355E3B]'}`}
+                  bg-gradient-to-br from-[#A8E6CF] to-[#DCEDC1] border-[#2D4B33] shadow-xl`}
                                 style={{ width: '300px', height: '500px' }}
                                 onClick={() => handleSelect(meal)}
                             >
-                                <div className="text-6xl mb-6 text-[#F5F5DC]">{meal.icon}</div>
-                                <h3 className="text-4xl font-bold mb-6 text-[#F5F5DC]">{meal.title}</h3>
-                                <p className="text-lg opacity-90 mb-6 text-[#2D4F5F5DCB33]">{meal.description}</p>
-                                <p className="text-2xl font-semibold text-[#F5F5DC]">${calculatePrice(meal.basePrice)} / {formData.subscriptionType}</p>
+                                <div className="text-6xl mb-6 text-[#2D4B33]">{meal.icon}</div>
+                                <h3 className="text-4xl font-bold mb-6 text-[#2D4B33]">{meal.title}</h3>
+                                <p className="text-lg opacity-90 mb-6 text-[#2D4B33]">{meal.description}</p>
+                                <p className="text-2xl font-semibold text-[#2D4B33]">${calculatePrice(meal.basePrice)} / {formData.subscriptionType}</p>
                             </motion.div>
                         ))}
                     </div>
+
                     <button
                         onClick={handleNext}
                         className="text-[#2D4B33] text-4xl hover:text-[#355E3B] transition-all duration-300"
@@ -323,6 +351,7 @@ const SubscriptionChoicePage = () => {
                         &#10095;
                     </button>
                 </div>
+
 
                 {/* Confirmation Popup */}
                 <AnimatePresence>
@@ -335,7 +364,7 @@ const SubscriptionChoicePage = () => {
                         >
                             <FloatingCard>
                                 <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-2xl font-bold text-[#F5F5DC]">Confirm Your Choice</h2>
+                                    <h2 className="text-2xl font-bold text-[#2D4B33]">Confirm Your Choice</h2>
                                     <button
                                         onClick={handleCancel}
                                         className="p-2 hover:bg-[#ffffff10] rounded-lg"
@@ -343,18 +372,18 @@ const SubscriptionChoicePage = () => {
                                         <XMarkIcon className="w-6 h-6 text-[#2D4B33]" />
                                     </button>
                                 </div>
-                                <p className="text-lg mb-4 text-[#F5F5DC]">You selected: <span className="font-semibold text-[#F5F5DC]">{selectedChoice.title}</span></p>
-                                <p className="text-xl mb-4 font-semibold text-[#F5F5DC]">Total Price: <span className="text-[#F5F5DC]">${calculatePrice(selectedChoice.basePrice)}</span></p>
+                                <p className="text-lg mb-4 text-[#2D4B33]">You selected: <span className="font-semibold">{selectedChoice.title}</span></p>
+                                <p className="text-xl mb-4 font-semibold text-[#2D4B33]">Total Price: <span>${calculatePrice(selectedChoice.basePrice)}</span></p>
                                 <div className="flex justify-end gap-4">
                                     <GlowingButton
                                         onClick={handleConfirm}
-                                        className="bg-[#2D4B33] hover:bg-[#355E3B]"
+                                        className="bg-[#2D4B33] hover:bg-[#355E3B] text-white"
                                     >
                                         Confirm & Pay
                                     </GlowingButton>
                                     <GlowingButton
                                         onClick={handleCancel}
-                                        className="bg-red-600 hover:bg-red-500"
+                                        className="bg-red-600 hover:bg-red-500 text-white"
                                     >
                                         Cancel
                                     </GlowingButton>
@@ -362,7 +391,7 @@ const SubscriptionChoicePage = () => {
                             </FloatingCard>
                         </motion.div>
                     )}
-                </AnimatePresence>
+                </AnimatePresence>;
             </div>
         </div>
     );

@@ -80,8 +80,13 @@ const ChangePassword = () => {
             }
         } catch (error) {
             console.error('Error changing password:', error.response?.data || error.message);
-            const errorMsg = error.response?.data?.message || error.message || 'An error occurred while changing the password.';
-            setErrorMessage(errorMsg);
+
+            if (error.response?.status === 401) {
+                setErrorMessage('Current password is incorrect.');
+            } else {
+                const errorMsg = error.response?.data?.message || error.message || 'An error occurred while changing the password.';
+                setErrorMessage(errorMsg);
+            }
         }
     };
 

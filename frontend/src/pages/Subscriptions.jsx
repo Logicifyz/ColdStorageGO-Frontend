@@ -37,10 +37,47 @@ const SubscriptionForm = () => {
             setStep(step - 1);
         }
     };
+    const FloatingButterflies = () => {
+        const butterflies = Array.from({ length: 5 }, (_, i) => ({
+            id: i,
+            left: `${Math.random() * 100}vw`,
+            top: `${Math.random() * 100}vh`,
+            delay: Math.random() * 3,
+            size: Math.random() * 1.5 + 0.8,
+        }));
+
+        return (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {butterflies.map((butterfly) => (
+                    <motion.div
+                        key={butterfly.id}
+                        initial={{ opacity: 0, y: 0 }}
+                        animate={{ opacity: 1, y: [-10, 10, -10, 10] }}
+                        transition={{
+                            duration: 6 + Math.random() * 3,
+                            delay: butterfly.delay,
+                            repeat: Infinity,
+                            repeatType: "reverse",
+                            ease: "easeInOut",
+                        }}
+                        className="absolute text-4xl"
+                        style={{
+                            left: butterfly.left,
+                            top: butterfly.top,
+                            fontSize: `${butterfly.size}rem`,
+                        }}
+                    >
+                        🦋
+                    </motion.div>
+                ))}
+            </div>
+        );
+    };
 
     return (
         <div className="min-h-screen bg-[#F5F5DC] flex items-center justify-center p-8">
             <Toaster position="top-right" />
+            <FloatingButterflies /> {/* 🦋 Add the animation here */}
             <div className="w-full max-w-5xl flex flex-col items-center">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}

@@ -64,7 +64,7 @@ const MyTickets = () => {
     };
 
     return (
-        <div className="container mx-auto p-6 bg-[#F0EAD6] min-h-screen relative">
+        <div className="mx-auto p-6 bg-[#F0EAD6] w-full min-h-screen relative">
 
             {/* Background Circles */}
             <div className="absolute inset-0 overflow-hidden">

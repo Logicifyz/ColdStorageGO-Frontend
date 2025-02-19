@@ -62,7 +62,7 @@ const Navigation = () => {
     };
 
     const handleProfileClick = () => {
-        navigate("/account-dashboard");
+        navigate("/account-dashboard/profile");
     };
 
     const handleSubscribeClick = () => {
@@ -141,7 +141,14 @@ const Navigation = () => {
                                 !
                             </div>
                         </div>
-
+                        <div className="relative cursor-pointer" onClick={handleNotificationsClick}>
+                            <FaBell className="w-6 h-6 text-black" />
+                            {unreadNotifications > 0 && (
+                                <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    {unreadNotifications}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </nav>

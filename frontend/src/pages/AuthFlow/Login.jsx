@@ -40,7 +40,7 @@ const Login = () => {
                     password: ''
                 });
                 setTimeout(() => {
-                    navigate('/account-dashboard');
+                    navigate('/');
                 }, 2000);
             } else {
                 setError(response.data.message || 'Login failed');
