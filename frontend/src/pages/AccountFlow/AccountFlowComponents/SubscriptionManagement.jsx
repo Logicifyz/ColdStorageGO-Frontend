@@ -160,13 +160,13 @@ const SubscriptionManagement = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="space-y-6"
                     >
-                        {/* Subscription Header */}
+                       
                         <div className="text-center">
                             <h1 className="text-4xl font-bold text-green-700">My Subscription</h1>
                             <p className="text-md text-gray-500 mt-1">Manage your active subscription below.</p>
                         </div>
 
-                        {/* Subscription Info Card */}
+          
                         <div className="bg-green-100 p-6 rounded-xl shadow-md border border-green-300">
                             <div className="flex justify-between items-center">
                                 <h2 className="text-2xl font-semibold">{subscription.subscriptionChoice} Plan</h2>
@@ -175,7 +175,6 @@ const SubscriptionManagement = () => {
 
                             <p className="text-gray-600 mt-1">Subscription ID: {subscription.subscriptionId}</p>
 
-                            {/* Status */}
                             <div className="flex items-center mt-3">
                                 <strong className="mr-2">Status:</strong>
                                 {subscription.isFrozen ? (
@@ -189,11 +188,9 @@ const SubscriptionManagement = () => {
                                 )}
                             </div>
 
-                            {/* Dates */}
                             <p className="mt-2"><strong>End Date:</strong> {formatDate(subscription.endDate)}</p>
                         </div>
 
-                        {/* Freeze Scheduling */}
                         <div className="bg-white p-6 rounded-xl shadow-md border border-green-300">
                             <h3 className="text-xl font-semibold text-green-700">Schedule a Freeze</h3>
                             <div className="flex flex-col mt-3 space-y-2">
@@ -222,7 +219,6 @@ const SubscriptionManagement = () => {
                                 </button>
                             </div>
                         </div>
-                            {/* Scheduled Freezes List */}
                             {scheduledFreezes.length > 0 && (
                                 <div className="space-y-4">
                                     <h3 className="text-xl font-semibold">Scheduled Freezes</h3>
@@ -254,7 +250,7 @@ const SubscriptionManagement = () => {
                                     </div>
                                 </div>
                             )}
-                        {/* Cancel Subscription */}
+                    
                         <button
                             onClick={() => openModal('cancel')}
                             className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-semibold"
@@ -262,9 +258,9 @@ const SubscriptionManagement = () => {
                             Cancel Subscription
                         </button>
 
-                        {/* Recommendations */}
+                    
                             {userId && (
-                                console.log('UserId:', userId), // Add this line
+                                console.log('UserId:', userId),
                                 <SubscriptionRecommendation userId={userId} />
                             )}                    </motion.div>
                 ) : (
@@ -272,7 +268,7 @@ const SubscriptionManagement = () => {
                 )}
             </div>
 
-            {/* Confirmation Modal */}
+         
             <AnimatePresence>
                 {modal.isOpen && (
                     <motion.div

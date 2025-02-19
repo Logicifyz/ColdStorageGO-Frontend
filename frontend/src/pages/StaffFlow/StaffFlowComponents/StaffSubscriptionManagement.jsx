@@ -21,7 +21,7 @@ const StaffSubscriptionManagement = () => {
     const [subscriptions, setSubscriptions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterStatus, setFilterStatus] = useState("all"); // "all", "active", "expired", "canceled"
+    const [filterStatus, setFilterStatus] = useState("all"); 
     const [modal, setModal] = useState({ isOpen: false, subscriptionId: null });
     const [showAnalytics, setShowAnalytics] = useState(false);
     const [analyticsData, setAnalyticsData] = useState({
@@ -78,12 +78,12 @@ const StaffSubscriptionManagement = () => {
                 popularChoices: {
                     mostPopular: popularChoices.data.mostPopular,
                     leastPopular: popularChoices.data.leastPopular,
-                    allChoices: formattedChoices || [] // ✅ Ensure it's always an array
+                    allChoices: formattedChoices || [] 
                 },
                 popularTypes: {
                     mostPopular: popularTypes.data.mostPopular,
                     leastPopular: popularTypes.data.leastPopular,
-                    allTypes: formattedTypes || [] // ✅ Ensure it's always an array
+                    allTypes: formattedTypes || [] 
                 },
                 summary: summary.data
             });
@@ -95,12 +95,12 @@ const StaffSubscriptionManagement = () => {
                 popularChoices: {
                     mostPopular: { choice: "N/A", count: 0 },
                     leastPopular: { choice: "N/A", count: 0 },
-                    allChoices: [] // ✅ Default to an empty array
+                    allChoices: []
                 },
                 popularTypes: {
                     mostPopular: { type: "N/A", count: 0 },
                     leastPopular: { type: "N/A", count: 0 },
-                    allTypes: [] // ✅ Default to an empty array
+                    allTypes: []
                 },
                 summary: { totalSubscriptions: 0, activeSubscriptions: 0, expiredSubscriptions: 0, canceledSubscriptions: 0 }
             });
@@ -189,15 +189,14 @@ const StaffSubscriptionManagement = () => {
                         </button>
                     ))}
                 </div>
-                {/* Analytics Section */}
-                {showAnalytics && (
+                               {showAnalytics && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="mb-8"
                     >
                         <FloatingCard>
-                            {/* 📊 Subscription Analytics (Top Section) */}
+                     
                             <h2 className="text-2xl font-bold mb-4">Subscription Analytics</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <div className="bg-green-200 p-4 rounded-lg">
@@ -210,17 +209,16 @@ const StaffSubscriptionManagement = () => {
                                 </div>
                             </div>
 
-                            {/* 🥧 Popular Subscription Choices & Types Pie Charts */}
                             <h2 className="text-2xl font-bold mt-6 mb-4">Subscription Trends</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                                {/* 🥗 Subscription Choices Pie Chart */}
+                               
                                 <div className="text-center">
                                     <h3 className="text-lg font-semibold mb-2">Most vs. Least Popular Choice</h3>
                                     <ResponsiveContainer width="100%" height={250}>
                                         <PieChart>
                                             <Pie
-                                                data={analyticsData.popularChoices.allChoices || []} // ✅ Ensure it's always an array
+                                                data={analyticsData.popularChoices.allChoices || []} 
                                                 dataKey="count"
                                                 nameKey="choice"
                                                 cx="50%"
@@ -229,7 +227,7 @@ const StaffSubscriptionManagement = () => {
                                                 fill="#8884d8"
                                                 label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                                             >
-                                                {(analyticsData.popularChoices.allChoices || []).map((entry, index) => ( // ✅ Ensure safe mapping
+                                                {(analyticsData.popularChoices.allChoices || []).map((entry, index) => ( 
                                                     <Cell key={`cell-${index}`} fill={index === 0 ? "#4CAF50" : "#FF6347"} />
                                                 ))}
                                             </Pie>
@@ -242,13 +240,12 @@ const StaffSubscriptionManagement = () => {
                                     </p>
                                 </div>
 
-                                {/* 📆 Subscription Types Pie Chart */}
                                 <div className="text-center">
                                     <h3 className="text-lg font-semibold mb-2">Most vs. Least Popular Type</h3>
                                     <ResponsiveContainer width="100%" height={250}>
                                         <PieChart>
                                             <Pie
-                                                data={analyticsData.popularTypes.allTypes || []} // ✅ Ensure it's always an array
+                                                data={analyticsData.popularTypes.allTypes || []} 
                                                 dataKey="count"
                                                 nameKey="type"
                                                 cx="50%"
@@ -257,7 +254,7 @@ const StaffSubscriptionManagement = () => {
                                                 fill="#8884d8"
                                                 label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                                             >
-                                                {(analyticsData.popularTypes.allTypes || []).map((entry, index) => ( // ✅ Ensure safe mapping
+                                                {(analyticsData.popularTypes.allTypes || []).map((entry, index) => ( 
                                                     <Cell key={`cell-${index}`} fill={index === 0 ? "#4CAF50" : "#FF6347"} />
                                                 ))}
                                             </Pie>
@@ -271,7 +268,6 @@ const StaffSubscriptionManagement = () => {
                                 </div>
                             </div>
 
-                            {/* 🔢 Subscription Summary (Bottom Section) */}
                             <div className="bg-green-200 p-4 rounded-lg col-span-full mt-6">
                                 <h3 className="text-lg font-semibold">Subscription Summary</h3>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
@@ -296,7 +292,7 @@ const StaffSubscriptionManagement = () => {
                         </FloatingCard>
                     </motion.div>
                 )}
-                {/* Confirmation Modal */}
+           
                 <AnimatePresence>
                     {modal.isOpen && (
                         <motion.div
@@ -357,7 +353,7 @@ const StaffSubscriptionManagement = () => {
                                     <p className="text-gray-700 mb-2">Street Address: {subscription.user?.userProfile?.streetAddress || "N/A"}</p>
                                     <p className="text-gray-700 mb-4">Postal Code: {subscription.user?.userProfile?.postalCode || "N/A"}</p>
 
-                                    {/* ✅ Keep Button Spacing Consistent */}
+                                  
                                     <div className="mt-4 min-h-[44px] flex items-center">
                                         {subscription.status === "Active" ? (
                                             <button
@@ -367,7 +363,7 @@ const StaffSubscriptionManagement = () => {
                                                 Cancel Subscription
                                             </button>
                                         ) : (
-                                            <div className="h-[44px]"></div> // Keeps layout uniform
+                                            <div className="h-[44px]"></div> 
                                         )}
                                     </div>
                                 </div>

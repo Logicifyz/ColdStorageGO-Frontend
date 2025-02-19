@@ -23,7 +23,7 @@ const SubscriptionHistory = () => {
     const [history, setHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filterStatus, setFilterStatus] = useState("all"); // "all", "active", "frozen", "canceled"
+    const [filterStatus, setFilterStatus] = useState("all");
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -32,7 +32,7 @@ const SubscriptionHistory = () => {
                 setHistory(response.data);
             } catch (error) {
                 console.error("Error fetching history:", error);
-                setHistory([]); // Ensure empty history is handled
+                setHistory([]); 
             } finally {
                 setIsLoading(false);
             }
@@ -59,7 +59,6 @@ const SubscriptionHistory = () => {
                     Subscription History
                 </h1>
 
-                {/* Search Bar and Filter Tabs */}
                 <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <input
                         type="text"
@@ -98,8 +97,6 @@ const SubscriptionHistory = () => {
                         </button>
                     </div>
                 </div>
-
-                {/* Subscription History Cards */}
                 <div className="bg-[#F8F9FA] backdrop-blur-xl rounded-3xl shadow-2xl p-6 border border-[#2D4B33]/20">
                     {isLoading ? (
                         <p className="text-center text-lg animate-pulse text-[#2D4B33]">Loading subscription history...</p>
@@ -120,7 +117,7 @@ const SubscriptionHistory = () => {
                                         </div>
                                         <p className="text-sm text-gray-500">Subscription ID: {subscription.subscriptionId}</p>
 
-                                        {/* Status Badge */}
+                                       
                                         <p className="mt-2">
                                             <strong>Status:</strong>
                                             <span
@@ -133,7 +130,7 @@ const SubscriptionHistory = () => {
                                             </span>
                                         </p>
 
-                                        {/* Dates */}
+                                      
                                         <p className="text-md mt-1 text-gray-700">
                                             <strong>Start Date:</strong> {formatDate(subscription.startDate)}
                                         </p>

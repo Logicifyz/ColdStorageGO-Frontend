@@ -9,7 +9,7 @@ const SubscriptionRecommendation = ({ userId }) => {
         const fetchRecommendation = async () => {
             try {
                 const response = await api.get(`/api/subscriptions/recommendation/${userId}`);
-                console.log('Recommendation Response:', response.data); // Keep this for debugging
+                console.log('Recommendation Response:', response.data);
                 setRecommendation(response.data);
             } catch (error) {
                 console.error('Error fetching recommendation:', error);
