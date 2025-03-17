@@ -2,3 +2,88 @@ body {
 	background-color: #383838;
 	color: white; /* Adjust text color for visibility */
 }
+
+@keyframes pulse {
+	0%, 100% {
+		opacity: 0.2;
+	}
+
+	50% {
+		opacity: 0.3;
+	}
+}
+
+.animate-pulse {
+	animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-1000 {
+	animation-delay: 1s;
+}
+
+* {
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+button {
+	transition: transform 0.2s ease;
+}
+
+.recharts-tooltip-cursor {
+	fill: rgba(255, 255, 255, 0.1);
+}
+
+.recharts-default-tooltip {
+	border-radius: 0.75rem !important;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.recharts-cartesian-grid line {
+	stroke: rgba(255, 255, 255, 0.1);
+}
+
+.recharts-tooltip-item {
+	color: #fff;
+}
+
+.recharts-legend-item-text {
+	color: #9CA3AF !important;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes popIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.animate-fade-in {
+	animation: fadeIn 1s ease-in-out forwards;
+}
+
+.animate-pop-in {
+	animation: popIn 0.5s ease-out forwards;
+}
+
+.animate-delay-500 {
+	animation-delay: 0.5s;
+}
+
+.animate-delay-700 {
+	animation-delay: 0.7s;
+}

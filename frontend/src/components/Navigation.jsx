@@ -1,37 +1,199 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import api from '../api';
+import { FaPlus, FaBell } from "react-icons/fa";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Navigation = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [profilePic, setProfilePic] = useState(null);
+    const [showCreatePostDropdown, setShowCreatePostDropdown] = useState(false);
+    const [unreadNotifications, setUnreadNotifications] = useState(0); // State for unread notifications
+    const [username, setUsername] = useState('');
+    const [userAddress, setUserAddress] = useState({ street: '', postalCode: '' });
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await api.get("api/Auth/check-session");
+                setIsLoggedIn(response.data.sessionValid);
+                if (response.data.sessionValid) {
+                    const profilePicBase64 = response.data.profilePic
+                        ? `data:image/png;base64,${response.data.profilePic}`
+                        : null;
+                    setProfilePic(profilePicBase64);
+                    setUsername(response.data.username || '');
+
+                    // Fetch user address
+                    const addressResponse = await api.get("/api/Account/profile", { withCredentials: true });
+                    setUserAddress({
+                        street: addressResponse.data.streetAddress || '',
+                        postalCode: addressResponse.data.postalCode || ''
+                    });
+                }
+            } catch (error) {
+                console.error("Error checking session:", error);
+                setIsLoggedIn(false);
+            }
+        };
+        const fetchUnreadNotifications = async () => {
+            try {
+                const response = await api.get("api/Notification/UnreadCount");
+                setUnreadNotifications(response.data.unreadCount); // Fetch unread notification count
+            } catch (error) {
+                console.error("Error fetching unread notifications:", error);
+            }
+        };
+
+        checkSession();
+        if (isLoggedIn) {
+            fetchUnreadNotifications(); // Fetch unread notifications only when the user is logged in
+        }
+        // Call the function to check session validity when component mounts or location changes
+        checkSession();
+    }, [location.pathname, isLoggedIn]);
+
+    const handleLoginClick = () => {
+        navigate("/login");
+    };
+
+    const handleProfileClick = () => {
+        navigate("/account-dashboard/profile");
+    };
+
+    const handleSubscribeClick = () => {
+        if (!userAddress.street || !userAddress.postalCode) {
+            toast.warning("Please set up your address before subscribing! Redirecting to Address Page", {
+                position: "top-center",
+                autoClose: 2500, // Delays navigation slightly
+            });
+
+            setTimeout(() => {
+                navigate("/account-dashboard/address");
+            }, 2500); // Matches toast duration to avoid abrupt transition
+
+            return;
+        }
+        navigate("/subscriptions");
+    };
+
+
+    const toggleCreatePostDropdown = () => {
+        setShowCreatePostDropdown(!showCreatePostDropdown);
+    };
+
+    const handleNotificationsClick = () => {
+        navigate("/account-dashboard/notifications"); // Navigate to the notifications page
+    };
+
+    const getInitials = (name) => {
+        if (!name) return '';
+        const nameParts = name.split(' ');
+        return nameParts[0].charAt(0).toUpperCase() + (nameParts[1] ? nameParts[1].charAt(0).toUpperCase() : '');
+    };
+
     return (
-        <nav className="bg-[#383838] text-white sticky top-0 z-50">
-            <div className="container mx-auto flex justify-between items-center py-4 px-6">
-                {/* Logo */}
-                <div className="flex items-center space-x-2">
-                    <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
+        <>
+            <nav className="bg-[#F0EAD6] text-[#2D4B33] sticky top-0 z-50 shadow-md">
+                <div className="container mx-auto flex justify-between items-center py-4 px-6">
+                    <div className="flex items-center space-x-2">
+                        <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-14 w-auto" />
+                    </div>
 
-                </div>
+                    <div className="flex space-x-6">
+                        <Link to="/" className="hover:text-[#355E3B]">Home</Link>
+                        <Link to="/gallery" className="hover:text-[#355E3B]">Gallery</Link>
+                        <button onClick={handleSubscribeClick} className="hover:text-[#355E3B]">Subscribe</button>
+                        <Link to="/rewards" className="hover:text-[#355E3B]">Rewards</Link>
+                        <Link to="/help-centre" className="hover:text-[#355E3B]">Help Centre</Link>
+                        <Link to="/forum" className="hover:text-[#355E3B]">Forum</Link>
+                        <Link to="/cheffie-ai" className="hover:text-[#355E3B]">Cheffie AI</Link>
+                    </div>
 
-                {/* Links */}
-                <div className="flex space-x-6">
-                    <Link to="/" className="hover:text-gray-300">Home</Link>
-                    <Link to="/mealkits" className="hover:text-gray-300">Mealkits</Link>
-                    <Link to="/subscribe" className="hover:text-gray-300">Subscribe</Link>
-                    <Link to="/rewards" className="hover:text-gray-300">Rewards</Link>
-                    <Link to="/help" className="hover:text-gray-300">Help Centre</Link>
-                    <Link to="/forum" className="hover:text-gray-300">Forum</Link>
-                </div>
+                    <div className="flex items-center space-x-4">
+                        {isLoggedIn ? (
+                            <div className="cursor-pointer" onClick={handleProfileClick}>
+                                {profilePic ? (
+                                    <img src={profilePic} alt="Profile" className="w-8 h-8 rounded-full border-2 border-[#2D4B33]" />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full border-2 border-[#2D4B33] bg-[#E2F2E6] flex items-center justify-center">
+                                        <span className="text-[#2D4B33]">{getInitials(username)}</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={handleLoginClick}
+                                className="border border-[#2D4B33] px-4 py-2 rounded hover:bg-[#355E3B] hover:text-white"
+                            >
+                                Login
+                            </button>
+                        )}
 
-                {/* Login and Cart */}
-                <div className="flex items-center space-x-4">
-                    <button className="border border-white px-4 py-2 rounded hover:bg-white hover:text-[#383838]">Login</button>
-                    <div className="relative">
-                        <AiOutlineShoppingCart className="w-6 h-6" />
-                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                        {/* Shopping Cart Icon */}
+                        <div className="relative cursor-pointer" onClick={() => navigate("/cart")}>
+                            <AiOutlineShoppingCart className="w-6 h-6 text-black" />
+                            <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                !
+                            </div>
+                        </div>
+                        <div className="relative cursor-pointer" onClick={handleNotificationsClick}>
+                            <FaBell className="w-6 h-6 text-black" />
+                            {unreadNotifications > 0 && (
+                                <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    {unreadNotifications}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+
+            {location.pathname.startsWith("/forum") && (
+                <div className="bg-[#f0f0e0] text-[#123524] py-4 px-6 flex justify-between items-center sticky top-[85px] w-full z-40">
+                    <div className="flex items-center space-x-2">
+                        <img src="/CSGO.PNG" alt="Cold Storage Go" className="h-10 w-auto" />
+                        <h1 className="text-2xl font-semibold">Community</h1>
+                    </div>
+                    <div className="relative flex items-center space-x-4">
+                        {isLoggedIn ? (
+                            <div className="cursor-pointer" onClick={handleProfileClick}>
+                                {profilePic ? (
+                                    <img src={profilePic} alt="Profile" className="w-8 h-8 rounded-full border-2 border-[#123524]" />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full border-2 border-[#123524] bg-[#e0e0d0] flex items-center justify-center">
+                                        <span className="text-[#123524]">{getInitials(username)}</span>
+                                    </div>
+                                )}
+                            </div>
+                        ) : null}
+                        <div className="relative">
+                            <button
+                                className="bg-[#204037] px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-[#2a5246] text-[#f0f0e0]"
+                                onClick={toggleCreatePostDropdown}
+                            >
+                                <span>Share a recipe or ask something to everyone!</span>
+                                <FaPlus />
+                            </button>
+                            {showCreatePostDropdown && (
+                                <div className="absolute right-0 top-full mt-2 bg-[#204037] text-[#f0f0e0] rounded shadow-lg w-48">
+                                    <Link to="/create-recipe" className="block px-4 py-2 hover:bg-[#2a5246]">
+                                        Create Recipe
+                                    </Link>
+                                    <Link to="/create-discussion" className="block px-4 py-2 hover:bg-[#2a5246]">
+                                        Create Discussion
+                                    </Link>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 
